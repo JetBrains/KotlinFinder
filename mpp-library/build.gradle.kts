@@ -6,7 +6,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.multiplatform")
     id("dev.icerock.mobile.multiplatform")
-    id("dev.icerock.mobile.multiplatform-resources")
+    //id("dev.icerock.mobile.multiplatform-resources")
 }
 
 android {
@@ -39,6 +39,6 @@ dependencies {
     mppModules.forEach { mppModule(it) }
 }
 
-multiplatformResources {
+/*multiplatformResources {
     multiplatformResourcesPackage = "org.example.library"
-}
+}*/
