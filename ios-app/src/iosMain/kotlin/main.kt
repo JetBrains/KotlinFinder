@@ -21,14 +21,16 @@ class AppDelegate : UIResponder, UIApplicationDelegateProtocol {
 
     private var _window: UIWindow? = null
     override fun window() = _window
-    override fun setWindow(window: UIWindow?) { _window = window }
+    override fun setWindow(window: UIWindow?) {
+        _window = window
+    }
 
-    override fun application(application: UIApplication, didFinishLaunchingWithOptions: Map<Any?, *>?): Boolean {
+    /*override fun application(application: UIApplication, didFinishLaunchingWithOptions: Map<Any?, *>?): Boolean {
         println("application")
         window = UIWindow(frame = UIScreen.mainScreen.bounds)
-        window!!.rootViewController = FinderViewController()
+        window!!.rootViewController =
         window!!.makeKeyAndVisible()
         return true
-    }
+    }*/
 }
 
