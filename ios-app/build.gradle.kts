@@ -85,19 +85,26 @@ dependencies {
 val xcodeIntegrationGroup: String = "Xcode integration"
 val xcodeBundleId = "org.jetbrains.kotlin.native-demo"
 
+val targetBuildDir: String? = System.getenv("TARGET_BUILD_DIR")
+val executablePath: String? = System.getenv("EXECUTABLE_PATH")
+
 val currentTarget = kotlin.targets[target.key] as KotlinNativeTarget
 val kotlinBinary = currentTarget.binaries.getExecutable(buildType)
 
-val targetBuildDir: String = "~/Library/Developer/Xcode/DerivedData/ios-app-build-dir/Build/Products/Debug-iphonesimulator"
-val executablePath: String = "ios-app.app/ios-app"
-
-val packForXcode by tasks.creating(Copy::class.java) {
-    group = xcodeIntegrationGroup
-
+val packForXcode = if (sdkName == null || targetBuildDir == null || executablePath == null) {
+  // The build is launched not by Xcode ->
+  // We cannot create a copy task and just show a meaningful error message.
+  tasks.create("packForXCode").doLast {
+    throw IllegalStateException("Please run the task from Xcode")
+  }
+} else {
+  // Otherwise copy the executable into the Xcode output directory.
+  tasks.create("packForXCode", Copy::class.java) {
     dependsOn(kotlinBinary.linkTask)
     destinationDir = file(targetBuildDir)
     from(kotlinBinary.outputFile)
     rename { executablePath }
+  }
 }
 
 val xcodeProject = file("ios-app.xcodeproj")

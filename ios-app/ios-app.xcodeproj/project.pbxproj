@@ -3,13 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		45F4791D219463C7003D25FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45F47912219463C7003D25FA /* LaunchScreen.storyboard */; };
 		45F4791E219463C7003D25FA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45F47914219463C7003D25FA /* Main.storyboard */; };
 		45F47921219463C7003D25FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F4791A219463C7003D25FA /* Assets.xcassets */; };
+		45FAED15234EC97A008C0653 /* kotlin in Resources */ = {isa = PBXBuildFile; fileRef = 45FAED14234EC97A008C0653 /* kotlin */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,7 @@
 		45F4791A219463C7003D25FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		45F4791B219463C7003D25FA /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		45F4791C219463C7003D25FA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		45FAED14234EC97A008C0653 /* kotlin */ = {isa = PBXFileReference; lastKnownFileType = folder; name = kotlin; path = src/iosMain/kotlin; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +38,7 @@
 		287627F61F319065007FA12B = {
 			isa = PBXGroup;
 			children = (
+				45FAED14234EC97A008C0653 /* kotlin */,
 				45964D362282A1FD00C16658 /* mpp-library */,
 				45F47910219463C7003D25FA /* src */,
 				287628001F319065007FA12B /* Products */,
@@ -80,7 +83,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 287628111F319065007FA12B /* Build configuration list for PBXNativeTarget "ios-app" */;
 			buildPhases = (
-				287627FB1F319065007FA12B /* Sources */,
+				45FAED16234ECBC6008C0653 /* Compile Kotlin/Native */,
 				287627FC1F319065007FA12B /* Frameworks */,
 				287627FD1F319065007FA12B /* Resources */,
 			);
@@ -135,20 +138,32 @@
 				45F4791E219463C7003D25FA /* Main.storyboard in Resources */,
 				45F4791D219463C7003D25FA /* LaunchScreen.storyboard in Resources */,
 				45F47921219463C7003D25FA /* Assets.xcassets in Resources */,
+				45FAED15234EC97A008C0653 /* kotlin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXSourcesBuildPhase section */
-		287627FB1F319065007FA12B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
+/* Begin PBXShellScriptBuildPhase section */
+		45FAED16234ECBC6008C0653 /* Compile Kotlin/Native */ = {
+			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Compile Kotlin/Native";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "$SRCROOT/../gradlew -p $SRCROOT packForXCode -Pdisable.android=true\n";
 		};
-/* End PBXSourcesBuildPhase section */
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXVariantGroup section */
 		45F47912219463C7003D25FA /* LaunchScreen.storyboard */ = {
