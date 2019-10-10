@@ -47,6 +47,7 @@ kotlin {
         iosX64("ios")
     }
 
+
     /*val watchos = if (!target.simulator) {
         // Device.
         watchosArm64("watchos")
@@ -75,9 +76,16 @@ kotlin {
 
 dependencies {
     mppLibrary(Deps.Libs.MultiPlatform.kotlinStdLib.copy(android = null))
-   // mppLibrary(Deps.Libs.MultiPlatform.coroutines.copy(android = null))
-//    mppLibrary(Deps.Libs.MultiPlatform.mokoResources)
-//    mppLibrary(Deps.Libs.MultiPlatform.mokoCore)
+
+    if (target.simulator ) {
+        "iosMainImplementation"(Deps.Libs.MultiPlatform.coroutines.iosX64!!)
+        "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoResources.iosX64!!)
+        "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoCore.iosX64!!)
+    } else {
+        "iosMainImplementation"(Deps.Libs.MultiPlatform.coroutines.iosArm64!!)
+        "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoResources.iosArm64!!)
+        "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoCore.iosArm64!!)
+    }
 }
 
 
@@ -164,7 +172,7 @@ tasks.create("run") {
     group = xcodeIntegrationGroup
 
     dependsOn(buildAppWithXcode)
-    dependsOn(packForXcode)
+    //dependsOn(packForXcode)
     dependsOn(installAppInSimulator)
     dependsOn(launchAppInSimulator)
 }
