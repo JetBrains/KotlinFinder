@@ -17,7 +17,7 @@ enum class Target(val simulator: Boolean, val key: String) {
     IOS_ARM64(false, "ios")
 }
 
-val sdkName: String? = "iphonesimulator" //System.getenv("SDK_NAME")
+val sdkName: String? = System.getenv("SDK_NAME") ?: "iphonesimulator"
 
 val target = sdkName.orEmpty().let {
     when {
@@ -172,7 +172,6 @@ tasks.create("run") {
     group = xcodeIntegrationGroup
 
     dependsOn(buildAppWithXcode)
-    //dependsOn(packForXcode)
     dependsOn(installAppInSimulator)
     dependsOn(launchAppInSimulator)
 }
