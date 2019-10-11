@@ -21,7 +21,7 @@ class Factory(
         baseUrl = baseUrl
     )
 
-    val newsFactory = NewsFactory(
+    /*val newsFactory = NewsFactory(
         newsSource = object : NewsSource {
             override suspend fun getNewsList(): List<News> {
                 return domainFactory.newsRepository.getNewsList().map { item ->
@@ -36,5 +36,5 @@ class Factory(
         newsListStrings = object : NewsListViewModel.Strings {
             override val unknownError: StringResource = MR.strings.unknown_error
         }
-    )
+    )*/
 }
