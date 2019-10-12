@@ -1,3 +1,4 @@
+import Screens.MainScreenViewController
 import kotlinx.cinterop.*
 import platform.Foundation.*
 import platform.UIKit.*
@@ -25,12 +26,12 @@ class AppDelegate : UIResponder, UIApplicationDelegateProtocol {
         _window = window
     }
 
-    /*override fun application(application: UIApplication, didFinishLaunchingWithOptions: Map<Any?, *>?): Boolean {
+    override fun application(application: UIApplication, didFinishLaunchingWithOptions: Map<Any?, *>?): Boolean {
         println("application")
         window = UIWindow(frame = UIScreen.mainScreen.bounds)
-        window!!.rootViewController =
+        window!!.rootViewController = MainScreenViewController()
         window!!.makeKeyAndVisible()
         return true
-    }*/
+    }
 }
 
