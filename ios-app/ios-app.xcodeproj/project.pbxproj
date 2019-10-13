@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		45F4791D219463C7003D25FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45F47912219463C7003D25FA /* LaunchScreen.storyboard */; };
-		45F4791E219463C7003D25FA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45F47914219463C7003D25FA /* Main.storyboard */; };
 		45F47921219463C7003D25FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F4791A219463C7003D25FA /* Assets.xcassets */; };
 		45FAED15234EC97A008C0653 /* kotlin in Resources */ = {isa = PBXBuildFile; fileRef = 45FAED14234EC97A008C0653 /* kotlin */; };
 		B0088D52234F2BFF009E8630 /* TestStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B0088D51234F2BFF009E8630 /* TestStoryboard.storyboard */; };
@@ -18,7 +17,6 @@
 		287627FF1F319065007FA12B /* ios-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45964D362282A1FD00C16658 /* mpp-library */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "mpp-library"; path = "../mpp-library"; sourceTree = "<group>"; };
 		45F47913219463C7003D25FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		45F47915219463C7003D25FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		45F4791A219463C7003D25FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		45F4791C219463C7003D25FA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45FAED14234EC97A008C0653 /* kotlin */ = {isa = PBXFileReference; lastKnownFileType = folder; name = kotlin; path = src/iosMain/kotlin; sourceTree = "<group>"; };
@@ -63,7 +61,6 @@
 				45F47911219463C7003D25FA /* Resources */,
 				45F4791A219463C7003D25FA /* Assets.xcassets */,
 				45F4791C219463C7003D25FA /* Info.plist */,
-				B0088D51234F2BFF009E8630 /* TestStoryboard.storyboard */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -72,7 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				45F47912219463C7003D25FA /* LaunchScreen.storyboard */,
-				45F47914219463C7003D25FA /* Main.storyboard */,
+				B0088D51234F2BFF009E8630 /* TestStoryboard.storyboard */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -136,7 +133,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45F4791E219463C7003D25FA /* Main.storyboard in Resources */,
 				45F4791D219463C7003D25FA /* LaunchScreen.storyboard in Resources */,
 				45F47921219463C7003D25FA /* Assets.xcassets in Resources */,
 				45FAED15234EC97A008C0653 /* kotlin in Resources */,
@@ -174,14 +170,6 @@
 				45F47913219463C7003D25FA /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		45F47914219463C7003D25FA /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				45F47915219463C7003D25FA /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

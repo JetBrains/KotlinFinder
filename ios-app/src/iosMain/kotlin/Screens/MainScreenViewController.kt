@@ -1,8 +1,8 @@
 package Screens
 
 import Views.CollectWordView
-import kotlinx.cinterop.CValue
-import platform.CoreGraphics.*
+import platform.CoreGraphics.CGRectMake
+import platform.CoreGraphics.CGSizeMake
 import platform.Foundation.NSCoder
 import platform.Foundation.NSNumber
 import platform.QuartzCore.CAShapeLayer
@@ -28,23 +28,28 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
     override fun viewDidLoad() {
         super.viewDidLoad()
 
-        this.view.backgroundColor = UIColor.whiteColor
+        with(view) {
+            backgroundColor = UIColor.whiteColor
 
-        this.view.addSubview(this.scrollView)
-        this.view.addSubview(this.findTaskButton)
-        this.view.addSubview(this.shadowView)
-        this.view.addSubview(this.controlWordContainerView)
+            addSubview(scrollView)
+            addSubview(findTaskButton)
+            addSubview(shadowView)
+            addSubview(controlWordContainerView)
+        }
+
         this.scrollView.addSubview(this.mapImageView)
         this.controlWordContainerView.addSubview(this.collectWordView)
 
         this.shadowView.backgroundColor = UIColor.whiteColor
 
-        this.scrollView.translatesAutoresizingMaskIntoConstraints = false
-        this.findTaskButton.translatesAutoresizingMaskIntoConstraints = false
-        this.controlWordContainerView.translatesAutoresizingMaskIntoConstraints = false
-        this.shadowView.translatesAutoresizingMaskIntoConstraints = false
-        this.mapImageView.translatesAutoresizingMaskIntoConstraints = false
-        this.collectWordView.translatesAutoresizingMaskIntoConstraints = false
+        listOf(
+            scrollView,
+            findTaskButton,
+            controlWordContainerView,
+            shadowView,
+            mapImageView,
+            collectWordView
+        ).forEach { it.translatesAutoresizingMaskIntoConstraints = false }
 
         this.collectWordView.topAnchor.constraintEqualToAnchor(this.shadowView.topAnchor, constant = 20.0).setActive(true)
         this.collectWordView.bottomAnchor.constraintEqualToAnchor(this.shadowView.bottomAnchor, constant = -30.0).setActive(true)
@@ -69,26 +74,43 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
 
         this.mapImageView.fillSuperview()
 
-        this.findTaskButton.layer.cornerRadius = 16.0
-        this.findTaskButton.setBackgroundColor(UIColor.colorNamed("orangeColor"))
+        with(this.findTaskButton) {
+            layer.cornerRadius = 16.0
+            setBackgroundColor(UIColor.colorNamed("orangeColor"))
+        }
 
-        this.controlWordContainerView.backgroundColor = UIColor.whiteColor
         this.collectWordView.backgroundColor = UIColor.whiteColor
 
-        this.controlWordContainerView.layer.mask = this.roundedCornersMaskLayer
-        this.controlWordContainerView.layer.masksToBounds = false
+        with(controlWordContainerView) {
+            with(layer) {
+                mask = this@MainScreenViewController.roundedCornersMaskLayer
+                masksToBounds = false
+            }
+            backgroundColor = UIColor.whiteColor
+        }
 
-        this.shadowView.layer.insertSublayer(layer = this.shadowLayer, atIndex = 0)
-        this.shadowView.layer.masksToBounds = false
+        with(shadowView.layer) {
+            insertSublayer(layer = this@MainScreenViewController.shadowLayer, atIndex = 0)
+            masksToBounds = false
+        }
 
-        this.shadowLayer.shadowOpacity = NSNumber(0.45).floatValue
-        this.shadowLayer.masksToBounds = false
-        this.shadowLayer.shadowRadius = 4.0
-        this.shadowLayer.shadowColor = UIColor.blackColor.CGColor
-        this.shadowLayer.shadowOffset = CGSizeMake(width = 0.0, height = 0.0)
+        with(shadowLayer) {
+            shadowOpacity = NSNumber(0.45).floatValue
+            masksToBounds = false
+            shadowRadius = 4.0
+            shadowColor = UIColor.blackColor.CGColor
+            shadowOffset = CGSizeMake(width = 0.0, height = 0.0)
+        }
 
-        this.scrollView.setShowsHorizontalScrollIndicator(false)
-        this.scrollView.setShowsVerticalScrollIndicator(false)
+        with(scrollView) {
+            setShowsHorizontalScrollIndicator(false)
+            setShowsVerticalScrollIndicator(false)
+
+            minimumZoomScale = 0.1
+            maximumZoomScale = 1.0
+            zoomScale = minimumZoomScale
+            delegate = this@MainScreenViewController
+        }
     }
 
     override fun viewDidLayoutSubviews() {
@@ -106,11 +128,11 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
         this.roundedCornersMaskLayer.path = path.CGPath
     }
 
-    override fun viewForZoomingInScrollView(scrollView: platform.UIKit.UIScrollView): UIView {
+    override fun viewForZoomingInScrollView(scrollView: UIScrollView): UIView {
         return this.mapImageView
     }
 
-    fun UIView.fillSuperview(spacings: UIEdgeInsets = UIEdgeInsetsZero) {
+    private fun UIView.fillSuperview(spacings: UIEdgeInsets = UIEdgeInsetsZero) {
         assert(this.superview != null)
 
         this.translatesAutoresizingMaskIntoConstraints = false
@@ -121,7 +143,7 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
         this.bottomAnchor.constraintEqualToAnchor(this.superview!!.bottomAnchor, constant = -spacings.bottom).setActive(true)
     }
 
-    fun UIView.fillContainer(container: UIView, spacings: UIEdgeInsets = UIEdgeInsetsZero) {
+    private fun UIView.fillContainer(container: UIView, spacings: UIEdgeInsets = UIEdgeInsetsZero) {
         this.translatesAutoresizingMaskIntoConstraints = false
 
         this.leftAnchor.constraintEqualToAnchor(container.leftAnchor, constant = spacings.left).setActive(true)
