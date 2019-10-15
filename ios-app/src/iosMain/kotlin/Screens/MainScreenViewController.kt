@@ -80,6 +80,9 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
 
         this.collectWordView.backgroundColor = UIColor.whiteColor
 
+        this.collectWordView.setText("KOTLIN")
+        this.collectWordView.setCollectedLettersCount(3)
+
         with(controlWordContainerView) {
             with(layer) {
                 mask = this@MainScreenViewController.roundedCornersMaskLayer

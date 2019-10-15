@@ -2,12 +2,13 @@ package Views
 
 import kotlinx.cinterop.CValue
 import platform.CoreGraphics.CGRect
-import platform.Foundation.NSCoder
+import platform.Foundation.*
 import platform.UIKit.*
+
 
 class CollectWordView: UIView {
     private val imageView: UIImageView = UIImageView()
-    private val wordLabel: UILabel = UILabel()
+    private val wordStackView: UIStackView = UIStackView()
     private val titleLabel: UILabel = UILabel()
 
     @OverrideInit
@@ -16,14 +17,12 @@ class CollectWordView: UIView {
     @OverrideInit
     constructor(frame: CValue<CGRect>) : super(frame) {
         this.addSubview(this.imageView)
-        this.addSubview(this.wordLabel)
+        this.addSubview(this.wordStackView)
         this.addSubview(this.titleLabel)
 
-        this.imageView.image = UIImage.imageNamed("kotlin0")
+        this.wordStackView.axis = UILayoutConstraintAxisHorizontal
 
-        this.wordLabel.text = "KOTLIN"
-        this.wordLabel.font = UIFont.boldSystemFontOfSize(42.0)
-        this.wordLabel.textColor = UIColor.colorNamed("blackTextColor")!!
+        this.imageView.image = UIImage.imageNamed("kotlin0")
 
         this.titleLabel.text = "Collect word"
         this.titleLabel.font = UIFont.systemFontOfSize(12.0)
@@ -34,13 +33,32 @@ class CollectWordView: UIView {
         this.imageView.topAnchor.constraintEqualToAnchor(this.topAnchor).setActive(true)
         this.imageView.bottomAnchor.constraintEqualToAnchor(this.bottomAnchor).setActive(true)
 
-        this.wordLabel.translatesAutoresizingMaskIntoConstraints = false
-        this.wordLabel.leadingAnchor.constraintEqualToAnchor(this.imageView.trailingAnchor, constant = 20.0).setActive(true)
-        this.wordLabel.trailingAnchor.constraintEqualToAnchor(this.trailingAnchor).setActive(true)
-        this.wordLabel.bottomAnchor.constraintEqualToAnchor(this.bottomAnchor, constant = 0.0).setActive(true)
+        this.wordStackView.translatesAutoresizingMaskIntoConstraints = false
+        this.wordStackView.leadingAnchor.constraintEqualToAnchor(this.imageView.trailingAnchor, constant = 20.0).setActive(true)
+        this.wordStackView.trailingAnchor.constraintEqualToAnchor(this.trailingAnchor).setActive(true)
+        this.wordStackView.bottomAnchor.constraintEqualToAnchor(this.bottomAnchor, constant = 0.0).setActive(true)
 
         this.titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        this.titleLabel.leadingAnchor.constraintEqualToAnchor(this.wordLabel.leadingAnchor).setActive(true)
+        this.titleLabel.leadingAnchor.constraintEqualToAnchor(this.wordStackView.leadingAnchor).setActive(true)
         this.titleLabel.topAnchor.constraintEqualToAnchor(this.topAnchor, constant = 2.0).setActive(true)
+    }
+
+    fun setText(text: String) {
+        this.wordStackView.arrangedSubviews().map { (it as? UIView)?.removeFromSuperview() }
+
+        for (i in 0..(text.count() - 1)) {
+            val label: UILabel = UILabel()
+            label.text = "${text[i]}"
+            label.textColor = UIColor.colorNamed("blackInactiveTextColor")!!
+            label.font = UIFont.boldSystemFontOfSize(42.0)
+
+            this.wordStackView.addArrangedSubview(label)
+        }
+    }
+
+    fun setCollectedLettersCount(count: Int) {
+        for (i in 0..(count - 1)) {
+            (this.wordStackView.arrangedSubviews()[i] as? UILabel)?.textColor = UIColor.colorNamed("blackTextColor")!!
+        }
     }
 }
