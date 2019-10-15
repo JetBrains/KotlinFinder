@@ -22,10 +22,12 @@ class CollectWordView: UIView {
         this.imageView.image = UIImage.imageNamed("kotlin0")
 
         this.wordLabel.text = "KOTLIN"
-        this.wordLabel.font = UIFont.systemFontOfSize(26.0)
+        this.wordLabel.font = UIFont.boldSystemFontOfSize(42.0)
+        this.wordLabel.textColor = UIColor.colorNamed("blackTextColor")!!
 
         this.titleLabel.text = "Collect word"
         this.titleLabel.font = UIFont.systemFontOfSize(12.0)
+        this.titleLabel.textColor = UIColor.colorNamed("blackLightTextColor")!!
 
         this.imageView.translatesAutoresizingMaskIntoConstraints = false
         this.imageView.leadingAnchor.constraintEqualToAnchor(this.leadingAnchor).setActive(true)
@@ -33,9 +35,9 @@ class CollectWordView: UIView {
         this.imageView.bottomAnchor.constraintEqualToAnchor(this.bottomAnchor).setActive(true)
 
         this.wordLabel.translatesAutoresizingMaskIntoConstraints = false
-        this.wordLabel.leadingAnchor.constraintEqualToAnchor(this.imageView.trailingAnchor, constant = 40.0).setActive(true)
+        this.wordLabel.leadingAnchor.constraintEqualToAnchor(this.imageView.trailingAnchor, constant = 20.0).setActive(true)
         this.wordLabel.trailingAnchor.constraintEqualToAnchor(this.trailingAnchor).setActive(true)
-        this.wordLabel.bottomAnchor.constraintEqualToAnchor(this.bottomAnchor, constant = -10.0).setActive(true)
+        this.wordLabel.bottomAnchor.constraintEqualToAnchor(this.bottomAnchor, constant = 0.0).setActive(true)
 
         this.titleLabel.translatesAutoresizingMaskIntoConstraints = false
         this.titleLabel.leadingAnchor.constraintEqualToAnchor(this.wordLabel.leadingAnchor).setActive(true)

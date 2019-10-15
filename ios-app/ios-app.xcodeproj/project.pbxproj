@@ -11,6 +11,8 @@
 		45F47921219463C7003D25FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F4791A219463C7003D25FA /* Assets.xcassets */; };
 		45FAED15234EC97A008C0653 /* kotlin in Resources */ = {isa = PBXBuildFile; fileRef = 45FAED14234EC97A008C0653 /* kotlin */; };
 		B0088D52234F2BFF009E8630 /* TestStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B0088D51234F2BFF009E8630 /* TestStoryboard.storyboard */; };
+		B078B37C235612BC0063160D /* SFProDisplay-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B078B37A235612BC0063160D /* SFProDisplay-Regular.ttf */; };
+		B078B37D235612BC0063160D /* SFProDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B078B37B235612BC0063160D /* SFProDisplay-Bold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +23,8 @@
 		45F4791C219463C7003D25FA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45FAED14234EC97A008C0653 /* kotlin */ = {isa = PBXFileReference; lastKnownFileType = folder; name = kotlin; path = src/iosMain/kotlin; sourceTree = "<group>"; };
 		B0088D51234F2BFF009E8630 /* TestStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TestStoryboard.storyboard; sourceTree = "<group>"; };
+		B078B37A235612BC0063160D /* SFProDisplay-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Regular.ttf"; sourceTree = "<group>"; };
+		B078B37B235612BC0063160D /* SFProDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Bold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,7 +63,6 @@
 			isa = PBXGroup;
 			children = (
 				45F47911219463C7003D25FA /* Resources */,
-				45F4791A219463C7003D25FA /* Assets.xcassets */,
 				45F4791C219463C7003D25FA /* Info.plist */,
 			);
 			path = src;
@@ -68,10 +71,21 @@
 		45F47911219463C7003D25FA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B078B379235612680063160D /* Fonts */,
+				45F4791A219463C7003D25FA /* Assets.xcassets */,
 				45F47912219463C7003D25FA /* LaunchScreen.storyboard */,
 				B0088D51234F2BFF009E8630 /* TestStoryboard.storyboard */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		B078B379235612680063160D /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				B078B37B235612BC0063160D /* SFProDisplay-Bold.ttf */,
+				B078B37A235612BC0063160D /* SFProDisplay-Regular.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -136,6 +150,8 @@
 				45F4791D219463C7003D25FA /* LaunchScreen.storyboard in Resources */,
 				45F47921219463C7003D25FA /* Assets.xcassets in Resources */,
 				45FAED15234EC97A008C0653 /* kotlin in Resources */,
+				B078B37D235612BC0063160D /* SFProDisplay-Bold.ttf in Resources */,
+				B078B37C235612BC0063160D /* SFProDisplay-Regular.ttf in Resources */,
 				B0088D52234F2BFF009E8630 /* TestStoryboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

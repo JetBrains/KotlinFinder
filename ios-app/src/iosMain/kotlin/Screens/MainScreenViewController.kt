@@ -1,6 +1,7 @@
 package Screens
 
 import Views.CollectWordView
+import Views.CommonButton
 import platform.CoreGraphics.CGRectMake
 import platform.CoreGraphics.CGSizeMake
 import platform.Foundation.NSCoder
@@ -11,7 +12,7 @@ import platform.UIKit.*
 
 class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
     private val scrollView: UIScrollView = UIScrollView()
-    private val findTaskButton: UIButton = UIButton()
+    private val findTaskButton: CommonButton = CommonButton(frame = CGRectMake(0.0, 0.0, 0.0, 0.0))
     private val controlWordContainerView: UIView = UIView()
     private val collectWordView: CollectWordView = CollectWordView(frame = CGRectMake(0.0, 0.0, 0.0, 0.0))
     private val shadowLayer: CAShapeLayer = CAShapeLayer()
@@ -70,14 +71,12 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
         this.findTaskButton.rightAnchor.constraintEqualToAnchor(this.view.rightAnchor, constant = -16.0).setActive(true)
         this.findTaskButton.bottomAnchor.constraintEqualToAnchor(this.shadowView.topAnchor, constant = -20.0).setActive(true)
 
+        this.findTaskButton.setStyle(CommonButton.Style.ORANGE)
+        this.findTaskButton.setTitle("Find a task", forState = 0u)
+
         this.controlWordContainerView.fillContainer(this.shadowView)
 
         this.mapImageView.fillSuperview()
-
-        with(this.findTaskButton) {
-            layer.cornerRadius = 16.0
-            setBackgroundColor(UIColor.colorNamed("orangeColor"))
-        }
 
         this.collectWordView.backgroundColor = UIColor.whiteColor
 
@@ -90,7 +89,7 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
         }
 
         with(shadowView.layer) {
-            insertSublayer(layer = this@MainScreenViewController.shadowLayer, atIndex = 0)
+            insertSublayer(layer = this@MainScreenViewController.shadowLayer, atIndex = 0u)
             masksToBounds = false
         }
 
