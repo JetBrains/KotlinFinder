@@ -32,5 +32,6 @@ include(":ios-app")
 listOf(
     Modules.MultiPlatform.domain,
     Modules.MultiPlatform.Feature.auth,
-    Modules.MultiPlatform.Feature.news
+    Modules.MultiPlatform.Feature.news,
+    Modules.MultiPlatform.Feature.mainMap
 ).forEach { include(it.name) }

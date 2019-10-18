@@ -3,6 +3,7 @@ package Views
 import kotlinx.cinterop.CValue
 import platform.CoreGraphics.CGRect
 import platform.Foundation.NSCoder
+import platform.Foundation.NSMutableAttributedString
 import platform.UIKit.*
 
 class CommonButton: UIButton {

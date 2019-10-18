@@ -60,5 +60,7 @@ class CollectWordView: UIView {
         for (i in 0..(count - 1)) {
             (this.wordStackView.arrangedSubviews()[i] as? UILabel)?.textColor = UIColor.colorNamed("blackTextColor")!!
         }
+
+        this.imageView.image = UIImage.imageNamed("kotlin$count")
     }
 }

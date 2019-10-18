@@ -2,6 +2,13 @@ package Screens
 
 import Views.CollectWordView
 import Views.CommonButton
+import dev.icerock.moko.core.Timer
+import dev.icerock.moko.mvvm.livedata.LiveData
+import dev.icerock.moko.mvvm.livedata.MutableLiveData
+import dev.icerock.moko.mvvm.livedata.readOnly
+import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import kotlinx.cinterop.ObjCAction
+import kotlinx.cinterop.ObjCMethod
 import platform.CoreGraphics.CGRectMake
 import platform.CoreGraphics.CGSizeMake
 import platform.Foundation.NSCoder
@@ -19,6 +26,8 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
     private val roundedCornersMaskLayer: CAShapeLayer = CAShapeLayer()
     private val shadowView: UIView = UIView()
     private val mapImageView: UIImageView = UIImageView(UIImage.imageNamed("mapImage"))
+
+    val viewModel: MapViewModel = MapViewModel()
 
     @OverrideInit
     constructor() : super(nibName = null, bundle = null)
@@ -71,8 +80,8 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
         this.findTaskButton.rightAnchor.constraintEqualToAnchor(this.view.rightAnchor, constant = -16.0).setActive(true)
         this.findTaskButton.bottomAnchor.constraintEqualToAnchor(this.shadowView.topAnchor, constant = -20.0).setActive(true)
 
-        this.findTaskButton.setStyle(CommonButton.Style.ORANGE)
-        this.findTaskButton.setTitle("Find a task", forState = 0u)
+        //this.findTaskButton.setStyle(CommonButton.Style.ORANGE)
+        //this.findTaskButton.setTitle("Find a task", forState = 0u)
 
         this.controlWordContainerView.fillContainer(this.shadowView)
 
@@ -81,7 +90,7 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
         this.collectWordView.backgroundColor = UIColor.whiteColor
 
         this.collectWordView.setText("KOTLIN")
-        this.collectWordView.setCollectedLettersCount(3)
+        this.collectWordView.setCollectedLettersCount(0)
 
         with(controlWordContainerView) {
             with(layer) {
@@ -113,6 +122,12 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
             zoomScale = minimumZoomScale
             delegate = this@MainScreenViewController
         }
+
+        this.findTaskButton.addTarget(target = this,
+            action = platform.darwin.sel_registerName("findTaskButtonTapped"),
+            forControlEvents = UIControlEventTouchUpInside)
+
+        this.bindViewModel(viewModel)
     }
 
     override fun viewDidLayoutSubviews() {
@@ -128,6 +143,43 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
         this.shadowLayer.shadowPath = path.CGPath
 
         this.roundedCornersMaskLayer.path = path.CGPath
+    }
+
+    fun bindViewModel(viewModel: MapViewModel) {
+        //this.viewModel = viewModel
+
+        viewModel.currentStep.addObserver { step: Int ->
+            this.collectWordView.setCollectedLettersCount(step)
+        }
+
+        viewModel.findTaskButtonState.addObserver { state: MapViewModel.FindTaskButtonState ->
+            when (state) {
+                MapViewModel.FindTaskButtonState.ACTIVE -> {
+                    this.findTaskButton.enabled = true
+                    this.findTaskButton.setStyle(CommonButton.Style.ORANGE)
+                    this.findTaskButton.setTitle("Find a task", forState = 0u)
+                }
+
+                MapViewModel.FindTaskButtonState.TOO_FAR -> {
+                    this.findTaskButton.enabled = false
+                    this.findTaskButton.setStyle(CommonButton.Style.GRAY)
+                    this.findTaskButton.setTitle("You are too far from the task point", forState = 0u)
+                }
+
+                MapViewModel.FindTaskButtonState.COMPLETED -> {
+                    this.findTaskButton.enabled = false
+                    this.findTaskButton.setStyle(CommonButton.Style.ORANGE)
+                    this.findTaskButton.setTitle("Completed", forState = 0u)
+                }
+            }
+        }
+
+        viewModel.start()
+    }
+
+    @ObjCAction
+    fun findTaskButtonTapped() {
+        this.viewModel.findTaskButtonTapped()
     }
 
     override fun viewForZoomingInScrollView(scrollView: UIScrollView): UIView {
@@ -154,3 +206,46 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
         this.bottomAnchor.constraintEqualToAnchor(container.bottomAnchor, constant = -spacings.bottom).setActive(true)
     }
 }
+
+/*
+class MapViewModel: ViewModel() {
+
+    enum class FindTaskButtonState {
+        TOO_FAR,
+        ACTIVE,
+        COMPLETED
+    }
+
+    val stepsCount: Int = 6
+
+    private val _findTaskButtonState: MutableLiveData<FindTaskButtonState> = MutableLiveData(FindTaskButtonState.TOO_FAR)
+    val findTaskButtonState: LiveData<FindTaskButtonState> = _findTaskButtonState.readOnly()
+
+    private val _currentStep: MutableLiveData<Int> = MutableLiveData(0)
+    val currentStep: LiveData<Int> = _currentStep.readOnly()
+
+    fun start() {
+        doDelay()
+    }
+
+    fun findTaskButtonTapped() {
+        if (_currentStep.value == stepsCount) {
+            _findTaskButtonState.value = FindTaskButtonState.COMPLETED
+        } else {
+            _currentStep.value += 1
+
+            doDelay()
+        }
+    }
+
+    private fun doDelay() {
+        _findTaskButtonState.value = FindTaskButtonState.TOO_FAR
+
+        val timer: Timer = Timer(2 * 1000, block = {
+            _findTaskButtonState.value = FindTaskButtonState.ACTIVE
+            false
+        })
+
+        timer.start()
+    }
+}*/
