@@ -89,7 +89,7 @@ dependencies {
         "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoMvvm.iosArm64!!)
     }
 
-    "iosMainImplementation"(Modules.MultiPlatform.Feature.mainMap.name)
+    "iosMainImplementation"(project(Modules.MultiPlatform.Feature.mainMap.name))
 }
 
 

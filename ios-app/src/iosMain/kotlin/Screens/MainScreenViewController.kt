@@ -2,13 +2,8 @@ package Screens
 
 import Views.CollectWordView
 import Views.CommonButton
-import dev.icerock.moko.core.Timer
-import dev.icerock.moko.mvvm.livedata.LiveData
-import dev.icerock.moko.mvvm.livedata.MutableLiveData
-import dev.icerock.moko.mvvm.livedata.readOnly
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import kotlinx.cinterop.ObjCAction
-import kotlinx.cinterop.ObjCMethod
 import platform.CoreGraphics.CGRectMake
 import platform.CoreGraphics.CGSizeMake
 import platform.Foundation.NSCoder
@@ -17,11 +12,12 @@ import platform.QuartzCore.CAShapeLayer
 import platform.UIKit.*
 
 
-class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
+class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol {
     private val scrollView: UIScrollView = UIScrollView()
     private val findTaskButton: CommonButton = CommonButton(frame = CGRectMake(0.0, 0.0, 0.0, 0.0))
     private val controlWordContainerView: UIView = UIView()
-    private val collectWordView: CollectWordView = CollectWordView(frame = CGRectMake(0.0, 0.0, 0.0, 0.0))
+    private val collectWordView: CollectWordView =
+        CollectWordView(frame = CGRectMake(0.0, 0.0, 0.0, 0.0))
     private val shadowLayer: CAShapeLayer = CAShapeLayer()
     private val roundedCornersMaskLayer: CAShapeLayer = CAShapeLayer()
     private val shadowView: UIView = UIView()
@@ -61,14 +57,22 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
             collectWordView
         ).forEach { it.translatesAutoresizingMaskIntoConstraints = false }
 
-        this.collectWordView.topAnchor.constraintEqualToAnchor(this.shadowView.topAnchor, constant = 20.0).setActive(true)
-        this.collectWordView.bottomAnchor.constraintEqualToAnchor(this.shadowView.bottomAnchor, constant = -30.0).setActive(true)
-        this.collectWordView.centerXAnchor.constraintEqualToAnchor(this.shadowView.centerXAnchor).setActive(true)
+        this.collectWordView.topAnchor.constraintEqualToAnchor(
+            this.shadowView.topAnchor,
+            constant = 20.0
+        ).setActive(true)
+        this.collectWordView.bottomAnchor.constraintEqualToAnchor(
+            this.shadowView.bottomAnchor,
+            constant = -30.0
+        ).setActive(true)
+        this.collectWordView.centerXAnchor.constraintEqualToAnchor(this.shadowView.centerXAnchor)
+            .setActive(true)
 
         this.scrollView.leftAnchor.constraintEqualToAnchor(this.view.leftAnchor).setActive(true)
         this.scrollView.topAnchor.constraintEqualToAnchor(this.view.topAnchor).setActive(true)
         this.scrollView.rightAnchor.constraintEqualToAnchor(this.view.rightAnchor).setActive(true)
-        this.scrollView.bottomAnchor.constraintEqualToAnchor(this.shadowView.topAnchor).setActive(true)
+        this.scrollView.bottomAnchor.constraintEqualToAnchor(this.shadowView.topAnchor)
+            .setActive(true)
         this.scrollView.backgroundColor = UIColor.whiteColor
 
         this.shadowView.leftAnchor.constraintEqualToAnchor(this.view.leftAnchor).setActive(true)
@@ -76,12 +80,18 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
         this.shadowView.bottomAnchor.constraintEqualToAnchor(this.view.bottomAnchor).setActive(true)
 
         this.findTaskButton.heightAnchor.constraintEqualToConstant(50.0).setActive(true)
-        this.findTaskButton.leftAnchor.constraintEqualToAnchor(this.view.leftAnchor, constant = 16.0).setActive(true)
-        this.findTaskButton.rightAnchor.constraintEqualToAnchor(this.view.rightAnchor, constant = -16.0).setActive(true)
-        this.findTaskButton.bottomAnchor.constraintEqualToAnchor(this.shadowView.topAnchor, constant = -20.0).setActive(true)
-
-        //this.findTaskButton.setStyle(CommonButton.Style.ORANGE)
-        //this.findTaskButton.setTitle("Find a task", forState = 0u)
+        this.findTaskButton.leftAnchor.constraintEqualToAnchor(
+            this.view.leftAnchor,
+            constant = 16.0
+        ).setActive(true)
+        this.findTaskButton.rightAnchor.constraintEqualToAnchor(
+            this.view.rightAnchor,
+            constant = -16.0
+        ).setActive(true)
+        this.findTaskButton.bottomAnchor.constraintEqualToAnchor(
+            this.shadowView.topAnchor,
+            constant = -20.0
+        ).setActive(true)
 
         this.controlWordContainerView.fillContainer(this.shadowView)
 
@@ -123,9 +133,11 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
             delegate = this@MainScreenViewController
         }
 
-        this.findTaskButton.addTarget(target = this,
+        this.findTaskButton.addTarget(
+            target = this,
             action = platform.darwin.sel_registerName("findTaskButtonTapped"),
-            forControlEvents = UIControlEventTouchUpInside)
+            forControlEvents = UIControlEventTouchUpInside
+        )
 
         this.bindViewModel(viewModel)
     }
@@ -138,7 +150,8 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
         val path: UIBezierPath = UIBezierPath.bezierPathWithRoundedRect(
             rect = this.controlWordContainerView.bounds,
             byRoundingCorners = UIRectCornerTopLeft.or(UIRectCornerTopRight),
-            cornerRadii = CGSizeMake(16.0, 16.0))
+            cornerRadii = CGSizeMake(16.0, 16.0)
+        )
 
         this.shadowLayer.shadowPath = path.CGPath
 
@@ -163,7 +176,10 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
                 MapViewModel.FindTaskButtonState.TOO_FAR -> {
                     this.findTaskButton.enabled = false
                     this.findTaskButton.setStyle(CommonButton.Style.GRAY)
-                    this.findTaskButton.setTitle("You are too far from the task point", forState = 0u)
+                    this.findTaskButton.setTitle(
+                        "You are too far from the task point",
+                        forState = 0u
+                    )
                 }
 
                 MapViewModel.FindTaskButtonState.COMPLETED -> {
@@ -191,19 +207,35 @@ class MainScreenViewController: UIViewController, UIScrollViewDelegateProtocol {
 
         this.translatesAutoresizingMaskIntoConstraints = false
 
-        this.leftAnchor.constraintEqualToAnchor(this.superview!!.leftAnchor, constant = spacings.left).setActive(true)
-        this.topAnchor.constraintEqualToAnchor(this.superview!!.topAnchor, constant = spacings.top).setActive(true)
-        this.rightAnchor.constraintEqualToAnchor(this.superview!!.rightAnchor, constant = -spacings.right).setActive(true)
-        this.bottomAnchor.constraintEqualToAnchor(this.superview!!.bottomAnchor, constant = -spacings.bottom).setActive(true)
+        this.leftAnchor.constraintEqualToAnchor(
+            this.superview!!.leftAnchor,
+            constant = spacings.left
+        ).setActive(true)
+        this.topAnchor.constraintEqualToAnchor(this.superview!!.topAnchor, constant = spacings.top)
+            .setActive(true)
+        this.rightAnchor.constraintEqualToAnchor(
+            this.superview!!.rightAnchor,
+            constant = -spacings.right
+        ).setActive(true)
+        this.bottomAnchor.constraintEqualToAnchor(
+            this.superview!!.bottomAnchor,
+            constant = -spacings.bottom
+        ).setActive(true)
     }
 
     private fun UIView.fillContainer(container: UIView, spacings: UIEdgeInsets = UIEdgeInsetsZero) {
         this.translatesAutoresizingMaskIntoConstraints = false
 
-        this.leftAnchor.constraintEqualToAnchor(container.leftAnchor, constant = spacings.left).setActive(true)
-        this.topAnchor.constraintEqualToAnchor(container.topAnchor, constant = spacings.top).setActive(true)
-        this.rightAnchor.constraintEqualToAnchor(container.rightAnchor, constant = -spacings.right).setActive(true)
-        this.bottomAnchor.constraintEqualToAnchor(container.bottomAnchor, constant = -spacings.bottom).setActive(true)
+        this.leftAnchor.constraintEqualToAnchor(container.leftAnchor, constant = spacings.left)
+            .setActive(true)
+        this.topAnchor.constraintEqualToAnchor(container.topAnchor, constant = spacings.top)
+            .setActive(true)
+        this.rightAnchor.constraintEqualToAnchor(container.rightAnchor, constant = -spacings.right)
+            .setActive(true)
+        this.bottomAnchor.constraintEqualToAnchor(
+            container.bottomAnchor,
+            constant = -spacings.bottom
+        ).setActive(true)
     }
 }
 
