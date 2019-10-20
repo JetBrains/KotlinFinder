@@ -23,7 +23,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
     private val shadowView: UIView = UIView()
     private val mapImageView: UIImageView = UIImageView(UIImage.imageNamed("mapImage"))
 
-    val viewModel: MapViewModel = MapViewModel()
+    private lateinit var viewModel: MapViewModel
 
     @OverrideInit
     constructor() : super(nibName = null, bundle = null)
@@ -138,8 +138,6 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             action = platform.darwin.sel_registerName("findTaskButtonTapped"),
             forControlEvents = UIControlEventTouchUpInside
         )
-
-        this.bindViewModel(viewModel)
     }
 
     override fun viewDidLayoutSubviews() {
@@ -159,7 +157,9 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
     }
 
     fun bindViewModel(viewModel: MapViewModel) {
-        //this.viewModel = viewModel
+        this.loadViewIfNeeded()
+
+        this.viewModel = viewModel
 
         viewModel.currentStep.addObserver { step: Int ->
             this.collectWordView.setCollectedLettersCount(step)

@@ -15,23 +15,3 @@ fun main(args: Array<String>) {
     }
 }
 
-class AppDelegate : UIResponder, UIApplicationDelegateProtocol {
-    companion object : UIResponderMeta(), UIApplicationDelegateProtocolMeta {}
-
-    @OverrideInit constructor() : super()
-
-    private var _window: UIWindow? = null
-    override fun window() = _window
-    override fun setWindow(window: UIWindow?) {
-        _window = window
-    }
-
-    override fun application(application: UIApplication, didFinishLaunchingWithOptions: Map<Any?, *>?): Boolean {
-        println("application")
-        window = UIWindow(frame = UIScreen.mainScreen.bounds)
-        window!!.rootViewController = MainScreenViewController()
-        window!!.makeKeyAndVisible()
-        return true
-    }
-}
-
