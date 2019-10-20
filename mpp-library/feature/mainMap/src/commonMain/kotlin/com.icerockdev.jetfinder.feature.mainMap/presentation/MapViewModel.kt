@@ -28,11 +28,11 @@ class MapViewModel: ViewModel() {
     }
 
     fun findTaskButtonTapped() {
+        _currentStep.value += 1
+        
         if (_currentStep.value == stepsCount) {
             _findTaskButtonState.value = FindTaskButtonState.COMPLETED
         } else {
-            _currentStep.value += 1
-
             doDelay()
         }
     }
