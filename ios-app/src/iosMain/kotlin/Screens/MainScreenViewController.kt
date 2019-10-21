@@ -3,6 +3,8 @@ package Screens
 import Views.CollectWordView
 import Views.CommonButton
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
+import common.fillContainer
+import common.fillSuperview
 import kotlinx.cinterop.ObjCAction
 import platform.CoreGraphics.CGRectMake
 import platform.CoreGraphics.CGSizeMake
@@ -200,42 +202,6 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
 
     override fun viewForZoomingInScrollView(scrollView: UIScrollView): UIView {
         return this.mapImageView
-    }
-
-    private fun UIView.fillSuperview(spacings: UIEdgeInsets = UIEdgeInsetsZero) {
-        assert(this.superview != null)
-
-        this.translatesAutoresizingMaskIntoConstraints = false
-
-        this.leftAnchor.constraintEqualToAnchor(
-            this.superview!!.leftAnchor,
-            constant = spacings.left
-        ).setActive(true)
-        this.topAnchor.constraintEqualToAnchor(this.superview!!.topAnchor, constant = spacings.top)
-            .setActive(true)
-        this.rightAnchor.constraintEqualToAnchor(
-            this.superview!!.rightAnchor,
-            constant = -spacings.right
-        ).setActive(true)
-        this.bottomAnchor.constraintEqualToAnchor(
-            this.superview!!.bottomAnchor,
-            constant = -spacings.bottom
-        ).setActive(true)
-    }
-
-    private fun UIView.fillContainer(container: UIView, spacings: UIEdgeInsets = UIEdgeInsetsZero) {
-        this.translatesAutoresizingMaskIntoConstraints = false
-
-        this.leftAnchor.constraintEqualToAnchor(container.leftAnchor, constant = spacings.left)
-            .setActive(true)
-        this.topAnchor.constraintEqualToAnchor(container.topAnchor, constant = spacings.top)
-            .setActive(true)
-        this.rightAnchor.constraintEqualToAnchor(container.rightAnchor, constant = -spacings.right)
-            .setActive(true)
-        this.bottomAnchor.constraintEqualToAnchor(
-            container.bottomAnchor,
-            constant = -spacings.bottom
-        ).setActive(true)
     }
 }
 
