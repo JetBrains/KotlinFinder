@@ -24,6 +24,11 @@ object Modules {
                 name = ":mpp-library:feature:mainMap",
                 exported = true
             )
+
+            val spotSearch = MultiPlatformModule(
+                name = ":mpp-library:feature:spotSearch",
+                exported = true
+            )
         }
     }
 }

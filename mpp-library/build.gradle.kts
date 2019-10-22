@@ -21,13 +21,15 @@ android {
 val mppLibs = listOf(
     Deps.Libs.MultiPlatform.mokoCore,
     Deps.Libs.MultiPlatform.mokoResources,
-    Deps.Libs.MultiPlatform.mokoMvvm
+    Deps.Libs.MultiPlatform.mokoMvvm,
+    Deps.Libs.MultiPlatform.bluefalcon
 )
 val mppModules = listOf(
     Modules.MultiPlatform.domain,
     Modules.MultiPlatform.Feature.auth,
     Modules.MultiPlatform.Feature.news,
-    Modules.MultiPlatform.Feature.mainMap
+    Modules.MultiPlatform.Feature.mainMap,
+    Modules.MultiPlatform.Feature.spotSearch
 )
 
 dependencies {

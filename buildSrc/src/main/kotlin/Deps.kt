@@ -53,6 +53,13 @@ object Deps {
                 common = "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${Versions.Libs.MultiPlatform.coroutines}",
                 ios = "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:${Versions.Libs.MultiPlatform.coroutines}"
             )
+
+            val bluefalcon = MultiPlatformLibrary(
+                android = "dev.bluefalcon:library-android:0.5.1",
+                common = "dev.bluefalcon:library:0.5.1",
+                ios = "dev.bluefalcon:library-ios:0.5.1"
+            )
+
             val serialization = MultiPlatformLibrary(
                 android = "org.jetbrains.kotlinx:kotlinx-serialization-runtime:${Versions.Libs.MultiPlatform.serialization}",
                 common = "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:${Versions.Libs.MultiPlatform.serialization}",

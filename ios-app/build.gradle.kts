@@ -82,11 +82,13 @@ dependencies {
         "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoResources.iosX64!!)
         "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoCore.iosX64!!)
         "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoMvvm.iosX64!!)
+        "iosMainImplementation"(Deps.Libs.MultiPlatform.bluefalcon.iosX64!!)
     } else {
         "iosMainImplementation"(Deps.Libs.MultiPlatform.coroutines.iosArm64!!)
         "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoResources.iosArm64!!)
         "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoCore.iosArm64!!)
         "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoMvvm.iosArm64!!)
+        "iosMainImplementation"(Deps.Libs.MultiPlatform.bluefalcon.iosArm64!!)
     }
 
     "iosMainImplementation"(project(Modules.MultiPlatform.Feature.mainMap.name))

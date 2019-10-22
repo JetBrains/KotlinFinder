@@ -33,5 +33,6 @@ listOf(
     Modules.MultiPlatform.domain,
     Modules.MultiPlatform.Feature.auth,
     Modules.MultiPlatform.Feature.news,
-    Modules.MultiPlatform.Feature.mainMap
+    Modules.MultiPlatform.Feature.mainMap,
+    Modules.MultiPlatform.Feature.spotSearch
 ).forEach { include(it.name) }
