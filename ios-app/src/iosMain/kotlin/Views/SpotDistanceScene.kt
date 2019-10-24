@@ -17,10 +17,13 @@ import kotlin.random.Random
 
 
 class SpotDistanceScene: SKScene {
-    private var barNodes: MutableList<SKShapeNode> = mutableListOf()
+    private var barNodes: NSMutableArray = NSMutableArray()
     private var glowNodes: NSMutableArray = NSMutableArray()
 
-    private var distance: CGFloat = 1.0
+    private var initialBarHeight: CGFloat = 10.0
+
+    var distance: Float = 1.0f
+
 
     @OverrideInit
     constructor(coder: NSCoder) : super(coder)
@@ -72,10 +75,7 @@ class SpotDistanceScene: SKScene {
 
             this.addChild(bar)
 
-            println(this.barNodes)
-            println(bar)
-
-            this.barNodes.add(bar)
+            this.barNodes.addObject(bar)
             this.glowNodes.addObject(glow)
         }
 
@@ -84,24 +84,48 @@ class SpotDistanceScene: SKScene {
 
     }
 
-   /* override fun update(currentTime: NSTimeInterval) {
+    override fun update(currentTime: NSTimeInterval) {
         super.update(currentTime)
 
         for (i: Int in 0..(this.barNodes.count - 1u).toInt()) {
             val barNode: SKShapeNode =
                 (this.barNodes.objectAtIndex(i.toULong()) as? SKShapeNode) ?: return
 
+            if (barNode.hasActions()) {
+                continue
+            }
 
+            val scaleFactor: Float = (0.5f + Random.nextFloat()) * this.distance
+            val newHeight: CGFloat = this.initialBarHeight * scaleFactor
+            val newY: CGFloat = CGRectGetHeight(this.frame) / 2.0 - newHeight
+            var duration: NSTimeInterval = 0.2 + Random.nextFloat() * (0.2f * (if (Random.nextInt() % 2 == 0) 1 else -1).toFloat())
+
+            if (duration < 0.1)
+                duration = 0.5
+
+            val scaleAnimation: SKAction = SKAction.scaleYTo(scale = scaleFactor.toDouble(), duration = duration)
+            val moveAnimation: SKAction = SKAction.moveToY(y = newY, duration = duration)
+
+            val unScaleAnimation: SKAction = scaleAnimation.reversedAction()
+            val unMoveAnimation: SKAction = moveAnimation.reversedAction()
+
+            val actionsSeq: SKAction = SKAction.sequence(listOf(
+                SKAction.group(listOf(scaleAnimation, moveAnimation)),
+                SKAction.group(listOf(unScaleAnimation, unMoveAnimation))))
+
+            barNode.runAction(actionsSeq, completion = {
+                barNode.removeAllActions()
+            })
         }
-    }*/
+    }
 
-    fun setDistance(distance: Float) {
+    /*fun setDistance(distance: Float) {
         this.startAnimation(distance)
     }
 
     private fun startAnimation(distance: Float) {
-        for (i: Int in 0..(this.barNodes.count() - 1).toInt()) {
-            val barNode: SKShapeNode = this.barNodes[i] //(this.barNodes.objectAtIndex(i.toULong()) as? SKShapeNode) ?: return
+        for (i: Int in 0..(this.barNodes.count() - 1u).toInt()) {
+            val barNode: SKShapeNode = (this.barNodes.objectAtIndex(i.toULong()) as? SKShapeNode) ?: return
 
             barNode.removeAllActions()
 
@@ -131,7 +155,7 @@ class SpotDistanceScene: SKScene {
                 SKAction.sequence(listOf(SKAction.group(listOf(scaleAnimation, moveAnimation)),
                     SKAction.group(listOf(unScaleAnimation, unMoveAnimation))))))
         }
-    }
+    }*/
 
     private fun createBar(width: CGFloat, height: CGFloat): Pair<SKShapeNode, SKEffectNode> {
         val bar: SKShapeNode = SKShapeNode.shapeNodeWithRect(
@@ -163,3 +187,10 @@ class SpotDistanceScene: SKScene {
         this.barNodes.removeAllObjects()*/
     }
 }
+
+
+data class Bar (
+    val topPart: SKShapeNode,
+    val middlePart: SKShapeNode,
+    val bottomPart: SKShapeNode
+)

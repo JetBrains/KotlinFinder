@@ -3,6 +3,7 @@ package Screens
 import Views.SpotDistanceScene
 import common.centerInSuperview
 import common.fillSuperview
+import dev.icerock.moko.core.Timer
 import platform.CoreGraphics.CGRectGetWidth
 import platform.Foundation.NSCoder
 import platform.SpriteKit.SKSceneScaleMode
@@ -75,9 +76,12 @@ class SpotSearchViewController: UIViewController {
 
         this.setSearchMode(true)
 
-        dispatch_after(DISPATCH_TIME_NOW + 5u ,dispatch_get_main_queue(), {
-            this.spotSearchScene.setDistance(2.0f)
-        })
+        Timer(5000, block = {
+            this.spotSearchScene.distance = 5.0f
+            this.spotSearchViewContainer.setNeedsDisplay()
+
+            false
+        }).start()
 
     }
 
