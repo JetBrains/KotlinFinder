@@ -1,4 +1,5 @@
 import Screens.MainScreenViewController
+import Screens.SpotSearchViewController
 import com.icerockdev.jetfinder.feature.mainMap.di.Factory
 import platform.UIKit.*
 
@@ -21,7 +22,7 @@ class AppDelegate : UIResponder, UIApplicationDelegateProtocol {
         val vc: MainScreenViewController = MainScreenViewController()
         vc.bindViewModel(Factory().createMapViewModel())
 
-        window!!.rootViewController = vc
+        window!!.rootViewController = SpotSearchViewController()
         window!!.makeKeyAndVisible()
         return true
     }

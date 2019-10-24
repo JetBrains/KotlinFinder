@@ -20,8 +20,6 @@ class SpotDistanceScene: SKScene {
     private var barNodes: MutableList<SKShapeNode> = mutableListOf()
     private var glowNodes: NSMutableArray = NSMutableArray()
 
-    private var array: MutableList<UIView> = mutableListOf()
-
     private var distance: CGFloat = 1.0
 
     @OverrideInit
@@ -38,7 +36,6 @@ class SpotDistanceScene: SKScene {
 
         this.backgroundColor = UIColor.clearColor
 
-        this.array.add(UIView())
     }
 
     override fun didChangeSize(oldSize: CValue<CGSize>) {
@@ -75,6 +72,9 @@ class SpotDistanceScene: SKScene {
 
             this.addChild(bar)
 
+            println(this.barNodes)
+            println(bar)
+
             this.barNodes.add(bar)
             this.glowNodes.addObject(glow)
         }
@@ -84,11 +84,16 @@ class SpotDistanceScene: SKScene {
 
     }
 
-    override fun update(currentTime: NSTimeInterval) {
+   /* override fun update(currentTime: NSTimeInterval) {
         super.update(currentTime)
 
+        for (i: Int in 0..(this.barNodes.count - 1u).toInt()) {
+            val barNode: SKShapeNode =
+                (this.barNodes.objectAtIndex(i.toULong()) as? SKShapeNode) ?: return
 
-    }
+
+        }
+    }*/
 
     fun setDistance(distance: Float) {
         this.startAnimation(distance)
@@ -96,7 +101,7 @@ class SpotDistanceScene: SKScene {
 
     private fun startAnimation(distance: Float) {
         for (i: Int in 0..(this.barNodes.count() - 1).toInt()) {
-            val barNode: SKShapeNode = this.barNodes[i]//(this.barNodes.objectAtIndex(i.toULong()) as? SKShapeNode) ?: return
+            val barNode: SKShapeNode = this.barNodes[i] //(this.barNodes.objectAtIndex(i.toULong()) as? SKShapeNode) ?: return
 
             barNode.removeAllActions()
 
@@ -151,7 +156,7 @@ class SpotDistanceScene: SKScene {
     }
 
     private fun clearScene() {
-       /* for (i: Int in 0..(this.barNodes.count - 1u).toInt()) {
+        /*for (i: Int in 0..(this.barNodes.count - 1u).toInt()) {
             (this.barNodes.objectAtIndex(i.toULong()) as? SKShapeNode)?.removeFromParent()
         }
 
