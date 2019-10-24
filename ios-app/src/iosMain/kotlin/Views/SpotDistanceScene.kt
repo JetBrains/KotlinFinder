@@ -27,9 +27,9 @@ class SpotDistanceScene: SKScene {
     )
 
     private val bars: NSMutableArray = NSMutableArray()
-    private val initialBarHeight: CGFloat = 20.0
+    private val initialBarHeight: CGFloat = 10.0
 
-    var distance: Float = 1.0f
+    var distance: Float = 5.0f
 
 
     @OverrideInit
@@ -62,10 +62,6 @@ class SpotDistanceScene: SKScene {
         val barHeight: CGFloat = this.initialBarHeight
         val barWidth: CGFloat = width / barsCount / 2.0
         val barsSpacing: CGFloat = barWidth
-
-        println("width: ${CGRectGetWidth(this.frame)}\n")
-        println("bar width: $barWidth\n")
-        println("bars count: $barsCount\n")
 
         for (i in 0..barsCount) {
             val bar: Bar = this.createBar(width = barWidth, height = barHeight)
@@ -113,10 +109,10 @@ class SpotDistanceScene: SKScene {
             val scaleFactor: Float = (0.5f + Random.nextFloat()) * this.distance
             val newHeight: CGFloat = this.initialBarHeight * scaleFactor
             val newY: CGFloat = CGRectGetHeight(this.frame) / 2.0 - newHeight / 2.0
-            var duration: NSTimeInterval = 0.2 + Random.nextFloat() * (0.2f * (if (Random.nextInt() % 2 == 0) 1 else -1).toFloat())
+            var duration: NSTimeInterval = 0.1 + Random.nextFloat() * (0.1f * (if (Random.nextInt() % 2 == 0) 1 else -1).toFloat())
 
             if (duration < 0.1)
-                duration = 0.5
+                duration = 0.2
 
             val scaleAnimation: SKAction = SKAction.scaleYTo(scale = scaleFactor.toDouble(), duration = duration)
             val moveAnimation: SKAction = SKAction.moveToY(y = newY, duration = duration)
@@ -163,6 +159,7 @@ class SpotDistanceScene: SKScene {
 
         val glow: SKEffectNode = SKEffectNode()
         glow.shouldRasterize = true
+        glow.shouldEnableEffects = true
         bar.addChild(glow)
 
         val view: SKView = SKView()
@@ -170,7 +167,8 @@ class SpotDistanceScene: SKScene {
         glow.addChild(SKSpriteNode(view.textureFromNode(bar)))
         glow.filter = CIFilter.filterWithName(
             name ="CIGaussianBlur",
-            withInputParameters = mapOf("inputRadius" to 4.0))
+            withInputParameters = mapOf("inputRadius" to 2.0))
+        glow.zPosition = -1.0
 
         return Bar(circlePart, bar, circlePart.copy() as SKShapeNode, glow)
     }
