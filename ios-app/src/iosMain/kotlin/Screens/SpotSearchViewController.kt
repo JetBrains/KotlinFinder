@@ -20,6 +20,19 @@ class SpotSearchViewController: UIViewController {
     private val spotSearchViewContainer: SKView = SKView()
     private val spotSearchScene: SpotDistanceScene = SpotDistanceScene()
 
+    private val updateTimer = Timer(500) {
+        this.spotSearchScene.distance -= 0.25f
+        
+        if(spotSearchScene.distance < 0) {
+            spotSearchScene.distance = 10f
+        }
+        
+        println("dist: ${spotSearchScene.distance}")
+        this.spotSearchViewContainer.setNeedsDisplay()
+
+        true
+    }
+
     @OverrideInit
     constructor() : super(nibName = null, bundle = null)
 
@@ -76,13 +89,9 @@ class SpotSearchViewController: UIViewController {
 
         this.setSearchMode(true)
 
-        Timer(5000, block = {
-            this.spotSearchScene.distance = 5.0f
-            this.spotSearchViewContainer.setNeedsDisplay()
-
-            false
-        }).start()
-
+        this.spotSearchScene.distance = 10f
+        
+        updateTimer.start()
     }
 
     override fun viewDidLayoutSubviews() {
