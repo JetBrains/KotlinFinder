@@ -19,10 +19,13 @@ class AppDelegate : UIResponder, UIApplicationDelegateProtocol {
         println("application")
         window = UIWindow(frame = UIScreen.mainScreen.bounds)
 
+
         val vc: MainScreenViewController = MainScreenViewController()
         vc.bindViewModel(Factory().createMapViewModel())
 
-        window!!.rootViewController = SpotSearchViewController()
+        val navigationController: UINavigationController = UINavigationController(rootViewController = vc)
+
+        window!!.rootViewController = navigationController
         window!!.makeKeyAndVisible()
         return true
     }
