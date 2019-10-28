@@ -92,12 +92,15 @@ dependencies {
     }
 
     "iosMainImplementation"(project(Modules.MultiPlatform.Feature.mainMap.name))
+    "iosMainImplementation"(project(Modules.MultiPlatform.Feature.spotSearch.name))
+    "iosMainImplementation"(project(Modules.MultiPlatform.library))
+    //projectModule(Modules.MultiPlatform.library)
 }
 
 
 
 val xcodeIntegrationGroup: String = "Xcode integration"
-val xcodeBundleId = "org.jetbrains.kotlin.native-demo"
+val xcodeBundleId = "org.jetbrains.kotlin.native-demo0"
 
 val targetBuildDir: String? = System.getenv("TARGET_BUILD_DIR")
 val executablePath: String? = System.getenv("EXECUTABLE_PATH")

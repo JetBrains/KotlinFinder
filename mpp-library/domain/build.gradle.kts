@@ -36,6 +36,8 @@ dependencies {
 
     mppLibrary(Deps.Libs.MultiPlatform.settings)
     mppLibrary(Deps.Libs.MultiPlatform.napier)
+
+    mppLibrary(Deps.Libs.MultiPlatform.bluefalcon)
 }
 
 openApiGenerate {

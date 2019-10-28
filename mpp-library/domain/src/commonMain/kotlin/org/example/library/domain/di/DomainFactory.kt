@@ -6,6 +6,7 @@ package org.example.library.domain.di
 
 import com.github.aakira.napier.Napier
 import com.russhwolf.settings.Settings
+import dev.bluefalcon.ApplicationContext
 import dev.icerock.moko.network.exceptionfactory.HttpExceptionFactory
 import dev.icerock.moko.network.exceptionfactory.parser.ErrorExceptionParser
 import dev.icerock.moko.network.exceptionfactory.parser.ValidationExceptionParser
@@ -19,13 +20,15 @@ import io.ktor.client.features.logging.Logging
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.json.Json
 import org.example.library.domain.repository.NewsRepository
+import org.example.library.domain.repository.SpotSearchRepository
 import org.example.library.domain.storage.KeyValueStorage
 
-class Factory(
-    private val settings: Settings,
+class DomainFactory(
+   // private val settings: Settings,
+    private val context: ApplicationContext,
     private val baseUrl: String
 ) {
-    private val keyValueStorage: KeyValueStorage by lazy { KeyValueStorage(settings) }
+   // private val keyValueStorage: KeyValueStorage by lazy { KeyValueStorage(settings) }
 
     private val json: Json by lazy {
         @Suppress("EXPERIMENTAL_API_USAGE")
@@ -73,5 +76,9 @@ class Factory(
 
     val newsRepository: NewsRepository by lazy {
         NewsRepository(newsApi = newsApi)
+    }
+
+    val spotSearchRepository: SpotSearchRepository by lazy {
+        SpotSearchRepository(context)
     }
 }

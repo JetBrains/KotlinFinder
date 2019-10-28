@@ -1,12 +1,14 @@
 package com.icerockdev.jetfinder.feature.mainMap.di
 
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
+import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 
 
-class Factory {
+class MapViewModelFactory {
 
-    fun createMapViewModel(): MapViewModel {
-        return MapViewModel()
+    fun createMapViewModel(
+        eventsDispatcher: EventsDispatcher<MapViewModel.EventsListener>
+    ): MapViewModel {
+        return MapViewModel(eventsDispatcher = eventsDispatcher)
     }
-
 }

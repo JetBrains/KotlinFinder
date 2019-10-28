@@ -4,22 +4,14 @@
 
 object Modules {
     object MultiPlatform {
+        const val library = ":mpp-library"
+
         val domain = MultiPlatformModule(
             name = ":mpp-library:domain",
             exported = true
         )
 
         object Feature {
-            val auth = MultiPlatformModule(
-                name = ":mpp-library:feature:auth",
-                exported = true
-            )
-
-            val news = MultiPlatformModule(
-                name = ":mpp-library:feature:news",
-                exported = true
-            )
-
             val mainMap = MultiPlatformModule(
                 name = ":mpp-library:feature:mainMap",
                 exported = true

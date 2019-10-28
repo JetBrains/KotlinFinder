@@ -1,0 +1,4 @@
+package common
+
+class AppCoordinator {
+}
