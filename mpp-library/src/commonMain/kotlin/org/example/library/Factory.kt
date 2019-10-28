@@ -6,17 +6,18 @@ package org.example.library
 
 import com.icerockdev.jetfinder.feature.mainMap.di.MapViewModelFactory
 import com.icerockdev.jetfinder.feature.spotSearch.di.SpotSearchViewModelFactory
+import com.russhwolf.settings.Settings
 import dev.bluefalcon.ApplicationContext
 import org.example.library.domain.di.DomainFactory
 
 
 class Factory(
     context: ApplicationContext,
-   // settings: Settings,
+    settings: Settings,
     baseUrl: String
 ) {
     private val domainFactory = DomainFactory(
-       // settings = settings,
+        settings = settings,
         baseUrl = baseUrl,
         context = context
     )

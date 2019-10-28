@@ -1,5 +1,7 @@
+import com.russhwolf.settings.AppleSettings
 import common.AppCoordinator
 import org.example.library.Factory
+import platform.Foundation.NSUserDefaults
 import platform.UIKit.*
 
 
@@ -17,7 +19,10 @@ class AppDelegate : UIResponder, UIApplicationDelegateProtocol {
         println("application")
         window = UIWindow(frame = UIScreen.mainScreen.bounds)
 
-        val factory: Factory = Factory(context = UIView(), baseUrl = "")
+        val factory: Factory = Factory(
+            context = UIView(),
+            baseUrl = "",
+            settings = AppleSettings(delegate = NSUserDefaults.standardUserDefaults()))
 
         this.coordinator = AppCoordinator(this.window!!, factory)
 

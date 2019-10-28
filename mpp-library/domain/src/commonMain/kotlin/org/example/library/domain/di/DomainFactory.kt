@@ -23,11 +23,11 @@ import org.example.library.domain.repository.SpotSearchRepository
 import org.example.library.domain.storage.KeyValueStorage
 
 class DomainFactory(
-   // private val settings: Settings,
+    private val settings: Settings,
     private val context: ApplicationContext,
     private val baseUrl: String
 ) {
-   // private val keyValueStorage: KeyValueStorage by lazy { KeyValueStorage(settings) }
+    private val keyValueStorage: KeyValueStorage by lazy { KeyValueStorage(settings) }
 
     private val json: Json by lazy {
         @Suppress("EXPERIMENTAL_API_USAGE")
