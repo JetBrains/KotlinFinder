@@ -1,28 +1,33 @@
-import Screens.MainScreenViewController
-import com.icerockdev.jetfinder.feature.mainMap.di.Factory
+import common.AppCoordinator
+import org.example.library.Factory
 import platform.UIKit.*
+
 
 class AppDelegate : UIResponder, UIApplicationDelegateProtocol {
     companion object : UIResponderMeta(), UIApplicationDelegateProtocolMeta {}
 
-    @OverrideInit
-    constructor() : super()
-
     private var _window: UIWindow? = null
     override fun window() = _window
-    override fun setWindow(window: UIWindow?) {
-        _window = window
-    }
+    private lateinit var coordinator: AppCoordinator
+
+    @OverrideInit
+    constructor() : super()
 
     override fun application(application: UIApplication, didFinishLaunchingWithOptions: Map<Any?, *>?): Boolean {
         println("application")
         window = UIWindow(frame = UIScreen.mainScreen.bounds)
 
-        val vc: MainScreenViewController = MainScreenViewController()
-        vc.bindViewModel(Factory().createMapViewModel())
+        val factory: Factory = Factory(context = UIView(), baseUrl = "")
 
-        window!!.rootViewController = vc
-        window!!.makeKeyAndVisible()
+        this.coordinator = AppCoordinator(this.window!!, factory)
+
+        this.coordinator.start()
+
         return true
     }
+
+    override fun setWindow(window: UIWindow?) {
+        _window = window
+    }
 }
+

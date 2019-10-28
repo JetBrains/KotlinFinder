@@ -1,6 +1,7 @@
-package Screens
+package screens
 
-import Views.SpotDistanceView
+import views.SpotDistanceView
+import com.icerockdev.jetfinder.feature.spotSearch.presentation.SpotSearchViewModel
 import common.centerInSuperview
 import common.fillSuperview
 import platform.CoreGraphics.CGRectMake
@@ -14,6 +15,8 @@ class SpotSearchViewController: UIViewController {
     private val instructionLabel: UILabel = UILabel()
     private val successImageView: UIImageView = UIImageView(UIImage.imageNamed("spotFound"))
     private val spotSearchView: SpotDistanceView = SpotDistanceView(frame = CGRectMake(0.0, 0.0, 0.0, 0.0))
+
+    private lateinit var viewModel: SpotSearchViewModel
 
     @OverrideInit
     constructor() : super(nibName = null, bundle = null)
@@ -68,6 +71,16 @@ class SpotSearchViewController: UIViewController {
         labelsStackView.widthAnchor.constraintLessThanOrEqualToAnchor(this.view.widthAnchor, multiplier = 0.8, constant = 0.0).setActive(true)
 
         this.setSearchMode(true)
+    }
+
+    override fun viewWillAppear(animated: Boolean) {
+        super.viewWillAppear(animated)
+
+        this.navigationController?.setNavigationBarHidden(false, animated = false)
+    }
+
+    fun bindViewModel(viewModel: SpotSearchViewModel) {
+        this.viewModel = viewModel
     }
 
     private fun setSearchMode(searchMode: Boolean) {

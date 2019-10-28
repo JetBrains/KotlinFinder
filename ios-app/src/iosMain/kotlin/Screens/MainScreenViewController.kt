@@ -1,7 +1,7 @@
-package Screens
+package screens
 
-import Views.CollectWordView
-import Views.CommonButton
+import views.CollectWordView
+import views.CommonButton
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import common.fillContainer
 import common.fillSuperview
@@ -142,6 +142,12 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         )
     }
 
+    override fun viewWillAppear(animated: Boolean) {
+        super.viewWillAppear(animated)
+
+        this.navigationController?.setNavigationBarHidden(true, animated = false)
+    }
+
     override fun viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -204,46 +210,3 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         return this.mapImageView
     }
 }
-
-/*
-class MapViewModel: ViewModel() {
-
-    enum class FindTaskButtonState {
-        TOO_FAR,
-        ACTIVE,
-        COMPLETED
-    }
-
-    val stepsCount: Int = 6
-
-    private val _findTaskButtonState: MutableLiveData<FindTaskButtonState> = MutableLiveData(FindTaskButtonState.TOO_FAR)
-    val findTaskButtonState: LiveData<FindTaskButtonState> = _findTaskButtonState.readOnly()
-
-    private val _currentStep: MutableLiveData<Int> = MutableLiveData(0)
-    val currentStep: LiveData<Int> = _currentStep.readOnly()
-
-    fun start() {
-        doDelay()
-    }
-
-    fun findTaskButtonTapped() {
-        if (_currentStep.value == stepsCount) {
-            _findTaskButtonState.value = FindTaskButtonState.COMPLETED
-        } else {
-            _currentStep.value += 1
-
-            doDelay()
-        }
-    }
-
-    private fun doDelay() {
-        _findTaskButtonState.value = FindTaskButtonState.TOO_FAR
-
-        val timer: Timer = Timer(2 * 1000, block = {
-            _findTaskButtonState.value = FindTaskButtonState.ACTIVE
-            false
-        })
-
-        timer.start()
-    }
-}*/

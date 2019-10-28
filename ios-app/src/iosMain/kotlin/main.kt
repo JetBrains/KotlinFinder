@@ -1,4 +1,3 @@
-import Screens.MainScreenViewController
 import kotlinx.cinterop.*
 import platform.Foundation.*
 import platform.UIKit.*

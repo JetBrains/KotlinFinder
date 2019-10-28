@@ -1,4 +1,4 @@
-package Views
+package views
 
 import kotlinx.cinterop.CValue
 import platform.CoreGraphics.CGRect

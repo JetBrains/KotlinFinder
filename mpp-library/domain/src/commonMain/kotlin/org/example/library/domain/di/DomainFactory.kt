@@ -19,7 +19,6 @@ import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.Logging
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.json.Json
-import org.example.library.domain.repository.NewsRepository
 import org.example.library.domain.repository.SpotSearchRepository
 import org.example.library.domain.storage.KeyValueStorage
 
@@ -72,10 +71,6 @@ class DomainFactory(
             httpClient = httpClient,
             json = json
         )
-    }
-
-    val newsRepository: NewsRepository by lazy {
-        NewsRepository(newsApi = newsApi)
     }
 
     val spotSearchRepository: SpotSearchRepository by lazy {
