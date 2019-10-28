@@ -55,9 +55,9 @@ object Deps {
             )
 
             val bluefalcon = MultiPlatformLibrary(
-                android = "dev.bluefalcon:library-android:0.5.1",
                 common = "dev.bluefalcon:library:0.5.1",
-                ios = "dev.bluefalcon:library-ios:0.5.1"
+                iosArm64 = "dev.bluefalcon:library-iosarm64:0.5.1",
+                iosX64 = "dev.bluefalcon:library-iosx64:0.5.1"
             )
 
             val serialization = MultiPlatformLibrary(
