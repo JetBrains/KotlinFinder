@@ -1,3 +1,5 @@
+import Deps.Plugins.androidExtensions
+
 /*
  * Copyright 2019 IceRock MAG Inc. Use of this source code is governed by the Apache 2.0 license.
  */
@@ -5,8 +7,12 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.multiplatform")
+    id("kotlin-android-extensions")
     id("dev.icerock.mobile.multiplatform")
-    //id("dev.icerock.mobile.multiplatform-resources")
+}
+
+androidExtensions {
+    isExperimental = true
 }
 
 android {
@@ -18,28 +24,12 @@ android {
     }
 }
 
-val mppLibs = listOf(
-    Deps.Libs.MultiPlatform.mokoCore,
-    Deps.Libs.MultiPlatform.mokoResources,
-    Deps.Libs.MultiPlatform.mokoMvvm
-)
-val mppModules = listOf(
-    Modules.MultiPlatform.domain,
-    Modules.MultiPlatform.Feature.auth,
-    Modules.MultiPlatform.Feature.news,
-    Modules.MultiPlatform.Feature.mainMap
-)
-
 dependencies {
     mppLibrary(Deps.Libs.MultiPlatform.kotlinStdLib)
     mppLibrary(Deps.Libs.MultiPlatform.coroutines)
 
     androidLibrary(Deps.Libs.Android.lifecycle)
 
-    mppLibs.forEach { mppLibrary(it) }
-    mppModules.forEach { mppModule(it) }
+    mppLibrary(Deps.Libs.MultiPlatform.mokoMvvm)
+    mppLibrary(Deps.Libs.MultiPlatform.mokoResources)
 }
-
-/*multiplatformResources {
-    multiplatformResourcesPackage = "org.example.library"
-}*/
