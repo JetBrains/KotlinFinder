@@ -94,7 +94,6 @@ dependencies {
     "iosMainImplementation"(project(Modules.MultiPlatform.Feature.mainMap.name))
     "iosMainImplementation"(project(Modules.MultiPlatform.Feature.spotSearch.name))
     "iosMainImplementation"(project(Modules.MultiPlatform.library))
-    //projectModule(Modules.MultiPlatform.library)
 }
 
 

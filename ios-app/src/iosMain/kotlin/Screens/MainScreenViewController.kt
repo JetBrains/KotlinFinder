@@ -1,8 +1,8 @@
 package screens
 
+import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import views.CollectWordView
 import views.CommonButton
-import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import common.fillContainer
 import common.fillSuperview
 import kotlinx.cinterop.ObjCAction

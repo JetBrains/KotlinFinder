@@ -13,7 +13,7 @@ object Modules {
 
         object Feature {
             val mainMap = MultiPlatformModule(
-                name = ":mpp-library:feature:mainMap",
+                name = ":mpp-library:feature:main-map",
                 exported = true
             )
 

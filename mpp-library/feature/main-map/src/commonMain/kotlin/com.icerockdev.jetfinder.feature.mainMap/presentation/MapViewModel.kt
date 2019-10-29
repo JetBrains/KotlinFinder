@@ -8,6 +8,8 @@ import dev.icerock.moko.mvvm.livedata.LiveData
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.livedata.readOnly
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class MapViewModel(
@@ -51,13 +53,10 @@ class MapViewModel(
     }
 
     private fun doDelay() {
-        _findTaskButtonState.value = FindTaskButtonState.TOO_FAR
-
-        val timer: Timer = Timer(2 * 1000, block = {
+        coroutineScope.launch {
+            _findTaskButtonState.value = FindTaskButtonState.TOO_FAR
+            delay(2000)
             _findTaskButtonState.value = FindTaskButtonState.ACTIVE
-            false
-        })
-
-        timer.start()
+        }
     }
 }
