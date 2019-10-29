@@ -33,6 +33,7 @@ dependencies {
 
     mppLibrary(Deps.Libs.MultiPlatform.mokoCore)
     mppLibrary(Deps.Libs.MultiPlatform.mokoNetwork)
+    mppLibrary(Deps.Libs.MultiPlatform.mokoMvvm)
 
     mppLibrary(Deps.Libs.MultiPlatform.settings)
     mppLibrary(Deps.Libs.MultiPlatform.napier)

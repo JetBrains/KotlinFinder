@@ -1,5 +1,6 @@
 package com.icerockdev.jetfinder.feature.mainMap.presentation
 
+import dev.bluefalcon.BluetoothPeripheral
 import dev.icerock.moko.core.Timer
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcherOwner

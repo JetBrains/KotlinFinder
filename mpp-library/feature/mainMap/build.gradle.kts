@@ -32,4 +32,6 @@ dependencies {
 
     mppLibrary(Deps.Libs.MultiPlatform.mokoMvvm)
     mppLibrary(Deps.Libs.MultiPlatform.mokoResources)
+
+    mppModule(Modules.MultiPlatform.domain)
 }

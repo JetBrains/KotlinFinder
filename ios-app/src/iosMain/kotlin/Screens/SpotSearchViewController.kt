@@ -81,6 +81,8 @@ class SpotSearchViewController: UIViewController {
 
     fun bindViewModel(viewModel: SpotSearchViewModel) {
         this.viewModel = viewModel
+
+        viewModel.start()
     }
 
     private fun setSearchMode(searchMode: Boolean) {
