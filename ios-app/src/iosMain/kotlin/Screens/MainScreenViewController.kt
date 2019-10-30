@@ -1,8 +1,6 @@
 package screens
 
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
-import views.CollectWordView
-import views.CommonButton
 import common.fillContainer
 import common.fillSuperview
 import kotlinx.cinterop.ObjCAction
@@ -12,6 +10,8 @@ import platform.Foundation.NSCoder
 import platform.Foundation.NSNumber
 import platform.QuartzCore.CAShapeLayer
 import platform.UIKit.*
+import views.CollectWordView
+import views.CommonButton
 
 
 class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol {

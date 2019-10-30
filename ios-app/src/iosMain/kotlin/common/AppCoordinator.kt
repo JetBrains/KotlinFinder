@@ -1,12 +1,13 @@
 package common
 
-import screens.MainScreenViewController
-import screens.SpotSearchViewController
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import com.icerockdev.jetfinder.feature.spotSearch.presentation.SpotSearchViewModel
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import org.example.library.Factory
-import platform.UIKit.*
+import platform.UIKit.UINavigationController
+import platform.UIKit.UIWindow
+import screens.MainScreenViewController
+import screens.SpotSearchViewController
 
 
 open class BasicCoordinator(
@@ -26,11 +27,14 @@ open class BasicCoordinator(
 class AppCoordinator(
     window: UIWindow,
     factory: Factory
-): BasicCoordinator(window, factory), MapViewModel.EventsListener {
+) : BasicCoordinator(window, factory), MapViewModel.EventsListener {
 
     override fun start() {
         // TODO: set navbar tint color
-        this.navigationController.setViewControllers(listOf(this.createMainScreen()), animated = false)
+        this.navigationController.setViewControllers(
+            listOf(this.createMainScreen()),
+            animated = false
+        )
         this.window.rootViewController = this.navigationController
         this.window.makeKeyAndVisible()
     }

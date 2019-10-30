@@ -3,10 +3,9 @@ package views
 import kotlinx.cinterop.CValue
 import platform.CoreGraphics.CGRect
 import platform.Foundation.NSCoder
-import platform.Foundation.NSMutableAttributedString
 import platform.UIKit.*
 
-class CommonButton: UIButton {
+class CommonButton : UIButton {
     enum class Style {
         ORANGE,
         GRAY
@@ -15,10 +14,10 @@ class CommonButton: UIButton {
     private var style: Style = Style.ORANGE
 
     @OverrideInit
-    constructor(coder: NSCoder): super(coder)
+    constructor(coder: NSCoder) : super(coder)
 
     @OverrideInit
-    constructor(frame: CValue<CGRect>): super(frame) {
+    constructor(frame: CValue<CGRect>) : super(frame) {
         this.layer.cornerRadius = 16.0
     }
 

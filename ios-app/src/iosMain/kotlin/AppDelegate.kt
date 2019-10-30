@@ -15,7 +15,10 @@ class AppDelegate : UIResponder, UIApplicationDelegateProtocol {
     @OverrideInit
     constructor() : super()
 
-    override fun application(application: UIApplication, didFinishLaunchingWithOptions: Map<Any?, *>?): Boolean {
+    override fun application(
+        application: UIApplication,
+        didFinishLaunchingWithOptions: Map<Any?, *>?
+    ): Boolean {
         println("application")
         window = UIWindow(frame = UIScreen.mainScreen.bounds)
 

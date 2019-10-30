@@ -1,13 +1,10 @@
 package org.example.library.domain.repository
 
 import dev.bluefalcon.*
-import dev.bluefalcon.ApplicationContext
-import dev.icerock.moko.mvvm.livedata.MutableLiveData
-
 
 class SpotSearchRepository(
     context: ApplicationContext
-): BlueFalconDelegate {
+) : BlueFalconDelegate {
     private val bf: BlueFalcon = BlueFalcon(context, null)
 
     fun startScanning() {
@@ -44,13 +41,30 @@ class SpotSearchRepository(
         println("peripheral: ${bluetoothPeripheral.name}, RSSI: ${bluetoothPeripheral.rssi}")
     }
 
-    override fun didConnect(bluetoothPeripheral: BluetoothPeripheral) {println("a")}
-    override fun didDisconnect(bluetoothPeripheral: BluetoothPeripheral) {println("a")}
-    override fun didDiscoverServices(bluetoothPeripheral: BluetoothPeripheral) {println("a")}
-    override fun didDiscoverCharacteristics(bluetoothPeripheral: BluetoothPeripheral) {println("a")}
+    override fun didConnect(bluetoothPeripheral: BluetoothPeripheral) {
+        println("a")
+    }
+
+    override fun didDisconnect(bluetoothPeripheral: BluetoothPeripheral) {
+        println("a")
+    }
+
+    override fun didDiscoverServices(bluetoothPeripheral: BluetoothPeripheral) {
+        println("a")
+    }
+
+    override fun didDiscoverCharacteristics(bluetoothPeripheral: BluetoothPeripheral) {
+        println("a")
+    }
+
     override fun didCharacteristcValueChanged(
         bluetoothPeripheral: BluetoothPeripheral,
         bluetoothCharacteristic: BluetoothCharacteristic
-    ) {println("a")}
-    override fun didUpdateMTU(bluetoothPeripheral: BluetoothPeripheral) {println("a")}
+    ) {
+        println("a")
+    }
+
+    override fun didUpdateMTU(bluetoothPeripheral: BluetoothPeripheral) {
+        println("a")
+    }
 }

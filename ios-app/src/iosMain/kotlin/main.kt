@@ -1,6 +1,8 @@
-import kotlinx.cinterop.*
-import platform.Foundation.*
-import platform.UIKit.*
+import kotlinx.cinterop.autoreleasepool
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.toCStringArray
+import platform.Foundation.NSStringFromClass
+import platform.UIKit.UIApplicationMain
 
 fun main(args: Array<String>) {
     println("in main")
