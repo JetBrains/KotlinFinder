@@ -52,7 +52,7 @@ class MapViewModel(
     }
 
     private fun doDelay() {
-        coroutineScope.launch {
+        viewModelScope.launch {
             _findTaskButtonState.value = FindTaskButtonState.TOO_FAR
             delay(2000)
             _findTaskButtonState.value = FindTaskButtonState.ACTIVE
