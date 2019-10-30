@@ -55,9 +55,9 @@ object Deps {
             )
 
             val bluefalcon = MultiPlatformLibrary(
-                common = "dev.bluefalcon:library:0.5.1",
-                iosArm64 = "dev.bluefalcon:library-iosarm64:0.5.1",
-                iosX64 = "dev.bluefalcon:library-iosx64:0.5.1"
+                common = "dev.bluefalcon:library:${Versions.Libs.MultiPlatform.bluefalcon}",
+                iosArm64 = "dev.bluefalcon:library-iosarm64:${Versions.Libs.MultiPlatform.bluefalcon}",
+                iosX64 = "dev.bluefalcon:library-iosx64:${Versions.Libs.MultiPlatform.bluefalcon}"
             )
 
             val serialization = MultiPlatformLibrary(

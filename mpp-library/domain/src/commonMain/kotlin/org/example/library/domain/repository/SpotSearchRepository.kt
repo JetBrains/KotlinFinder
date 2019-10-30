@@ -14,9 +14,10 @@ class SpotSearchRepository(
 
         this.bf.delegates.add(this)
 
-        this.bf.prepareForScan {
-            this.doScanning()
-        }
+        // disabled while library update not published
+//        this.bf.prepareForScan {
+        this.doScanning()
+//        }
     }
 
     fun stopScanning() {

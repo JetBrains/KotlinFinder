@@ -48,6 +48,8 @@ const val kotlin = "1.3.50"
 
             const val napier = "1.0.0"
             const val settings = "0.3.3"
+
+            const val bluefalcon = "0.5.2"
         }
     }
 }
