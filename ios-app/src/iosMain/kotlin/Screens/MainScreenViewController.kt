@@ -197,8 +197,6 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
                 }
             }
         }
-
-        viewModel.start()
     }
 
     @ObjCAction

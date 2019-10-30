@@ -19,7 +19,7 @@ class SpotSearchViewController : UIViewController {
     private val spotSearchViewContainer: SKView = SKView()
     private val spotSearchScene: SpotDistanceScene = SpotDistanceScene()
 
-    private val updateTimer = Timer(500) {
+    /*private val updateTimer = Timer(500) {
         this.spotSearchScene.distance -= 0.25f
 
         if (spotSearchScene.distance < 0) {
@@ -30,7 +30,7 @@ class SpotSearchViewController : UIViewController {
         this.spotSearchViewContainer.setNeedsDisplay()
 
         true
-    }
+    }*/
 
     private lateinit var viewModel: SpotSearchViewModel
 
@@ -101,9 +101,9 @@ class SpotSearchViewController : UIViewController {
 
         this.setSearchMode(true)
 
-        this.spotSearchScene.distance = 10f
+        this.spotSearchScene.distance = 5.0f
 
-        updateTimer.start()
+        //updateTimer.start()
     }
 
     override fun viewDidLayoutSubviews() {
@@ -123,6 +123,11 @@ class SpotSearchViewController : UIViewController {
         this.viewModel = viewModel
 
         viewModel.start()
+
+        viewModel.nearestBeaconDistance.addObserver { distance: Int? ->
+            this.spotSearchScene.distance =
+                this.spotSearchScene.maxDistance * (viewModel.minDistance - (distance ?: viewModel.minDistance)) / viewModel.minDistance
+        }
     }
 
     private fun setSearchMode(searchMode: Boolean) {

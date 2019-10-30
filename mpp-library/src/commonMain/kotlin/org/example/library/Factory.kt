@@ -27,6 +27,6 @@ class Factory(
     }
 
     val mapFactory: MapViewModelFactory by lazy {
-        MapViewModelFactory()
+        MapViewModelFactory(domainFactory = domainFactory)
     }
 }

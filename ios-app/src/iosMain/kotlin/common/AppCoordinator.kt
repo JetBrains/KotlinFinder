@@ -6,6 +6,7 @@ import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import org.example.library.Factory
 import platform.UIKit.UINavigationController
 import platform.UIKit.UIWindow
+import platform.UIKit.tintColor
 import screens.MainScreenViewController
 import screens.SpotSearchViewController
 
@@ -30,7 +31,8 @@ class AppCoordinator(
 ) : BasicCoordinator(window, factory), MapViewModel.EventsListener {
 
     override fun start() {
-        // TODO: set navbar tint color
+        this.window.tintColor = Colors.orange
+
         this.navigationController.setViewControllers(
             listOf(this.createMainScreen()),
             animated = false
