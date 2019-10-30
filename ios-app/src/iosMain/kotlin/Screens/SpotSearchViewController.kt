@@ -1,18 +1,17 @@
-package Screens
+package screens
 
-import Views.SpotDistanceScene
+import com.icerockdev.jetfinder.feature.spotSearch.presentation.SpotSearchViewModel
 import common.centerInSuperview
 import common.fillSuperview
 import dev.icerock.moko.core.Timer
-import platform.CoreGraphics.CGRectGetWidth
 import platform.Foundation.NSCoder
 import platform.SpriteKit.SKSceneScaleMode
 import platform.SpriteKit.SKView
 import platform.UIKit.*
-import platform.darwin.*
+import views.SpotDistanceScene
 
 
-class SpotSearchViewController: UIViewController {
+class SpotSearchViewController : UIViewController {
     private val spotSearchStatusContainerView: UIView = UIView()
     private val statusLabel: UILabel = UILabel()
     private val instructionLabel: UILabel = UILabel()
@@ -22,16 +21,18 @@ class SpotSearchViewController: UIViewController {
 
     private val updateTimer = Timer(500) {
         this.spotSearchScene.distance -= 0.25f
-        
-        if(spotSearchScene.distance < 0) {
+
+        if (spotSearchScene.distance < 0) {
             spotSearchScene.distance = 10f
         }
-        
+
         println("dist: ${spotSearchScene.distance}")
         this.spotSearchViewContainer.setNeedsDisplay()
 
         true
     }
+
+    private lateinit var viewModel: SpotSearchViewModel
 
     @OverrideInit
     constructor() : super(nibName = null, bundle = null)
@@ -48,10 +49,13 @@ class SpotSearchViewController: UIViewController {
 
         this.view.addSubview(this.spotSearchStatusContainerView)
         this.spotSearchStatusContainerView.translatesAutoresizingMaskIntoConstraints = false
-        this.spotSearchStatusContainerView.centerXAnchor.constraintEqualToAnchor(this.view.centerXAnchor).setActive(true)
-        this.spotSearchStatusContainerView.centerYAnchor.constraintEqualToAnchor(this.view.centerYAnchor).setActive(true)
+        this.spotSearchStatusContainerView.centerXAnchor.constraintEqualToAnchor(this.view.centerXAnchor)
+            .setActive(true)
+        this.spotSearchStatusContainerView.centerYAnchor.constraintEqualToAnchor(this.view.centerYAnchor)
+            .setActive(true)
 
-        val spotBackgroundImageView: UIImageView = UIImageView(UIImage.imageNamed("spotSearchBackground"))
+        val spotBackgroundImageView: UIImageView =
+            UIImageView(UIImage.imageNamed("spotSearchBackground"))
         this.spotSearchStatusContainerView.addSubview(spotBackgroundImageView)
         spotBackgroundImageView.fillSuperview()
 
@@ -83,14 +87,22 @@ class SpotSearchViewController: UIViewController {
 
         this.view.addSubview(labelsStackView)
 
-        labelsStackView.topAnchor.constraintEqualToAnchor(this.spotSearchStatusContainerView.bottomAnchor, constant = 30.0).setActive(true)
-        labelsStackView.centerXAnchor.constraintEqualToAnchor(this.view.centerXAnchor).setActive(true)
-        labelsStackView.widthAnchor.constraintLessThanOrEqualToAnchor(this.view.widthAnchor, multiplier = 0.8, constant = 0.0).setActive(true)
+        labelsStackView.topAnchor.constraintEqualToAnchor(
+            this.spotSearchStatusContainerView.bottomAnchor,
+            constant = 30.0
+        ).setActive(true)
+        labelsStackView.centerXAnchor.constraintEqualToAnchor(this.view.centerXAnchor)
+            .setActive(true)
+        labelsStackView.widthAnchor.constraintLessThanOrEqualToAnchor(
+            this.view.widthAnchor,
+            multiplier = 0.8,
+            constant = 0.0
+        ).setActive(true)
 
         this.setSearchMode(true)
 
         this.spotSearchScene.distance = 10f
-        
+
         updateTimer.start()
     }
 
@@ -101,15 +113,29 @@ class SpotSearchViewController: UIViewController {
         this.spotSearchViewContainer.presentScene(this.spotSearchScene)
     }
 
+    override fun viewWillAppear(animated: Boolean) {
+        super.viewWillAppear(animated)
+
+        this.navigationController?.setNavigationBarHidden(false, animated = false)
+    }
+
+    fun bindViewModel(viewModel: SpotSearchViewModel) {
+        this.viewModel = viewModel
+
+        viewModel.start()
+    }
+
     private fun setSearchMode(searchMode: Boolean) {
         if (searchMode) {
             this.statusLabel.text = "Searching..."
-            this.instructionLabel.text = "The more intense and stronger the vibration, the closer you are to the goal!"
+            this.instructionLabel.text =
+                "The more intense and stronger the vibration, the closer you are to the goal!"
             this.successImageView.setHidden(true)
             this.spotSearchViewContainer.setHidden(false)
         } else {
             this.statusLabel.text = "Spot found"
-            this.instructionLabel.text = "You are well done! Another letter in the control word is open"
+            this.instructionLabel.text =
+                "You are well done! Another letter in the control word is open"
             this.successImageView.setHidden(false)
             this.spotSearchViewContainer.setHidden(true)
         }

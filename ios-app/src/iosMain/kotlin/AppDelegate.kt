@@ -1,32 +1,42 @@
-import Screens.MainScreenViewController
-import Screens.SpotSearchViewController
-import com.icerockdev.jetfinder.feature.mainMap.di.Factory
+import com.russhwolf.settings.AppleSettings
+import common.AppCoordinator
+import org.example.library.Factory
+import platform.Foundation.NSUserDefaults
 import platform.UIKit.*
+
 
 class AppDelegate : UIResponder, UIApplicationDelegateProtocol {
     companion object : UIResponderMeta(), UIApplicationDelegateProtocolMeta {}
 
+    private var _window: UIWindow? = null
+    override fun window() = _window
+    private lateinit var coordinator: AppCoordinator
+
     @OverrideInit
     constructor() : super()
 
-    private var _window: UIWindow? = null
-    override fun window() = _window
-    override fun setWindow(window: UIWindow?) {
-        _window = window
-    }
-
-    override fun application(application: UIApplication, didFinishLaunchingWithOptions: Map<Any?, *>?): Boolean {
+    override fun application(
+        application: UIApplication,
+        didFinishLaunchingWithOptions: Map<Any?, *>?
+    ): Boolean {
         println("application")
         window = UIWindow(frame = UIScreen.mainScreen.bounds)
 
+        val factory: Factory = Factory(
+            context = UIView(),
+            baseUrl = "",
+            settings = AppleSettings(delegate = NSUserDefaults.standardUserDefaults())
+        )
 
-        val vc: MainScreenViewController = MainScreenViewController()
-        vc.bindViewModel(Factory().createMapViewModel())
+        this.coordinator = AppCoordinator(this.window!!, factory)
 
-        val navigationController: UINavigationController = UINavigationController(rootViewController = vc)
+        this.coordinator.start()
 
-        window!!.rootViewController = navigationController
-        window!!.makeKeyAndVisible()
         return true
     }
+
+    override fun setWindow(window: UIWindow?) {
+        _window = window
+    }
 }
+

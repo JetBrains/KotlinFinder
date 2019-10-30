@@ -1,6 +1,7 @@
 package com.icerockdev.jetfinder.feature.mainMap.presentation
 
-import dev.icerock.moko.core.Timer
+import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
+import dev.icerock.moko.mvvm.dispatcher.EventsDispatcherOwner
 import dev.icerock.moko.mvvm.livedata.LiveData
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.livedata.readOnly
@@ -9,7 +10,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class MapViewModel: ViewModel() {
+class MapViewModel(
+    override val eventsDispatcher: EventsDispatcher<EventsListener>
+) : ViewModel(), EventsDispatcherOwner<MapViewModel.EventsListener> {
 
     enum class FindTaskButtonState {
         TOO_FAR,
@@ -17,9 +20,14 @@ class MapViewModel: ViewModel() {
         COMPLETED
     }
 
+    interface EventsListener {
+        fun showSpotSearchScreen()
+    }
+
     val stepsCount: Int = 6
 
-    private val _findTaskButtonState: MutableLiveData<FindTaskButtonState> = MutableLiveData(FindTaskButtonState.TOO_FAR)
+    private val _findTaskButtonState: MutableLiveData<FindTaskButtonState> =
+        MutableLiveData(FindTaskButtonState.TOO_FAR)
     val findTaskButtonState: LiveData<FindTaskButtonState> = _findTaskButtonState.readOnly()
 
     private val _currentStep: MutableLiveData<Int> = MutableLiveData(0)
@@ -30,12 +38,16 @@ class MapViewModel: ViewModel() {
     }
 
     fun findTaskButtonTapped() {
-        _currentStep.value += 1
+        /*_currentStep.value += 1
         
         if (_currentStep.value == stepsCount) {
             _findTaskButtonState.value = FindTaskButtonState.COMPLETED
         } else {
             doDelay()
+        }*/
+
+        eventsDispatcher.dispatchEvent {
+            showSpotSearchScreen()
         }
     }
 

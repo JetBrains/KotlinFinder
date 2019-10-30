@@ -53,15 +53,17 @@ object Deps {
                 common = "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${Versions.Libs.MultiPlatform.coroutines}",
                 ios = "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:${Versions.Libs.MultiPlatform.coroutines}"
             )
+
+            val bluefalcon = MultiPlatformLibrary(
+                common = "dev.bluefalcon:library:${Versions.Libs.MultiPlatform.bluefalcon}",
+                iosArm64 = "dev.bluefalcon:library-iosarm64:${Versions.Libs.MultiPlatform.bluefalcon}",
+                iosX64 = "dev.bluefalcon:library-iosx64:${Versions.Libs.MultiPlatform.bluefalcon}"
+            )
+
             val serialization = MultiPlatformLibrary(
                 android = "org.jetbrains.kotlinx:kotlinx-serialization-runtime:${Versions.Libs.MultiPlatform.serialization}",
                 common = "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:${Versions.Libs.MultiPlatform.serialization}",
                 ios = "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:${Versions.Libs.MultiPlatform.serialization}"
-            )
-            val mokoCore = MultiPlatformLibrary(
-                common = "dev.icerock.moko:core:${Versions.Libs.MultiPlatform.mokoCore}",
-                iosX64 = "dev.icerock.moko:core-iosx64:${Versions.Libs.MultiPlatform.mokoCore}",
-                iosArm64 = "dev.icerock.moko:core-iosarm64:${Versions.Libs.MultiPlatform.mokoCore}"
             )
             val mokoMvvm = MultiPlatformLibrary(
                 common = "dev.icerock.moko:mvvm:${Versions.Libs.MultiPlatform.mokoMvvm}",

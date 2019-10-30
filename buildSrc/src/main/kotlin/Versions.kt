@@ -13,7 +13,7 @@ object Versions {
 const val kotlin = "1.3.50"
 
     private const val mokoResources = "0.3.0"
-    private const val mokoNetwork = "0.1.0"
+    private const val mokoNetwork = "0.1.1"
 
     object Plugins {
         const val kotlin = Versions.kotlin
@@ -26,7 +26,6 @@ const val kotlin = "1.3.50"
 
     object Libs {
         object Android {
-            const val kotlinStdLib = Versions.kotlin
             const val appCompat = "1.0.2"
             const val material = "1.0.0"
             const val constraintLayout = "1.1.3"
@@ -34,14 +33,11 @@ const val kotlin = "1.3.50"
         }
 
         object MultiPlatform {
-            const val kotlinStdLib = Versions.kotlin
-
             const val coroutines = "1.3.0"
             const val serialization = "0.13.0"
             const val ktorClient = "1.2.4"
             const val ktorClientLogging = ktorClient
 
-            const val mokoCore = "0.1.0"
             const val mokoMvvm = "0.2.0"
             const val mokoResources = Versions.mokoResources
             const val mokoNetwork = Versions.mokoNetwork
@@ -51,6 +47,8 @@ const val kotlin = "1.3.50"
 
             const val napier = "1.0.0"
             const val settings = "0.3.3"
+
+            const val bluefalcon = "0.5.2"
         }
     }
 }

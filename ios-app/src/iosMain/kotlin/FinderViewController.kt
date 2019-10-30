@@ -24,11 +24,19 @@ class UILabelCellProxy(val text: String) : CellProxy {
         } else {
             val strength = value.coerceAtLeast(-100)
             val scaled = (150 + strength) / 150.0
-            cell.setBackgroundColor(UIColor(red = scaled, green = scaled, blue = scaled, alpha = 1.0))
+            cell.setBackgroundColor(
+                UIColor(
+                    red = scaled,
+                    green = scaled,
+                    blue = scaled,
+                    alpha = 1.0
+                )
+            )
             cell.setTextColor(UIColor.redColor)
         }
     }
 }
+
 @ExportObjCClass
 @Suppress("CONFLICTING_OVERLOADS")
 class FinderViewController : UIViewController {
@@ -39,7 +47,7 @@ class FinderViewController : UIViewController {
 
     val model = GameModel(letters)
 
-    val informer1 = object: DeviceInformer {
+    val informer1 = object : DeviceInformer {
         override fun informDevices(devices: List<DeviceRecord>) {
             val strings = devices.map {
                 val seen = timestamp() - it.lastSeen
@@ -59,7 +67,7 @@ class FinderViewController : UIViewController {
         }
     }
 
-    val informer2 = object: DeviceInformer {
+    val informer2 = object : DeviceInformer {
         override fun informDevices(devices: List<DeviceRecord>) {
             devices.forEach {
                 val name = it.name
@@ -135,9 +143,14 @@ class FinderViewController : UIViewController {
             setTitle("Scan", forState = UIControlStateNormal)
             font = UIFont.fontWithName(fontName = font.fontName, size = 28.0)!!
             layer.borderWidth = 1.0
-            layer.borderColor = UIColor.colorWithRed(0x47 / 255.0, 0x43 / 255.0, 0x70 / 255.0, 1.0).CGColor
+            layer.borderColor =
+                UIColor.colorWithRed(0x47 / 255.0, 0x43 / 255.0, 0x70 / 255.0, 1.0).CGColor
             layer.masksToBounds = true
-            addTarget(target = this@FinderViewController, action = NSSelectorFromString("onScan"), forControlEvents = UIControlEventTouchUpInside)
+            addTarget(
+                target = this@FinderViewController,
+                action = NSSelectorFromString("onScan"),
+                forControlEvents = UIControlEventTouchUpInside
+            )
             header.addSubview(this)
         }
 
@@ -148,13 +161,14 @@ class FinderViewController : UIViewController {
             textAlignment = NSTextAlignmentCenter
             font = UIFont.fontWithName(fontName = font.fontName, size = 28.0)!!
             layer.borderWidth = 1.0
-            layer.borderColor = UIColor.colorWithRed(0x47 / 255.0, 0x43 / 255.0, 0x70 / 255.0, 1.0).CGColor
+            layer.borderColor =
+                UIColor.colorWithRed(0x47 / 255.0, 0x43 / 255.0, 0x70 / 255.0, 1.0).CGColor
             layer.masksToBounds = true
             header.addSubview(this)
         }
         textView = UITextView().apply {
             setFrame(CGRectMake(x = 10.0, y = 10.0, width = width - 10.0, height = height - 200.0))
-            center = CGPointMake(x = width / 2 , y = height / 2)
+            center = CGPointMake(x = width / 2, y = height / 2)
             backgroundColor = UIColor.blackColor
             textColor = UIColor.whiteColor
             text = "n/a"
@@ -164,7 +178,10 @@ class FinderViewController : UIViewController {
             label.cell.apply {
                 font = UIFont.fontWithName(fontName = font.fontName, size = 50.0)!!
                 setFrame(CGRectMake(x = 10.0, y = 10.0, width = width / 4, height = height / 4))
-                center = CGPointMake(x = width / 4 + width / 4 * (index % 3), y = height / 3 + (index / 3) * height / 4)
+                center = CGPointMake(
+                    x = width / 4 + width / 4 * (index % 3),
+                    y = height / 3 + (index / 3) * height / 4
+                )
                 textAlignment = NSTextAlignmentCenter
                 layer.borderWidth = 1.0
                 if (!debug) header.addSubview(this)

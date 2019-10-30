@@ -1,7 +1,6 @@
-package Views
+package views
 
 import common.Colors
-import dev.icerock.moko.core.Timer
 import kotlinx.cinterop.CValue
 import platform.CoreGraphics.*
 import platform.CoreImage.CIFilter
@@ -9,17 +8,13 @@ import platform.CoreImage.filterWithName
 import platform.Foundation.NSCoder
 import platform.Foundation.NSMutableArray
 import platform.Foundation.NSTimeInterval
-import platform.Foundation.removeAllObjects
 import platform.SpriteKit.*
 import platform.UIKit.UIColor
-import platform.UIKit.UIView
-import kotlin.math.abs
 import kotlin.random.Random
 
 
-class SpotDistanceScene: SKScene {
-
-    data class Bar (
+class SpotDistanceScene : SKScene {
+    data class Bar(
         val topPart: SKShapeNode,
         val middlePart: SKShapeNode,
         val bottomPart: SKShapeNode,
@@ -30,7 +25,6 @@ class SpotDistanceScene: SKScene {
     private val initialBarHeight: CGFloat = 10.0
 
     var distance: Float = 5.0f
-
 
     @OverrideInit
     constructor(coder: NSCoder) : super(coder)
@@ -65,23 +59,27 @@ class SpotDistanceScene: SKScene {
 
         for (i in 0..barsCount) {
             val bar: Bar = this.createBar(width = barWidth, height = barHeight)
-            val xPos: CGFloat = i * (barWidth + barsSpacing) + lrSpacings / 2.0  - barWidth / 2.0
+            val xPos: CGFloat = i * (barWidth + barsSpacing) + lrSpacings / 2.0 - barWidth / 2.0
 
             bar.topPart.position = CGPointMake(
                 xPos,
-                CGRectGetHeight(this.frame) / 2.0 + barHeight / 2.0 - barWidth / 2.0)
+                CGRectGetHeight(this.frame) / 2.0 + barHeight / 2.0 - barWidth / 2.0
+            )
 
             bar.middlePart.position = CGPointMake(
                 xPos,
-                CGRectGetHeight(this.frame) / 2.0 - barHeight / 2.0)
+                CGRectGetHeight(this.frame) / 2.0 - barHeight / 2.0
+            )
 
             bar.bottomPart.position = CGPointMake(
                 xPos,
-                CGRectGetHeight(this.frame) / 2.0 - barHeight / 2.0 - barWidth / 2.0)
+                CGRectGetHeight(this.frame) / 2.0 - barHeight / 2.0 - barWidth / 2.0
+            )
 
             bar.glow.position = CGPointMake(
-                barWidth / 2.0 ,
-                barHeight / 2.0)
+                barWidth / 2.0,
+                barHeight / 2.0
+            )
 
             this.addChild(bar.middlePart)
             this.addChild(bar.topPart)
@@ -109,50 +107,71 @@ class SpotDistanceScene: SKScene {
             val scaleFactor: Float = (0.5f + Random.nextFloat()) * this.distance
             val newHeight: CGFloat = this.initialBarHeight * scaleFactor
             val newY: CGFloat = CGRectGetHeight(this.frame) / 2.0 - newHeight / 2.0
-            var duration: NSTimeInterval = 0.1 + Random.nextFloat() * (0.1f * (if (Random.nextInt() % 2 == 0) 1 else -1).toFloat())
+            var duration: NSTimeInterval =
+                0.1 + Random.nextFloat() * (0.1f * (if (Random.nextInt() % 2 == 0) 1 else -1).toFloat())
 
             if (duration < 0.1)
                 duration = 0.2
 
-            val scaleAnimation: SKAction = SKAction.scaleYTo(scale = scaleFactor.toDouble(), duration = duration)
+            val scaleAnimation: SKAction =
+                SKAction.scaleYTo(scale = scaleFactor.toDouble(), duration = duration)
             val moveAnimation: SKAction = SKAction.moveToY(y = newY, duration = duration)
 
             val unScaleAnimation: SKAction = scaleAnimation.reversedAction()
             val unMoveAnimation: SKAction = moveAnimation.reversedAction()
 
-            val moveTopPartAnimation: SKAction = SKAction.moveToY(y = newY + newHeight - barWidth / 2.0, duration = duration)
+            val moveTopPartAnimation: SKAction =
+                SKAction.moveToY(y = newY + newHeight - barWidth / 2.0, duration = duration)
 
-            val moveBottomPartAnimation: SKAction = SKAction.moveToY(y = newY - barWidth / 2.0, duration = duration)
+            val moveBottomPartAnimation: SKAction =
+                SKAction.moveToY(y = newY - barWidth / 2.0, duration = duration)
 
-            val actionsSeq: SKAction = SKAction.sequence(listOf(
-                SKAction.group(listOf(scaleAnimation, moveAnimation)),
-                SKAction.group(listOf(unScaleAnimation, unMoveAnimation))))
+            val actionsSeq: SKAction = SKAction.sequence(
+                listOf(
+                    SKAction.group(listOf(scaleAnimation, moveAnimation)),
+                    SKAction.group(listOf(unScaleAnimation, unMoveAnimation))
+                )
+            )
 
-            bar.topPart.runAction(SKAction.sequence(listOf(moveTopPartAnimation, moveTopPartAnimation.reversedAction())), completion = {
-                bar.topPart.removeAllActions()
-            })
+            bar.topPart.runAction(
+                SKAction.sequence(
+                    listOf(
+                        moveTopPartAnimation,
+                        moveTopPartAnimation.reversedAction()
+                    )
+                ), completion = {
+                    bar.topPart.removeAllActions()
+                })
 
             bar.middlePart.runAction(actionsSeq, completion = {
                 bar.middlePart.removeAllActions()
             })
 
-            bar.bottomPart.runAction(SKAction.sequence(listOf(moveBottomPartAnimation, moveBottomPartAnimation.reversedAction())), completion = {
-                bar.bottomPart.removeAllActions()
-            })
+            bar.bottomPart.runAction(
+                SKAction.sequence(
+                    listOf(
+                        moveBottomPartAnimation,
+                        moveBottomPartAnimation.reversedAction()
+                    )
+                ), completion = {
+                    bar.bottomPart.removeAllActions()
+                })
         }
     }
 
     private fun createBar(width: CGFloat, height: CGFloat): Bar {
         val bar: SKShapeNode = SKShapeNode.shapeNodeWithRect(
             rect = CGRectMake(0.0, 0.0, width, height),
-            cornerRadius = 0.0)
+            cornerRadius = 0.0
+        )
         bar.fillColor = Colors.orange
         bar.strokeColor = UIColor.clearColor
         bar.antialiased = true
 
         val circlePart: SKShapeNode = SKShapeNode.shapeNodeWithRect(
             rect = CGRectMake(0.0, 0.0, width, width),
-            cornerRadius = width / 2.0)
+            cornerRadius = width / 2.0
+        )
         circlePart.fillColor = Colors.orange
         circlePart.strokeColor = UIColor.clearColor
         circlePart.antialiased = true
@@ -166,8 +185,9 @@ class SpotDistanceScene: SKScene {
 
         glow.addChild(SKSpriteNode(view.textureFromNode(bar)))
         glow.filter = CIFilter.filterWithName(
-            name ="CIGaussianBlur",
-            withInputParameters = mapOf("inputRadius" to 2.0))
+            name = "CIGaussianBlur",
+            withInputParameters = mapOf("inputRadius" to 2.0)
+        )
         glow.zPosition = -1.0
 
         return Bar(circlePart, bar, circlePart.copy() as SKShapeNode, glow)

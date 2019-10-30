@@ -1,7 +1,5 @@
-package Screens
+package screens
 
-import Views.CollectWordView
-import Views.CommonButton
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import common.fillContainer
 import common.fillSuperview
@@ -12,6 +10,8 @@ import platform.Foundation.NSCoder
 import platform.Foundation.NSNumber
 import platform.QuartzCore.CAShapeLayer
 import platform.UIKit.*
+import views.CollectWordView
+import views.CommonButton
 
 
 class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol {
@@ -142,6 +142,12 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         )
     }
 
+    override fun viewWillAppear(animated: Boolean) {
+        super.viewWillAppear(animated)
+
+        this.navigationController?.setNavigationBarHidden(true, animated = false)
+    }
+
     override fun viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -197,8 +203,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
 
     @ObjCAction
     fun findTaskButtonTapped() {
-       // this.viewModel.findTaskButtonTapped()
-        this.navigationController?.pushViewController(SpotSearchViewController(), animated = true)
+        this.viewModel.findTaskButtonTapped()
     }
 
     override fun viewForZoomingInScrollView(scrollView: UIScrollView): UIView {

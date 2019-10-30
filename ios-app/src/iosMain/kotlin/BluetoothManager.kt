@@ -8,7 +8,8 @@ import platform.darwin.dispatch_get_main_queue
 fun timestamp() = kotlin.system.getTimeMillis()
 
 @Suppress("CONFLICTING_OVERLOADS")
-class BluetoothManager(val informer: DeviceInformer) : NSObject(), CBCentralManagerDelegateProtocol {
+class BluetoothManager(val informer: DeviceInformer) : NSObject(),
+    CBCentralManagerDelegateProtocol {
     val centralManager = CBCentralManager(delegate = this, queue = dispatch_get_main_queue())
     val devices = mutableMapOf<NSUUID, DeviceRecord>()
     var ready = false
@@ -17,8 +18,10 @@ class BluetoothManager(val informer: DeviceInformer) : NSObject(), CBCentralMana
 
     fun onDevice(device: CBPeripheral, rssi: Int) {
         val record = devices.getOrPut(device.identifier) {
-            DeviceRecord(device.identifier.UUIDString, device.name, device.RSSI?.intValue ?: rssi,
-                timestamp())
+            DeviceRecord(
+                device.identifier.UUIDString, device.name, device.RSSI?.intValue ?: rssi,
+                timestamp()
+            )
         }
         record.rssi = rssi
         record.lastSeen = timestamp()
@@ -31,9 +34,12 @@ class BluetoothManager(val informer: DeviceInformer) : NSObject(), CBCentralMana
         if (!supported) {
             informer.bluetoothUnavailable()
             // Report fake data.
-            informer.informDevices(listOf(
-                DeviceRecord("XXX",  "Apple Watch - Nikolay", -60, timestamp()),
-                    DeviceRecord("YYY", "Amazfit Cor", -70, timestamp())))
+            informer.informDevices(
+                listOf(
+                    DeviceRecord("XXX", "Apple Watch - Nikolay", -60, timestamp()),
+                    DeviceRecord("YYY", "Amazfit Cor", -70, timestamp())
+                )
+            )
             scanning = true
         }
 
@@ -63,16 +69,26 @@ class BluetoothManager(val informer: DeviceInformer) : NSObject(), CBCentralMana
         println("didConnectPeripheral")
     }
 
-    override fun centralManager(central: CBCentralManager, didDiscoverPeripheral: CBPeripheral,
-                                advertisementData: Map<Any?, *>, RSSI: NSNumber) {
-      onDevice(didDiscoverPeripheral, RSSI.intValue)
+    override fun centralManager(
+        central: CBCentralManager, didDiscoverPeripheral: CBPeripheral,
+        advertisementData: Map<Any?, *>, RSSI: NSNumber
+    ) {
+        onDevice(didDiscoverPeripheral, RSSI.intValue)
     }
 
-    override fun centralManager(central: CBCentralManager, didDisconnectPeripheral: CBPeripheral, error: NSError?) {
+    override fun centralManager(
+        central: CBCentralManager,
+        didDisconnectPeripheral: CBPeripheral,
+        error: NSError?
+    ) {
         println("didDiscoverPeripheral2")
     }
 
-    override fun centralManager(central: CBCentralManager, didFailToConnectPeripheral: CBPeripheral, error: NSError?) {
+    override fun centralManager(
+        central: CBCentralManager,
+        didFailToConnectPeripheral: CBPeripheral,
+        error: NSError?
+    ) {
         println("didFailToConnectPeripheral")
     }
 

@@ -1,12 +1,12 @@
-package Views
+package views
 
 import kotlinx.cinterop.CValue
 import platform.CoreGraphics.CGRect
-import platform.Foundation.*
+import platform.Foundation.NSCoder
 import platform.UIKit.*
 
 
-class CollectWordView: UIView {
+class CollectWordView : UIView {
     private val imageView: UIImageView = UIImageView()
     private val wordStackView: UIStackView = UIStackView()
     private val titleLabel: UILabel = UILabel()
@@ -34,13 +34,20 @@ class CollectWordView: UIView {
         this.imageView.bottomAnchor.constraintEqualToAnchor(this.bottomAnchor).setActive(true)
 
         this.wordStackView.translatesAutoresizingMaskIntoConstraints = false
-        this.wordStackView.leadingAnchor.constraintEqualToAnchor(this.imageView.trailingAnchor, constant = 20.0).setActive(true)
-        this.wordStackView.trailingAnchor.constraintEqualToAnchor(this.trailingAnchor).setActive(true)
-        this.wordStackView.bottomAnchor.constraintEqualToAnchor(this.bottomAnchor, constant = 0.0).setActive(true)
+        this.wordStackView.leadingAnchor.constraintEqualToAnchor(
+            this.imageView.trailingAnchor,
+            constant = 20.0
+        ).setActive(true)
+        this.wordStackView.trailingAnchor.constraintEqualToAnchor(this.trailingAnchor)
+            .setActive(true)
+        this.wordStackView.bottomAnchor.constraintEqualToAnchor(this.bottomAnchor, constant = 0.0)
+            .setActive(true)
 
         this.titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        this.titleLabel.leadingAnchor.constraintEqualToAnchor(this.wordStackView.leadingAnchor).setActive(true)
-        this.titleLabel.topAnchor.constraintEqualToAnchor(this.topAnchor, constant = 2.0).setActive(true)
+        this.titleLabel.leadingAnchor.constraintEqualToAnchor(this.wordStackView.leadingAnchor)
+            .setActive(true)
+        this.titleLabel.topAnchor.constraintEqualToAnchor(this.topAnchor, constant = 2.0)
+            .setActive(true)
     }
 
     fun setText(text: String) {
@@ -58,7 +65,8 @@ class CollectWordView: UIView {
 
     fun setCollectedLettersCount(count: Int) {
         for (i in 0..(count - 1)) {
-            (this.wordStackView.arrangedSubviews()[i] as? UILabel)?.textColor = UIColor.colorNamed("blackTextColor")!!
+            (this.wordStackView.arrangedSubviews()[i] as? UILabel)?.textColor =
+                UIColor.colorNamed("blackTextColor")!!
         }
 
         this.imageView.image = UIImage.imageNamed("kotlin$count")
