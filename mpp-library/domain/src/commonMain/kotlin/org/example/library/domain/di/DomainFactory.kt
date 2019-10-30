@@ -25,8 +25,7 @@ import org.example.library.domain.storage.KeyValueStorage
 
 class DomainFactory(
     private val settings: Settings,
-    private val context: ApplicationContext,
-    private val baseUrl: String
+    private val context: ApplicationContext
 ) {
     private val keyValueStorage: KeyValueStorage by lazy { KeyValueStorage(settings) }
 
@@ -48,10 +47,11 @@ class DomainFactory(
             install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
-                        Napier.d(message = message)
+                        //Napier.d(message = message)
+                        println(message)
                     }
                 }
-                level = LogLevel.HEADERS
+                level = LogLevel.ALL
             }
             install(TokenFeature) {
                 tokenHeaderName = "Authorization"
@@ -67,7 +67,6 @@ class DomainFactory(
 
     private val gameApi: GameApi by lazy {
         GameApi(
-            basePath = baseUrl,
             httpClient = httpClient,
             json = json
         )

@@ -13,12 +13,10 @@ import org.example.library.domain.di.DomainFactory
 
 class Factory(
     context: ApplicationContext,
-    settings: Settings,
-    baseUrl: String
+    settings: Settings
 ) {
     private val domainFactory = DomainFactory(
         settings = settings,
-        baseUrl = baseUrl,
         context = context
     )
 

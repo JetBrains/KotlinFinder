@@ -3,6 +3,9 @@ package org.example.library.domain.repository
 import dev.icerock.moko.network.generated.apis.GameApi
 import dev.icerock.moko.network.generated.models.ProximityItem
 import dev.icerock.moko.network.generated.models.ProximityResponse
+import io.ktor.http.encodeURLParameter
+import io.ktor.http.encodeURLPath
+import io.ktor.http.encodeURLQueryComponent
 import org.example.library.domain.entity.BeaconInfo
 
 
@@ -11,7 +14,7 @@ class GameDataRepository internal constructor (
 ) {
 
     suspend fun sendBeaconsInfo(beacons: List<BeaconInfo>): Int? {
-        val beaconsString: String = beacons.map { "${it.name}:${it.rssi}" }.joinToString(separator = ",")
+        val beaconsString: String = beacons.filter{ !it.name.contains("-") }.map { "${it.name}:${-10}" }.joinToString(separator = ",")
 
         /*for (b: BeaconInfo in beacons) {
             beaconsString += "${b.name}:${b.rssi}"
@@ -20,6 +23,8 @@ class GameDataRepository internal constructor (
                 beaconsString += ","
             }
         }*/
+
+        println("---> beaconsStr: $beaconsString")
 
         val response: ProximityResponse
 
@@ -31,12 +36,16 @@ class GameDataRepository internal constructor (
             return null
         }
 
-        if (response.near?.size == 0)
+        println("<--- response: " + response.toString())
+
+        if (response.near == null || response.near.size == 0)
             return null
 
         var maxStrength: Int = 0
 
-        response.near?.forEach { item: ProximityItem ->
+        response.near.forEach { item: ProximityItem ->
+            println("__ near: ${item.code}, strength: ${item.strength}")
+
             if (item.strength > maxStrength)
                 maxStrength = item.strength
         }

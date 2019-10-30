@@ -122,7 +122,7 @@ class SpotSearchViewController : UIViewController {
     fun bindViewModel(viewModel: SpotSearchViewModel) {
         this.viewModel = viewModel
 
-        viewModel.start()
+       // viewModel.start()
 
         viewModel.nearestBeaconDistance.addObserver { distance: Int? ->
             this.spotSearchScene.distance =

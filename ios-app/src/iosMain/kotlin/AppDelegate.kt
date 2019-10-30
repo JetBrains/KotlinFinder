@@ -24,7 +24,6 @@ class AppDelegate : UIResponder, UIApplicationDelegateProtocol {
 
         val factory: Factory = Factory(
             context = UIView(),
-            baseUrl = "",
             settings = AppleSettings(delegate = NSUserDefaults.standardUserDefaults())
         )
 

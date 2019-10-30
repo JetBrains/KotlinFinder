@@ -4,8 +4,10 @@ import dev.bluefalcon.*
 import dev.icerock.moko.mvvm.livedata.LiveData
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.livedata.readOnly
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.example.library.domain.UI
 import org.example.library.domain.entity.BeaconInfo
 
 
@@ -52,8 +54,11 @@ class SpotSearchRepository(
     }
 
     private fun sendBeaconInfo(beacon: BeaconInfo) {
-        GlobalScope.launch() {
+        GlobalScope.launch(Dispatchers.UI) {
             val nearestBeaconDistance: Int? = gameDataRepository.sendBeaconsInfo(listOf(beacon))
+            
+            println("NEAREST BEACON DIST: $nearestBeaconDistance")
+
             _nearestBeaconDistance.value = nearestBeaconDistance
         }
     }
