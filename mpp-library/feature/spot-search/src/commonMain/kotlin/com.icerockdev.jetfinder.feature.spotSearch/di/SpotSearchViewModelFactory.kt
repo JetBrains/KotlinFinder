@@ -7,5 +7,6 @@ class SpotSearchViewModelFactory(
     private val domainFactory: DomainFactory
 ) {
 
-    fun createSpotSearchViewModel(): SpotSearchViewModel = SpotSearchViewModel(domainFactory.spotSearchRepository)
+    fun createSpotSearchViewModel(): SpotSearchViewModel =
+        SpotSearchViewModel(domainFactory.spotSearchRepository)
 }

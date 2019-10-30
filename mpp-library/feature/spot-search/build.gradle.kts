@@ -1,5 +1,3 @@
-import Deps.Plugins.androidExtensions
-
 /*
  * Copyright 2019 IceRock MAG Inc. Use of this source code is governed by the Apache 2.0 license.
  */
@@ -9,10 +7,6 @@ plugins {
     id("org.jetbrains.kotlin.multiplatform")
     id("kotlin-android-extensions")
     id("dev.icerock.mobile.multiplatform")
-}
-
-androidExtensions {
-    isExperimental = true
 }
 
 android {

@@ -18,7 +18,7 @@ object Modules {
             )
 
             val spotSearch = MultiPlatformModule(
-                name = ":mpp-library:feature:spotSearch",
+                name = ":mpp-library:feature:spot-search",
                 exported = true
             )
         }
