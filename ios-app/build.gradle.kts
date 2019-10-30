@@ -13,8 +13,8 @@ plugins {
 enum class Target(val simulator: Boolean, val key: String) {
     WATCHOS_X86(true, "watchos"),
     WATCHOS_ARM64(false, "watchos"),
-    IOS_X64(true, "ios"),
-    IOS_ARM64(false, "ios")
+    IOS_X64(true, "iosX64"),
+    IOS_ARM64(false, "iosArm64")
 }
 
 val sdkName: String? = System.getenv("SDK_NAME") ?: "iphonesimulator"
@@ -35,18 +35,8 @@ val buildType = System.getenv("CONFIGURATION")?.let {
 
 
 kotlin {
-    // Declare a target.
-    // We declare only one target (either arm64 or x64)
-    // to workaround lack of common platform libraries
-    // for both device and simulator.
-    val ios = if (!target.simulator ) {
-        // Device.
-        iosArm64("ios")
-    } else {
-        // Simulator.
-        iosX64("ios")
-    }
-
+    val arm64 = iosArm64()
+    val x64 = iosX64()
 
     /*val watchos = if (!target.simulator) {
         // Device.
@@ -57,46 +47,40 @@ kotlin {
     }*/
 
     // Declare the output program.
-    ios.binaries.executable(listOf(buildType)) {
-        baseName = "app"
+    configure(listOf(arm64, x64)) {
+        binaries.executable(listOf(buildType)) {
+            baseName = "app"
+        }
     }
 
     /*watchos.binaries.executable(listOf(buildType)) {
         baseName = "watchapp"
     }*/
 
-    // Configure dependencies.
-    val appleMain by sourceSets.creating {
-        dependsOn(sourceSets["commonMain"])
-    }
-
-    sourceSets["iosMain"].dependsOn(appleMain)
     //sourceSets["watchosMain"].dependsOn(appleMain)
 }
 
 dependencies {
-    mppLibrary(Deps.Libs.MultiPlatform.kotlinStdLib.copy(android = null))
-
-    if (target.simulator ) {
-        "iosMainImplementation"(Deps.Libs.MultiPlatform.coroutines.iosX64!!)
-        "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoResources.iosX64!!)
-        "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoCore.iosX64!!)
-        "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoMvvm.iosX64!!)
-        "iosMainImplementation"(Deps.Libs.MultiPlatform.bluefalcon.iosX64!!)
-    } else {
-        "iosMainImplementation"(Deps.Libs.MultiPlatform.coroutines.iosArm64!!)
-        "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoResources.iosArm64!!)
-        "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoCore.iosArm64!!)
-        "iosMainImplementation"(Deps.Libs.MultiPlatform.mokoMvvm.iosArm64!!)
-        "iosMainImplementation"(Deps.Libs.MultiPlatform.bluefalcon.iosArm64!!)
+    listOf(
+        Deps.Libs.MultiPlatform.kotlinStdLib,
+        Deps.Libs.MultiPlatform.coroutines,
+        Deps.Libs.MultiPlatform.mokoResources,
+        Deps.Libs.MultiPlatform.mokoMvvm,
+        Deps.Libs.MultiPlatform.bluefalcon
+    ).forEach {
+        mppLibrary(it.copy(android = null))
     }
 
-    "iosMainImplementation"(project(Modules.MultiPlatform.Feature.mainMap.name))
-    "iosMainImplementation"(project(Modules.MultiPlatform.Feature.spotSearch.name))
-    "iosMainImplementation"(project(Modules.MultiPlatform.library))
+    listOf(
+        Modules.MultiPlatform.Feature.mainMap,
+        Modules.MultiPlatform.Feature.spotSearch
+    ).map { it.name }
+        .plus(Modules.MultiPlatform.library)
+        .forEach {
+            "iosArm64MainImplementation"(project(it))
+            "iosX64MainImplementation"(project(it))
+        }
 }
-
-
 
 val xcodeIntegrationGroup: String = "Xcode integration"
 val xcodeBundleId = "org.jetbrains.kotlin.native-demo0"
@@ -108,19 +92,19 @@ val currentTarget = kotlin.targets[target.key] as KotlinNativeTarget
 val kotlinBinary = currentTarget.binaries.getExecutable(buildType)
 
 val packForXcode = if (sdkName == null || targetBuildDir == null || executablePath == null) {
-  // The build is launched not by Xcode ->
-  // We cannot create a copy task and just show a meaningful error message.
-  tasks.create("packForXCode").doLast {
-    throw IllegalStateException("Please run the task from Xcode")
-  }
+    // The build is launched not by Xcode ->
+    // We cannot create a copy task and just show a meaningful error message.
+    tasks.create("packForXCode").doLast {
+        throw IllegalStateException("Please run the task from Xcode")
+    }
 } else {
-  // Otherwise copy the executable into the Xcode output directory.
-  tasks.create("packForXCode", Copy::class.java) {
-    dependsOn(kotlinBinary.linkTask)
-    destinationDir = file(targetBuildDir)
-    from(kotlinBinary.outputFile)
-    rename { executablePath }
-  }
+    // Otherwise copy the executable into the Xcode output directory.
+    tasks.create("packForXCode", Copy::class.java) {
+        dependsOn(kotlinBinary.linkTask)
+        destinationDir = file(targetBuildDir)
+        from(kotlinBinary.outputFile)
+        rename { executablePath }
+    }
 }
 
 val xcodeProject = file("ios-app.xcodeproj")
@@ -142,7 +126,8 @@ val buildAppWithXcode by tasks.creating(Exec::class.java) {
 
     workingDir = xcodeProject
     executable = "sh"
-    args("-c", """
+    args(
+        "-c", """
         xcrun xcodebuild \
             -scheme $xcodeAppName \
             -project . \
