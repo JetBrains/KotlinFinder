@@ -26,7 +26,6 @@ const val kotlin = "1.3.50"
 
     object Libs {
         object Android {
-            const val kotlinStdLib = Versions.kotlin
             const val appCompat = "1.0.2"
             const val material = "1.0.0"
             const val constraintLayout = "1.1.3"
@@ -34,8 +33,6 @@ const val kotlin = "1.3.50"
         }
 
         object MultiPlatform {
-            const val kotlinStdLib = Versions.kotlin
-
             const val coroutines = "1.3.0"
             const val serialization = "0.13.0"
             const val ktorClient = "1.2.4"
