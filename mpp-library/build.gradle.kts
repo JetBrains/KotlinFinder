@@ -19,7 +19,6 @@ android {
 }
 
 val mppLibs = listOf(
-    Deps.Libs.MultiPlatform.mokoCore,
     Deps.Libs.MultiPlatform.mokoResources,
     Deps.Libs.MultiPlatform.mokoMvvm,
     Deps.Libs.MultiPlatform.bluefalcon
