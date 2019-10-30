@@ -12,7 +12,7 @@ import dev.icerock.moko.network.exceptionfactory.parser.ErrorExceptionParser
 import dev.icerock.moko.network.exceptionfactory.parser.ValidationExceptionParser
 import dev.icerock.moko.network.features.ExceptionFeature
 import dev.icerock.moko.network.features.TokenFeature
-import dev.icerock.moko.network.generated.apis.NewsApi
+import dev.icerock.moko.network.generated.apis.GameApi
 import io.ktor.client.HttpClient
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logger
@@ -55,8 +55,7 @@ class DomainFactory(
             install(TokenFeature) {
                 tokenHeaderName = "Authorization"
                 tokenProvider = object : TokenFeature.TokenProvider {
-                    override fun getToken(): String? = //keyValueStorage.token?.let { "Bearer $it" }
-                        "ed155d0a445e4b4fbd878fe1f3bc1b7f"
+                    override fun getToken(): String? = keyValueStorage.token?.let { "Bearer $it" }
                 }
             }
 
@@ -65,8 +64,8 @@ class DomainFactory(
         }
     }
 
-    private val newsApi: NewsApi by lazy {
-        NewsApi(
+    private val gameApi: GameApi by lazy {
+        GameApi(
             basePath = baseUrl,
             httpClient = httpClient,
             json = json
