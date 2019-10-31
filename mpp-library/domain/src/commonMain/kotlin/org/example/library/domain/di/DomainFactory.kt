@@ -19,6 +19,7 @@ import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.Logging
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.json.Json
+import org.example.library.domain.repository.CollectedLettersRepository
 import org.example.library.domain.repository.GameDataRepository
 import org.example.library.domain.repository.SpotSearchRepository
 import org.example.library.domain.storage.KeyValueStorage
@@ -80,5 +81,9 @@ class DomainFactory(
         SpotSearchRepository(
             context = this.context,
             gameDataRepository = this.gameDataRepository)
+    }
+
+    val collectedLettersRepository: CollectedLettersRepository by lazy {
+        CollectedLettersRepository(this.keyValueStorage)
     }
 }

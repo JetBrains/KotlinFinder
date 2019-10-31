@@ -1,6 +1,7 @@
 package org.example.library.domain.repository
 
 import dev.bluefalcon.*
+import dev.icerock.moko.core.Timer
 import dev.icerock.moko.mvvm.livedata.LiveData
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.livedata.readOnly
@@ -33,6 +34,16 @@ class SpotSearchRepository(
         this.bf.prepareForScan {
             this.doScanning()
         }
+
+        var dist: Int = 0
+
+        Timer(3000) {
+
+            dist += 10
+            this._nearestBeaconDistance.value = dist
+
+            true
+        }.start()
     }
 
     fun stopScanning() {

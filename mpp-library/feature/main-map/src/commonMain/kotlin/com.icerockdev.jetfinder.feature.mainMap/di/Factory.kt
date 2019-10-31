@@ -14,6 +14,7 @@ class MapViewModelFactory(
         eventsDispatcher: EventsDispatcher<MapViewModel.EventsListener>
     ): MapViewModel {
         return MapViewModel(
+            collectedLettersRepository = this.domainFactory.collectedLettersRepository,
             spotSearchRepository = this.domainFactory.spotSearchRepository,
             eventsDispatcher = eventsDispatcher)
     }

@@ -10,5 +10,5 @@ import com.russhwolf.settings.nullableString
 
 class KeyValueStorage(settings: Settings) {
     var token by settings.nullableString("pref_token")
-    val collectedLettersCount: Int by settings.int("collected_letters_count")
+    var collectedLettersCount: Int by settings.int("collected_letters_count")
 }

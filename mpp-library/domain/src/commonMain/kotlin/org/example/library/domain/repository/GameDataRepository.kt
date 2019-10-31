@@ -1,6 +1,7 @@
 package org.example.library.domain.repository
 
 import dev.icerock.moko.network.generated.apis.GameApi
+import dev.icerock.moko.network.generated.models.ConfigResponse
 import dev.icerock.moko.network.generated.models.ProximityItem
 import dev.icerock.moko.network.generated.models.ProximityResponse
 import io.ktor.http.encodeURLParameter
@@ -14,15 +15,7 @@ class GameDataRepository internal constructor (
 ) {
 
     suspend fun sendBeaconsInfo(beacons: List<BeaconInfo>): Int? {
-        val beaconsString: String = beacons.filter{ !it.name.contains("-") }.map { "${it.name}:${-10}" }.joinToString(separator = ",")
-
-        /*for (b: BeaconInfo in beacons) {
-            beaconsString += "${b.name}:${b.rssi}"
-
-            if (beacons.indexOf(b) != (beacons.size - 1)) {
-                beaconsString += ","
-            }
-        }*/
+        val beaconsString: String = beacons.map { "${it.name}:${-10}" }.joinToString(separator = ",")
 
         println("---> beaconsStr: $beaconsString")
 
