@@ -1,12 +1,17 @@
 package org.example.library.domain.repository
 
-import dev.bluefalcon.*
-import dev.icerock.moko.core.Timer
+import com.github.aakira.napier.Napier
+import dev.bluefalcon.ApplicationContext
+import dev.bluefalcon.BlueFalcon
+import dev.bluefalcon.BlueFalconDelegate
+import dev.bluefalcon.BluetoothCharacteristic
+import dev.bluefalcon.BluetoothPeripheral
 import dev.icerock.moko.mvvm.livedata.LiveData
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.livedata.readOnly
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.example.library.domain.UI
 import org.example.library.domain.entity.BeaconInfo
@@ -21,29 +26,24 @@ class SpotSearchRepository(
     private val _nearestBeaconDistance: MutableLiveData<Int?> = MutableLiveData(null)
     val nearestBeaconDistance: LiveData<Int?> = _nearestBeaconDistance.readOnly()
 
+    init {
+        GlobalScope.launch(Dispatchers.UI) {
+            gameDataRepository.nearestStrength.collect { _nearestBeaconDistance.value = it }
+        }
+    }
+
     fun startScanning() {
         if (this.bf.isScanning) {
             return
         }
 
-        println("starting search...")
+        Napier.d(message = "starting search...")
 
         this.bf.delegates.add(this)
 
-        // disabled while library update not published
         this.bf.prepareForScan {
             this.doScanning()
         }
-
-        var dist: Int = 0
-
-        Timer(3000) {
-
-            dist += 10
-            this._nearestBeaconDistance.value = dist
-
-            true
-        }.start()
     }
 
     fun stopScanning() {
@@ -60,23 +60,15 @@ class SpotSearchRepository(
         try {
             this.bf.scan()
         } catch (error: Throwable) {
-            println(error.toString())
+            Napier.e(message = "fail scan", throwable = error)
         }
     }
 
     private fun sendBeaconInfo(beacon: BeaconInfo) {
-        GlobalScope.launch(Dispatchers.UI) {
-            val nearestBeaconDistance: Int? = gameDataRepository.sendBeaconsInfo(listOf(beacon))
-            
-            println("NEAREST BEACON DIST: $nearestBeaconDistance")
-
-            _nearestBeaconDistance.value = nearestBeaconDistance
-        }
+        GlobalScope.launch(Dispatchers.UI) { gameDataRepository.beaconsChannel.send(beacon) }
     }
 
     override fun didDiscoverDevice(bluetoothPeripheral: BluetoothPeripheral) {
-        println("peripheral: ${bluetoothPeripheral.name}, RSSI: ${bluetoothPeripheral.rssi}")
-
         val name: String = bluetoothPeripheral.name ?: return
         val rssi: Int = bluetoothPeripheral.rssi?.toInt() ?: return
 
@@ -90,6 +82,8 @@ class SpotSearchRepository(
     override fun didCharacteristcValueChanged(
         bluetoothPeripheral: BluetoothPeripheral,
         bluetoothCharacteristic: BluetoothCharacteristic
-    ) {}
+    ) {
+    }
+
     override fun didUpdateMTU(bluetoothPeripheral: BluetoothPeripheral) {}
 }
