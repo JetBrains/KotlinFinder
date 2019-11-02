@@ -9,7 +9,7 @@ class SpotSearchViewModelFactory(
 
     fun createSpotSearchViewModel(): SpotSearchViewModel =
         SpotSearchViewModel(
-            searchRepository = this.domainFactory.spotSearchRepository,
+            gameDataRepository = this.domainFactory.gameDataRepository,
             collectedLettersRepository = this.domainFactory.collectedLettersRepository
         )
 }

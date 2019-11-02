@@ -6,12 +6,8 @@ import dev.bluefalcon.BlueFalcon
 import dev.bluefalcon.BlueFalconDelegate
 import dev.bluefalcon.BluetoothCharacteristic
 import dev.bluefalcon.BluetoothPeripheral
-import dev.icerock.moko.mvvm.livedata.LiveData
-import dev.icerock.moko.mvvm.livedata.MutableLiveData
-import dev.icerock.moko.mvvm.livedata.readOnly
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.example.library.domain.UI
 import org.example.library.domain.entity.BeaconInfo
@@ -22,15 +18,6 @@ class SpotSearchRepository(
     private val gameDataRepository: GameDataRepository
 ) : BlueFalconDelegate {
     private val bf: BlueFalcon = BlueFalcon(context, null)
-
-    private val _nearestBeaconDistance: MutableLiveData<Int?> = MutableLiveData(null)
-    val nearestBeaconDistance: LiveData<Int?> = _nearestBeaconDistance.readOnly()
-
-    init {
-        GlobalScope.launch(Dispatchers.UI) {
-            gameDataRepository.nearestStrength.collect { _nearestBeaconDistance.value = it }
-        }
-    }
 
     fun startScanning() {
         if (this.bf.isScanning) {

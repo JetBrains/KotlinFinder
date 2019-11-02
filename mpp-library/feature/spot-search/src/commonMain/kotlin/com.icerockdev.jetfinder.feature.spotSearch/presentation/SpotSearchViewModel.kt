@@ -4,16 +4,18 @@ import dev.icerock.moko.mvvm.livedata.LiveData
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.livedata.readOnly
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.example.library.domain.repository.CollectedLettersRepository
-import org.example.library.domain.repository.SpotSearchRepository
+import org.example.library.domain.repository.GameDataRepository
 
 
 class SpotSearchViewModel(
-    private val searchRepository: SpotSearchRepository,
+    private val gameDataRepository: GameDataRepository,
     private val collectedLettersRepository: CollectedLettersRepository
 ) : ViewModel() {
-    val minDistance: Int = 100
-    val nearestBeaconDistance: LiveData<Int?> = this.searchRepository.nearestBeaconDistance
+    private val _nearestBeaconDistance: MutableLiveData<Int?> = MutableLiveData(null)
+    val nearestBeaconDistance: LiveData<Int?> = _nearestBeaconDistance.readOnly()
 
     private val _isSearchMode: MutableLiveData<Boolean> = MutableLiveData(true)
     val isSearchMode: LiveData<Boolean> = this._isSearchMode.readOnly()
@@ -21,26 +23,28 @@ class SpotSearchViewModel(
     private val _hintText: MutableLiveData<String> = MutableLiveData("")
     val hintText: LiveData<String> = this._hintText.readOnly()
 
-    private var isSpotFound: Boolean = false
-
     init {
-        this.nearestBeaconDistance.addObserver { distance: Int? ->
-            this.setDistance(distance)
+        viewModelScope.launch {
+            gameDataRepository.nearestStrength.collect { distance ->
+                setStrength(distance)
+            }
         }
     }
 
-    private fun setDistance(distance: Int?) {
-        this._isSearchMode.value = (distance == null || distance < this.minDistance)
+    private fun setStrength(strength: Int?) {
+        if (!this._isSearchMode.value) return
 
-        if (this._isSearchMode.value) {
-            this._hintText.value = "The more intense and stronger the vibration, the closer you are to the goal!"
-        } else if (!this.isSpotFound) {
+        this._nearestBeaconDistance.value = strength
+
+        val found = strength != null && strength >= 100
+
+        if (found) {
             this.collectedLettersRepository.incrementCount()
-
-            // TODO: text from config
-            this._hintText.value = "Hint text!"
-            
-            this.isSpotFound = true
+            this._isSearchMode.value = false
+        } else if (strength == null) {
+            this._hintText.value = "The more intense and stronger the vibration, the closer you are to the goal!"
+        } else {
+            this._hintText.value = ""
         }
     }
 }
