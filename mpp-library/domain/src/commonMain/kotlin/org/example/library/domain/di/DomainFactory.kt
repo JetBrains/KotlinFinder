@@ -14,6 +14,8 @@ import dev.icerock.moko.network.features.ExceptionFeature
 import dev.icerock.moko.network.features.TokenFeature
 import dev.icerock.moko.network.generated.apis.GameApi
 import io.ktor.client.HttpClient
+import io.ktor.client.features.cookies.AcceptAllCookiesStorage
+import io.ktor.client.features.cookies.HttpCookies
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.Logging
@@ -53,11 +55,9 @@ class DomainFactory(
                 }
                 level = LogLevel.NONE
             }
-            install(TokenFeature) {
-                tokenHeaderName = "Authorization"
-                tokenProvider = object : TokenFeature.TokenProvider {
-                    override fun getToken(): String? = keyValueStorage.token?.let { "Bearer $it" }
-                }
+            install(HttpCookies) {
+                // Will keep an in-memory map with all the cookies from previous requests.
+                storage = AcceptAllCookiesStorage()
             }
 
             // disable standard BadResponseStatus - exceptionfactory do it for us
