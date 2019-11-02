@@ -1,3 +1,4 @@
+import com.github.aakira.napier.DebugAntilog
 import com.russhwolf.settings.AppleSettings
 import common.AppCoordinator
 import org.example.library.Factory
@@ -24,7 +25,8 @@ class AppDelegate : UIResponder, UIApplicationDelegateProtocol {
 
         val factory: Factory = Factory(
             context = UIView(),
-            settings = AppleSettings(delegate = NSUserDefaults.standardUserDefaults())
+            settings = AppleSettings(delegate = NSUserDefaults.standardUserDefaults()),
+            antilog = DebugAntilog()
         )
 
         this.coordinator = AppCoordinator(this.window!!, factory)

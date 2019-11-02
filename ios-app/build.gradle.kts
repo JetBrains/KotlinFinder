@@ -66,7 +66,8 @@ dependencies {
         Deps.Libs.MultiPlatform.coroutines,
         Deps.Libs.MultiPlatform.mokoResources,
         Deps.Libs.MultiPlatform.mokoMvvm,
-        Deps.Libs.MultiPlatform.bluefalcon
+        Deps.Libs.MultiPlatform.bluefalcon,
+        Deps.Libs.MultiPlatform.napier
     ).forEach {
         mppLibrary(it.copy(android = null))
     }

@@ -48,8 +48,7 @@ class DomainFactory(
             install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
-                        //Napier.d(message = message)
-                        println(message)
+                        Napier.d(message = message)
                     }
                 }
                 level = LogLevel.ALL

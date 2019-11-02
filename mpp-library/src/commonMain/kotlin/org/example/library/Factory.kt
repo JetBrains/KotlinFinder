@@ -4,6 +4,8 @@
 
 package org.example.library
 
+import com.github.aakira.napier.Antilog
+import com.github.aakira.napier.Napier
 import com.icerockdev.jetfinder.feature.mainMap.di.MapViewModelFactory
 import com.icerockdev.jetfinder.feature.spotSearch.di.SpotSearchViewModelFactory
 import com.russhwolf.settings.Settings
@@ -13,7 +15,8 @@ import org.example.library.domain.di.DomainFactory
 
 class Factory(
     context: ApplicationContext,
-    settings: Settings
+    settings: Settings,
+    antilog: Antilog
 ) {
     private val domainFactory = DomainFactory(
         settings = settings,
@@ -26,5 +29,9 @@ class Factory(
 
     val mapFactory: MapViewModelFactory by lazy {
         MapViewModelFactory(domainFactory = domainFactory)
+    }
+
+    init {
+        Napier.base(antilog)
     }
 }
