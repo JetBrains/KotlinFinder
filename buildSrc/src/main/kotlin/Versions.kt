@@ -35,7 +35,7 @@ const val kotlin = "1.3.50"
         object MultiPlatform {
             const val coroutines = "1.3.0"
             const val serialization = "0.13.0"
-            const val ktorClient = "1.2.4"
+            const val ktorClient = "1.2.5"
             const val ktorClientLogging = ktorClient
 
             const val mokoMvvm = "0.3.1"
