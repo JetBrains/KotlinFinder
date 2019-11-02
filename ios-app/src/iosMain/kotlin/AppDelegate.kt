@@ -1,15 +1,23 @@
+import com.github.aakira.napier.DebugAntilog
 import com.russhwolf.settings.AppleSettings
 import common.AppCoordinator
 import org.example.library.Factory
 import platform.Foundation.NSUserDefaults
-import platform.UIKit.*
+import platform.UIKit.UIApplication
+import platform.UIKit.UIApplicationDelegateProtocol
+import platform.UIKit.UIApplicationDelegateProtocolMeta
+import platform.UIKit.UIResponder
+import platform.UIKit.UIResponderMeta
+import platform.UIKit.UIScreen
+import platform.UIKit.UIView
+import platform.UIKit.UIWindow
 
 
 class AppDelegate : UIResponder, UIApplicationDelegateProtocol {
     companion object : UIResponderMeta(), UIApplicationDelegateProtocolMeta {}
 
     private var _window: UIWindow? = null
-    override fun window() = _window
+
     private lateinit var coordinator: AppCoordinator
 
     @OverrideInit
@@ -19,21 +27,22 @@ class AppDelegate : UIResponder, UIApplicationDelegateProtocol {
         application: UIApplication,
         didFinishLaunchingWithOptions: Map<Any?, *>?
     ): Boolean {
-        println("application")
-        window = UIWindow(frame = UIScreen.mainScreen.bounds)
+        val window = UIWindow(frame = UIScreen.mainScreen.bounds)
+        setWindow(window)
 
         val factory: Factory = Factory(
             context = UIView(),
-            baseUrl = "",
-            settings = AppleSettings(delegate = NSUserDefaults.standardUserDefaults())
+            settings = AppleSettings(delegate = NSUserDefaults.standardUserDefaults()),
+            antilog = DebugAntilog()
         )
 
-        this.coordinator = AppCoordinator(this.window!!, factory)
-
-        this.coordinator.start()
-
+        this.coordinator = AppCoordinator(window, factory).apply {
+            start()
+        }
         return true
     }
+
+    override fun window() = _window
 
     override fun setWindow(window: UIWindow?) {
         _window = window

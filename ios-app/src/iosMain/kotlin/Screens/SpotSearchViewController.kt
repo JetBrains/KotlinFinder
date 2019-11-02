@@ -3,11 +3,35 @@ package screens
 import com.icerockdev.jetfinder.feature.spotSearch.presentation.SpotSearchViewModel
 import common.centerInSuperview
 import common.fillSuperview
-import dev.icerock.moko.core.Timer
+import kotlinx.cinterop.ObjCAction
 import platform.Foundation.NSCoder
 import platform.SpriteKit.SKSceneScaleMode
 import platform.SpriteKit.SKView
-import platform.UIKit.*
+import platform.UIKit.NSLineBreakByWordWrapping
+import platform.UIKit.NSTextAlignmentCenter
+import platform.UIKit.UIBarButtonItem
+import platform.UIKit.UIBarButtonItemStylePlain
+import platform.UIKit.UIColor
+import platform.UIKit.UIFont
+import platform.UIKit.UIImage
+import platform.UIKit.UIImageView
+import platform.UIKit.UILabel
+import platform.UIKit.UILayoutConstraintAxisVertical
+import platform.UIKit.UIStackView
+import platform.UIKit.UIView
+import platform.UIKit.UIViewController
+import platform.UIKit.addSubview
+import platform.UIKit.backgroundColor
+import platform.UIKit.bottomAnchor
+import platform.UIKit.centerXAnchor
+import platform.UIKit.centerYAnchor
+import platform.UIKit.colorNamed
+import platform.UIKit.navigationController
+import platform.UIKit.navigationItem
+import platform.UIKit.setHidden
+import platform.UIKit.topAnchor
+import platform.UIKit.translatesAutoresizingMaskIntoConstraints
+import platform.UIKit.widthAnchor
 import views.SpotDistanceScene
 
 
@@ -18,19 +42,6 @@ class SpotSearchViewController : UIViewController {
     private val successImageView: UIImageView = UIImageView(UIImage.imageNamed("spotFound"))
     private val spotSearchViewContainer: SKView = SKView()
     private val spotSearchScene: SpotDistanceScene = SpotDistanceScene()
-
-    private val updateTimer = Timer(500) {
-        this.spotSearchScene.distance -= 0.25f
-
-        if (spotSearchScene.distance < 0) {
-            spotSearchScene.distance = 10f
-        }
-
-        println("dist: ${spotSearchScene.distance}")
-        this.spotSearchViewContainer.setNeedsDisplay()
-
-        true
-    }
 
     private lateinit var viewModel: SpotSearchViewModel
 
@@ -44,6 +55,13 @@ class SpotSearchViewController : UIViewController {
         super.viewDidLoad()
 
         this.title = "Find a task"
+
+        this.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image = UIImage.imageNamed("back"),
+            style = UIBarButtonItemStylePlain,
+            target = this,
+            action = platform.darwin.sel_registerName("backButtonTapped")
+        )
 
         this.view.backgroundColor = UIColor.whiteColor()
 
@@ -99,11 +117,7 @@ class SpotSearchViewController : UIViewController {
             constant = 0.0
         ).setActive(true)
 
-        this.setSearchMode(true)
-
-        this.spotSearchScene.distance = 10f
-
-        updateTimer.start()
+        this.spotSearchScene.distance = 5.0f
     }
 
     override fun viewDidLayoutSubviews() {
@@ -119,25 +133,42 @@ class SpotSearchViewController : UIViewController {
         this.navigationController?.setNavigationBarHidden(false, animated = false)
     }
 
+    override fun viewDidDisappear(animated: Boolean) {
+        super.viewDidDisappear(animated)
+
+        if (this.isMovingFromParentViewController()) {
+            viewModel.onCleared()
+        }
+    }
+
     fun bindViewModel(viewModel: SpotSearchViewModel) {
         this.viewModel = viewModel
 
-        viewModel.start()
+        viewModel.nearestBeaconDistance.addObserver { distance: Int? ->
+            this.spotSearchScene.distance =
+                this.spotSearchScene.maxDistance * (viewModel.minDistance - (distance
+                    ?: viewModel.minDistance)) / viewModel.minDistance
+        }
+
+        viewModel.isSearchMode.addObserver { searchMode: Boolean ->
+            if (searchMode) {
+                this.statusLabel.text = "Searching..."
+                this.successImageView.setHidden(true)
+                this.spotSearchViewContainer.setHidden(false)
+            } else {
+                this.statusLabel.text = "Spot found"
+                this.successImageView.setHidden(false)
+                this.spotSearchViewContainer.setHidden(true)
+            }
+        }
+
+        viewModel.hintText.addObserver { text: String ->
+            this.instructionLabel.text = text
+        }
     }
 
-    private fun setSearchMode(searchMode: Boolean) {
-        if (searchMode) {
-            this.statusLabel.text = "Searching..."
-            this.instructionLabel.text =
-                "The more intense and stronger the vibration, the closer you are to the goal!"
-            this.successImageView.setHidden(true)
-            this.spotSearchViewContainer.setHidden(false)
-        } else {
-            this.statusLabel.text = "Spot found"
-            this.instructionLabel.text =
-                "You are well done! Another letter in the control word is open"
-            this.successImageView.setHidden(false)
-            this.spotSearchViewContainer.setHidden(true)
-        }
+    @ObjCAction
+    fun backButtonTapped() {
+        this.navigationController?.popViewControllerAnimated(true)
     }
 }

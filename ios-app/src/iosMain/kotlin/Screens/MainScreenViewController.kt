@@ -9,7 +9,27 @@ import platform.CoreGraphics.CGSizeMake
 import platform.Foundation.NSCoder
 import platform.Foundation.NSNumber
 import platform.QuartzCore.CAShapeLayer
-import platform.UIKit.*
+import platform.UIKit.UIBezierPath
+import platform.UIKit.UIColor
+import platform.UIKit.UIControlEventTouchUpInside
+import platform.UIKit.UIImage
+import platform.UIKit.UIImageView
+import platform.UIKit.UIRectCornerTopLeft
+import platform.UIKit.UIRectCornerTopRight
+import platform.UIKit.UIScrollView
+import platform.UIKit.UIScrollViewDelegateProtocol
+import platform.UIKit.UIView
+import platform.UIKit.UIViewController
+import platform.UIKit.addSubview
+import platform.UIKit.backgroundColor
+import platform.UIKit.bottomAnchor
+import platform.UIKit.centerXAnchor
+import platform.UIKit.heightAnchor
+import platform.UIKit.leftAnchor
+import platform.UIKit.navigationController
+import platform.UIKit.rightAnchor
+import platform.UIKit.topAnchor
+import platform.UIKit.translatesAutoresizingMaskIntoConstraints
 import views.CollectWordView
 import views.CommonButton
 
@@ -148,6 +168,14 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         this.navigationController?.setNavigationBarHidden(true, animated = false)
     }
 
+    override fun viewDidDisappear(animated: Boolean) {
+        super.viewDidDisappear(animated)
+
+        if (this.isMovingFromParentViewController()) {
+            viewModel.onCleared()
+        }
+    }
+
     override fun viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -197,8 +225,6 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
                 }
             }
         }
-
-        viewModel.start()
     }
 
     @ObjCAction

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "287627FE1F319065007FA12B"
-               BuildableName = "ios-app.app"
+               BuildableName = "JetFinder.app"
                BlueprintName = "ios-app"
                ReferencedContainer = "container:ios-app.xcodeproj">
             </BuildableReference>
@@ -29,8 +29,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -47,13 +45,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "287627FE1F319065007FA12B"
-            BuildableName = "ios-app.app"
+            BuildableName = "JetFinder.app"
             BlueprintName = "ios-app"
             ReferencedContainer = "container:ios-app.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -66,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "287627FE1F319065007FA12B"
-            BuildableName = "ios-app.app"
+            BuildableName = "JetFinder.app"
             BlueprintName = "ios-app"
             ReferencedContainer = "container:ios-app.xcodeproj">
          </BuildableReference>

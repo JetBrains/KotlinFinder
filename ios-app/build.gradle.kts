@@ -66,7 +66,8 @@ dependencies {
         Deps.Libs.MultiPlatform.coroutines,
         Deps.Libs.MultiPlatform.mokoResources,
         Deps.Libs.MultiPlatform.mokoMvvm,
-        Deps.Libs.MultiPlatform.bluefalcon
+        Deps.Libs.MultiPlatform.bluefalcon,
+        Deps.Libs.MultiPlatform.napier
     ).forEach {
         mppLibrary(it.copy(android = null))
     }
@@ -83,7 +84,7 @@ dependencies {
 }
 
 val xcodeIntegrationGroup: String = "Xcode integration"
-val xcodeBundleId = "org.jetbrains.kotlin.native-demo0"
+val xcodeBundleId = "org.jetbrains.kotlin.native-demo"
 
 val targetBuildDir: String? = System.getenv("TARGET_BUILD_DIR")
 val executablePath: String? = System.getenv("EXECUTABLE_PATH")

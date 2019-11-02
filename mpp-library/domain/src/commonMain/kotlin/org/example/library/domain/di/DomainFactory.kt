@@ -14,18 +14,21 @@ import dev.icerock.moko.network.features.ExceptionFeature
 import dev.icerock.moko.network.features.TokenFeature
 import dev.icerock.moko.network.generated.apis.GameApi
 import io.ktor.client.HttpClient
+import io.ktor.client.features.cookies.AcceptAllCookiesStorage
+import io.ktor.client.features.cookies.HttpCookies
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.Logging
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.json.Json
+import org.example.library.domain.repository.CollectedLettersRepository
+import org.example.library.domain.repository.GameDataRepository
 import org.example.library.domain.repository.SpotSearchRepository
 import org.example.library.domain.storage.KeyValueStorage
 
 class DomainFactory(
     private val settings: Settings,
-    private val context: ApplicationContext,
-    private val baseUrl: String
+    private val context: ApplicationContext
 ) {
     private val keyValueStorage: KeyValueStorage by lazy { KeyValueStorage(settings) }
 
@@ -50,13 +53,11 @@ class DomainFactory(
                         Napier.d(message = message)
                     }
                 }
-                level = LogLevel.HEADERS
+                level = LogLevel.NONE
             }
-            install(TokenFeature) {
-                tokenHeaderName = "Authorization"
-                tokenProvider = object : TokenFeature.TokenProvider {
-                    override fun getToken(): String? = keyValueStorage.token?.let { "Bearer $it" }
-                }
+            install(HttpCookies) {
+                // Will keep an in-memory map with all the cookies from previous requests.
+                storage = AcceptAllCookiesStorage()
             }
 
             // disable standard BadResponseStatus - exceptionfactory do it for us
@@ -66,13 +67,22 @@ class DomainFactory(
 
     private val gameApi: GameApi by lazy {
         GameApi(
-            basePath = baseUrl,
             httpClient = httpClient,
             json = json
         )
     }
 
+    val gameDataRepository: GameDataRepository by lazy {
+        GameDataRepository(this.gameApi)
+    }
+
     val spotSearchRepository: SpotSearchRepository by lazy {
-        SpotSearchRepository(context)
+        SpotSearchRepository(
+            context = this.context,
+            gameDataRepository = this.gameDataRepository)
+    }
+
+    val collectedLettersRepository: CollectedLettersRepository by lazy {
+        CollectedLettersRepository(this.keyValueStorage)
     }
 }
