@@ -4,6 +4,8 @@
 
 pluginManagement {
     repositories {
+        mavenLocal()
+
         jcenter()
         google()
 
@@ -28,6 +30,7 @@ rootProject.name = "JetFinder"
 include(":android-app")
 include(":mpp-library")
 include(":ios-app")
+include(":watchos-app")
 
 listOf(
     Modules.MultiPlatform.domain,

@@ -80,11 +80,6 @@ object Deps {
                 iosX64 = "dev.icerock.moko:permissions-iosx64:${Versions.Libs.MultiPlatform.mokoPermissions}",
                 iosArm64 = "dev.icerock.moko:permissions-iosarm64:${Versions.Libs.MultiPlatform.mokoPermissions}"
             )
-            val mokoMedia = MultiPlatformLibrary(
-                common = "dev.icerock.moko:media:${Versions.Libs.MultiPlatform.mokoMedia}",
-                iosX64 = "dev.icerock.moko:media-iosx64:${Versions.Libs.MultiPlatform.mokoMedia}",
-                iosArm64 = "dev.icerock.moko:media-iosarm64:${Versions.Libs.MultiPlatform.mokoMedia}"
-            )
             val mokoNetwork = MultiPlatformLibrary(
                 common = "dev.icerock.moko:network:${Versions.Libs.MultiPlatform.mokoNetwork}",
                 iosX64 = "dev.icerock.moko:network-iosx64:${Versions.Libs.MultiPlatform.mokoNetwork}",

@@ -11,16 +11,16 @@ plugins {
 }
 
 enum class Target(val simulator: Boolean, val key: String) {
-    IOS_X64(true, "iosX64"),
-    IOS_ARM64(false, "iosArm64")
+    WATCHOS_X86(true, "watchosX86"),
+    WATCHOS_ARM64(false, "watchosArm64")
 }
 
-val sdkName: String? = System.getenv("SDK_NAME") ?: "iphonesimulator"
+val sdkName: String? = System.getenv("SDK_NAME") ?: "watchsimulator"
 
 val target = sdkName.orEmpty().let {
     when {
-        it.startsWith("iphoneos") -> Target.IOS_ARM64
-        else -> Target.IOS_X64
+        it.startsWith("watchos") -> Target.WATCHOS_ARM64
+        else -> Target.WATCHOS_X86
     }
 }
 
@@ -30,38 +30,19 @@ val buildType = System.getenv("CONFIGURATION")?.let {
 
 
 kotlin {
-    val iosArm = iosArm64()
-    val iosX = iosX64()
+    val watchArm = watchosArm64()
+    val watchX = watchosX86()
 
     // Declare the output program.
-    configure(listOf(iosArm, iosX)) {
+    configure(listOf(watchArm, watchX)) {
         binaries.executable(listOf(buildType)) {
-            baseName = "app"
+            baseName = "watchapp"
         }
     }
 }
 
 dependencies {
-    listOf(
-        Deps.Libs.MultiPlatform.kotlinStdLib,
-        Deps.Libs.MultiPlatform.coroutines,
-        Deps.Libs.MultiPlatform.mokoResources,
-        Deps.Libs.MultiPlatform.mokoMvvm,
-        Deps.Libs.MultiPlatform.bluefalcon,
-        Deps.Libs.MultiPlatform.napier
-    ).forEach {
-        mppLibrary(it.copy(android = null))
-    }
 
-    listOf(
-        Modules.MultiPlatform.Feature.mainMap,
-        Modules.MultiPlatform.Feature.spotSearch
-    ).map { it.name }
-        .plus(Modules.MultiPlatform.library)
-        .forEach {
-            "iosArm64MainImplementation"(project(it))
-            "iosX64MainImplementation"(project(it))
-        }
 }
 
 val xcodeIntegrationGroup: String = "Xcode integration"

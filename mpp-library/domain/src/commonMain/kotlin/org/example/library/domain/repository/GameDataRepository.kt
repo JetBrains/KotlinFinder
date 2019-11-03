@@ -9,9 +9,10 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.example.library.domain.UI
@@ -26,8 +27,18 @@ class GameDataRepository internal constructor(
     val beaconsChannel: Channel<BeaconInfo> = Channel(Channel.BUFFERED)
 
     private val _nearestStrengthChannel: Channel<Int?> = Channel()
-    val nearestStrength: Flow<Int?> = flow {
-        emit(_nearestStrengthChannel.receive())
+    val nearestStrength: Flow<Int?> = channelFlow {
+        val job = launch {
+            while (isActive) {
+                val strength = _nearestStrengthChannel.receive()
+                Napier.d("got strength $strength")
+                send(strength)
+            }
+        }
+
+        awaitClose {
+            job.cancel()
+        }
     }
 
     init {
@@ -53,12 +64,16 @@ class GameDataRepository internal constructor(
     }
 
     private suspend fun sendBeaconsInfo(beacons: List<BeaconInfo>): Int? {
-        val validSymbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
-        val onlyLast = beacons.reversed().distinctBy { it.name }.map { beacon ->
-            beacon.copy(
-                name = beacon.name.filter { validSymbols.indexOf(it) > -1 }
-            )
+        val onlyLast = beacons
+            .filter { it.rssi < 0 }
+            .reversed()
+            .distinctBy { it.name }
+
+        if (onlyLast.isEmpty()) {
+            Napier.d(message = "all filtered = $beacons")
+            return null
         }
+
         val beaconsString: String = onlyLast.joinToString(separator = ",") { "${it.name}:${it.rssi}" }
 
         Napier.d(message = "proximity = $beaconsString")

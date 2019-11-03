@@ -5,13 +5,15 @@ import dev.bluefalcon.ApplicationContext
 import dev.bluefalcon.BlueFalcon
 import dev.bluefalcon.BlueFalconDelegate
 import dev.bluefalcon.BluetoothCharacteristic
+import dev.bluefalcon.BluetoothNotEnabledException
 import dev.bluefalcon.BluetoothPeripheral
-import dev.icerock.moko.mvvm.livedata.LiveData
-import dev.icerock.moko.mvvm.livedata.MutableLiveData
-import dev.icerock.moko.mvvm.livedata.readOnly
+import dev.bluefalcon.BluetoothResettingException
+import dev.bluefalcon.BluetoothUnknownException
+import dev.bluefalcon.BluetoothUnsupportedException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.example.library.domain.UI
 import org.example.library.domain.entity.BeaconInfo
@@ -23,15 +25,6 @@ class SpotSearchRepository(
 ) : BlueFalconDelegate {
     private val bf: BlueFalcon = BlueFalcon(context, null)
 
-    private val _nearestBeaconDistance: MutableLiveData<Int?> = MutableLiveData(null)
-    val nearestBeaconDistance: LiveData<Int?> = _nearestBeaconDistance.readOnly()
-
-    init {
-        GlobalScope.launch(Dispatchers.UI) {
-            gameDataRepository.nearestStrength.collect { _nearestBeaconDistance.value = it }
-        }
-    }
-
     fun startScanning() {
         if (this.bf.isScanning) {
             return
@@ -40,10 +33,7 @@ class SpotSearchRepository(
         Napier.d(message = "starting search...")
 
         this.bf.delegates.add(this)
-
-        this.bf.prepareForScan {
-            this.doScanning()
-        }
+        this.doScanning()
     }
 
     fun stopScanning() {
@@ -57,22 +47,47 @@ class SpotSearchRepository(
     }
 
     private fun doScanning() {
-        try {
-            this.bf.scan()
-        } catch (error: Throwable) {
-            Napier.e(message = "fail scan", throwable = error)
+        GlobalScope.launch(Dispatchers.UI) {
+            while (isActive) {
+                if (tryStartScan()) break
+
+                delay(100)
+            }
         }
     }
 
-    private fun sendBeaconInfo(beacon: BeaconInfo) {
-        GlobalScope.launch(Dispatchers.UI) { gameDataRepository.beaconsChannel.send(beacon) }
+    private fun tryStartScan(): Boolean {
+        try {
+            this.bf.scan()
+            return true
+        } catch (error: Throwable) {
+            return when (error) {
+                is BluetoothUnsupportedException,
+                is BluetoothNotEnabledException,
+                is BluetoothResettingException,
+                is BluetoothUnknownException -> {
+                    Napier.e(message = "known BT expetion, try again later", throwable = error)
+                    false
+                }
+                else -> {
+                    Napier.e(message = "fail scan", throwable = error)
+                    true
+                }
+            }
+        }
     }
 
-    override fun didDiscoverDevice(bluetoothPeripheral: BluetoothPeripheral) {
+    private fun sendBeaconInfo(bluetoothPeripheral: BluetoothPeripheral) {
         val name: String = bluetoothPeripheral.name ?: return
         val rssi: Int = bluetoothPeripheral.rssi?.toInt() ?: return
 
-        this.sendBeaconInfo(BeaconInfo(name = name, rssi = rssi))
+        val beaconInfo = BeaconInfo(name = name, rssi = rssi)
+
+        GlobalScope.launch(Dispatchers.UI) { gameDataRepository.beaconsChannel.send(beaconInfo) }
+    }
+
+    override fun didDiscoverDevice(bluetoothPeripheral: BluetoothPeripheral) {
+        this.sendBeaconInfo(bluetoothPeripheral)
     }
 
     override fun didConnect(bluetoothPeripheral: BluetoothPeripheral) {}
@@ -86,4 +101,8 @@ class SpotSearchRepository(
     }
 
     override fun didUpdateMTU(bluetoothPeripheral: BluetoothPeripheral) {}
+
+    override fun didRssiUpdate(bluetoothPeripheral: BluetoothPeripheral) {
+        this.sendBeaconInfo(bluetoothPeripheral)
+    }
 }
