@@ -43,7 +43,6 @@ const val kotlin = "1.3.50"
             const val mokoNetwork = Versions.mokoNetwork
             const val mokoFields = "0.1.0"
             const val mokoPermissions = "0.1.0"
-            const val mokoMedia = "0.1.0"
 
             const val napier = "1.0.0"
             const val settings = "0.3.3"
