@@ -10,7 +10,7 @@ import platform.SpriteKit.SKView
 import platform.UIKit.NSLineBreakByWordWrapping
 import platform.UIKit.NSTextAlignmentCenter
 import platform.UIKit.UIBarButtonItem
-import platform.UIKit.UIBarButtonItemStylePlain
+import platform.UIKit.UIBarButtonItemStyle
 import platform.UIKit.UIColor
 import platform.UIKit.UIFont
 import platform.UIKit.UIImage
@@ -58,7 +58,7 @@ class SpotSearchViewController : UIViewController {
 
         this.navigationItem.leftBarButtonItem = UIBarButtonItem(
             image = UIImage.imageNamed("back"),
-            style = UIBarButtonItemStylePlain,
+            style = UIBarButtonItemStyle.UIBarButtonItemStylePlain,
             target = this,
             action = platform.darwin.sel_registerName("backButtonTapped")
         )
