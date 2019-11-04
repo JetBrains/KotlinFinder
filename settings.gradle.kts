@@ -4,8 +4,6 @@
 
 pluginManagement {
     repositories {
-        mavenLocal()
-
         jcenter()
         google()
 

@@ -4,8 +4,6 @@
 
 allprojects {
     repositories {
-        mavenLocal()
-
         google()
         jcenter()
 
@@ -16,6 +14,7 @@ allprojects {
         maven { url = uri("https://dl.bintray.com/aakira/maven") }
         maven { url = uri("http://dl.bintray.com/kotlin/kotlin-dev") }
         maven { url = uri("http://dl.bintray.com/kotlin/kotlin-eap") }
+        maven { url = uri("https://dl.bintray.com/icerockdev/kotlin-libs") }
     }
 
     // workaround for https://youtrack.jetbrains.com/issue/KT-27170
