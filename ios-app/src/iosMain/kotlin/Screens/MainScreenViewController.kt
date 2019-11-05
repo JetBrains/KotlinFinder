@@ -30,6 +30,8 @@ import platform.UIKit.navigationController
 import platform.UIKit.rightAnchor
 import platform.UIKit.topAnchor
 import platform.UIKit.translatesAutoresizingMaskIntoConstraints
+import platform.UIKit.UIButton
+import platform.UIKit.UIButtonType
 import views.CollectWordView
 import views.CommonButton
 
@@ -44,6 +46,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
     private val roundedCornersMaskLayer: CAShapeLayer = CAShapeLayer()
     private val shadowView: UIView = UIView()
     private val mapImageView: UIImageView = UIImageView(UIImage.imageNamed("mapImage"))
+    private val hintButton: UIButton = UIButton.buttonWithType(3)
 
     private lateinit var viewModel: MapViewModel
 
@@ -67,6 +70,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
 
         this.scrollView.addSubview(this.mapImageView)
         this.controlWordContainerView.addSubview(this.collectWordView)
+        this.controlWordContainerView.addSubview(this.hintButton)
 
         this.shadowView.backgroundColor = UIColor.whiteColor
 
@@ -76,19 +80,32 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             controlWordContainerView,
             shadowView,
             mapImageView,
-            collectWordView
+            collectWordView,
+            this.hintButton
         ).forEach { it.translatesAutoresizingMaskIntoConstraints = false }
 
         this.collectWordView.topAnchor.constraintEqualToAnchor(
             this.shadowView.topAnchor,
             constant = 20.0
         ).setActive(true)
+
         this.collectWordView.bottomAnchor.constraintEqualToAnchor(
             this.shadowView.bottomAnchor,
             constant = -30.0
         ).setActive(true)
+
         this.collectWordView.centerXAnchor.constraintEqualToAnchor(this.shadowView.centerXAnchor)
             .setActive(true)
+
+        this.hintButton.topAnchor.constraintEqualToAnchor(
+            this.controlWordContainerView.topAnchor,
+            constant = 20.0
+        ).setActive(true)
+
+        this.hintButton.rightAnchor.constraintEqualToAnchor(
+            this.controlWordContainerView.rightAnchor,
+            constant = -20.0
+        ).setActive(true)
 
         this.scrollView.leftAnchor.constraintEqualToAnchor(this.view.leftAnchor).setActive(true)
         this.scrollView.topAnchor.constraintEqualToAnchor(this.view.topAnchor).setActive(true)
@@ -160,6 +177,12 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             action = platform.darwin.sel_registerName("findTaskButtonTapped"),
             forControlEvents = UIControlEventTouchUpInside
         )
+
+        this.hintButton.addTarget(
+            target = this,
+            action = platform.darwin.sel_registerName("hintButtonTapped"),
+            forControlEvents = UIControlEventTouchUpInside
+        )
     }
 
     override fun viewWillAppear(animated: Boolean) {
@@ -228,8 +251,13 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
     }
 
     @ObjCAction
-    fun findTaskButtonTapped() {
+    private fun findTaskButtonTapped() {
         this.viewModel.findTaskButtonTapped()
+    }
+
+    @ObjCAction
+    private fun hintButtonTapped() {
+
     }
 
     override fun viewForZoomingInScrollView(scrollView: UIScrollView): UIView {

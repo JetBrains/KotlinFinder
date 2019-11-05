@@ -2,6 +2,7 @@ package org.example.library.domain.repository
 
 import com.github.aakira.napier.Napier
 import dev.icerock.moko.network.generated.apis.GameApi
+import dev.icerock.moko.network.generated.models.ConfigResponse
 import dev.icerock.moko.network.generated.models.ProximityResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,6 +18,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.example.library.domain.UI
 import org.example.library.domain.entity.BeaconInfo
+import org.example.library.domain.entity.GameConfig
+import org.example.library.domain.entity.toDonain
 
 
 @FlowPreview
@@ -25,6 +28,7 @@ class GameDataRepository internal constructor(
     private val gameApi: GameApi
 ) {
     val beaconsChannel: Channel<BeaconInfo> = Channel(Channel.BUFFERED)
+    private var _gameConfig: GameConfig? = null
 
     private val _nearestStrengthChannel: Channel<Int?> = Channel()
     val nearestStrength: Flow<Int?> = channelFlow {
@@ -60,6 +64,23 @@ class GameDataRepository internal constructor(
 
                 delay(1000)
             }
+        }
+    }
+
+    fun gameConfig(): GameConfig? {
+        return this._gameConfig
+    }
+
+    suspend fun loadGameConfig(): GameConfig? {
+        try {
+            val config: ConfigResponse = this.gameApi.finderConfigGet()
+            Napier.d(message = "Game config response = $config")
+
+            this._gameConfig = config.toDonain()
+        } catch (error: Throwable) {
+            Napier.e(message = "Failed to get game config", throwable = error)
+        } finally {
+            return this._gameConfig
         }
     }
 
