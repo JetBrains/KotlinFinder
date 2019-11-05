@@ -6,13 +6,15 @@ import dev.icerock.moko.mvvm.livedata.readOnly
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.example.library.domain.repository.CollectedLettersRepository
+import org.example.library.domain.entity.ProximityInfo
+import org.example.library.domain.entity.TaskItem
+import org.example.library.domain.repository.CollectedSpotsRepository
 import org.example.library.domain.repository.GameDataRepository
 
 
 class SpotSearchViewModel(
     private val gameDataRepository: GameDataRepository,
-    private val collectedLettersRepository: CollectedLettersRepository
+    private val collectedSpotsRepository: CollectedSpotsRepository
 ) : ViewModel() {
     private val _nearestBeaconDistance: MutableLiveData<Int?> = MutableLiveData(null)
     val nearestBeaconDistance: LiveData<Int?> = _nearestBeaconDistance.readOnly()
@@ -25,23 +27,32 @@ class SpotSearchViewModel(
 
     init {
         viewModelScope.launch {
-            gameDataRepository.nearestStrength.collect { distance ->
-                setStrength(distance)
+            gameDataRepository.proximityInfo.collect { info: ProximityInfo? ->
+                setProximity(info)
             }
         }
     }
 
-    private fun setStrength(strength: Int?) {
-        if (!this._isSearchMode.value) return
+    private fun setProximity(proximity: ProximityInfo?) {
+        if (!this._isSearchMode.value)
+            return
 
-        this._nearestBeaconDistance.value = strength
+        this._nearestBeaconDistance.value = proximity?.nearestBeaconStrength
 
-        val found = strength != null && strength >= 100
+        val found: Boolean = (proximity?.nearestBeaconStrength != null) && ((proximity.nearestBeaconStrength ?: 0) >= 100)
 
         if (found) {
-            this.collectedLettersRepository.incrementCount()
+            val discoveredIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds() ?: return
+
+            this.collectedSpotsRepository.setCollectedSpotIds(discoveredIds)
+
+            val task: TaskItem = this.gameDataRepository.taskForSpotId(
+                (proximity?.discoveredBeaconsIds?.minus(elements = discoveredIds) ?: return).first()
+            ) ?: return
+
+            this._hintText.value = task.question
             this._isSearchMode.value = false
-        } else if (strength == null) {
+        } else if (proximity?.nearestBeaconStrength == null) {
             this._hintText.value = "The more intense and stronger the vibration, the closer you are to the goal!"
         } else {
             this._hintText.value = ""

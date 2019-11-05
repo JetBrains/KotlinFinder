@@ -17,8 +17,7 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.example.library.domain.UI
-import org.example.library.domain.entity.BeaconInfo
-import org.example.library.domain.entity.GameConfig
+import org.example.library.domain.entity.*
 import org.example.library.domain.entity.toDonain
 
 
@@ -30,13 +29,13 @@ class GameDataRepository internal constructor(
     val beaconsChannel: Channel<BeaconInfo> = Channel(Channel.BUFFERED)
     private var _gameConfig: GameConfig? = null
 
-    private val _nearestStrengthChannel: Channel<Int?> = Channel()
-    val nearestStrength: Flow<Int?> = channelFlow {
+    private val _proximityInfoChannel: Channel<ProximityInfo?> = Channel()
+    val proximityInfo: Flow<ProximityInfo?> = channelFlow {
         val job = launch {
             while (isActive) {
-                val strength = _nearestStrengthChannel.receive()
-                Napier.d("got strength $strength")
-                send(strength)
+                val info: ProximityInfo? = _proximityInfoChannel.receive()
+                Napier.d("got strength $info")
+                send(info)
             }
         }
 
@@ -57,8 +56,8 @@ class GameDataRepository internal constructor(
 
                 if (scanResults.isNotEmpty()) {
                     async {
-                        val nearestStrength = sendBeaconsInfo(scanResults)
-                        _nearestStrengthChannel.send(nearestStrength)
+                        val info: ProximityInfo? = sendBeaconsInfo(scanResults)
+                        _proximityInfoChannel.send(info)
                     }
                 }
 
@@ -69,6 +68,18 @@ class GameDataRepository internal constructor(
 
     fun gameConfig(): GameConfig? {
         return this._gameConfig
+    }
+
+    fun taskForSpotId(id: Int): TaskItem? {
+        val items: List<TaskItem> = this.gameConfig()?.tasks ?: return null
+
+        for (item: TaskItem in items) {
+            if (item.code == id) {
+                return item
+            }
+        }
+
+        return null
     }
 
     suspend fun loadGameConfig(): GameConfig? {
@@ -84,7 +95,7 @@ class GameDataRepository internal constructor(
         }
     }
 
-    private suspend fun sendBeaconsInfo(beacons: List<BeaconInfo>): Int? {
+    private suspend fun sendBeaconsInfo(beacons: List<BeaconInfo>): ProximityInfo? {
         val onlyLast = beacons
             .filter { it.rssi < 0 }
             .reversed()
@@ -99,19 +110,19 @@ class GameDataRepository internal constructor(
 
         Napier.d(message = "proximity = $beaconsString")
 
-        val response: ProximityResponse
+        val info: ProximityInfo
 
         try {
-            response = this.gameApi.finderProximityGet(beaconsString)
+            val response: ProximityResponse = this.gameApi.finderProximityGet(beaconsString)
             Napier.d(message = "received = $response")
+
+            info = response.toDomain()
         } catch (error: Throwable) {
             Napier.e(message = "can't get proximity", throwable = error)
             Napier.e(message = error.toString())
             return null
         }
 
-        if (response.near.isNullOrEmpty()) return null
-
-        return response.near.map { it.strength }.max()
+        return info
     }
 }
