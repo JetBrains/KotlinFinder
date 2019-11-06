@@ -31,6 +31,7 @@ class MapViewModel(
 
     interface EventsListener {
         fun showSpotSearchScreen()
+        fun showEnterNameAlert()
     }
 
     private val _findTaskButtonState = MutableLiveData<FindTaskButtonState>(FindTaskButtonState.TOO_FAR)
@@ -56,6 +57,13 @@ class MapViewModel(
             this._currentStep.value = ids?.count() ?: 0
 
             this.setHintStr()
+
+            if ((this.gameDataRepository.gameConfig() != null && ids?.count() != null) &&
+                (this.gameDataRepository.gameConfig()?.active == ids.count())) {
+                this.eventsDispatcher.dispatchEvent {
+                    showEnterNameAlert()
+                }
+            }
         }
 
         this.spotSearchRepository.startScanning()
@@ -66,6 +74,14 @@ class MapViewModel(
     fun findTaskButtonTapped() {
         eventsDispatcher.dispatchEvent {
             showSpotSearchScreen()
+        }
+    }
+
+    fun sendWinnerName(name: String, completion: ((String?) -> Unit)) {
+        viewModelScope.launch {
+            val message: String? = gameDataRepository.sendWinnerName(name)
+
+            completion(message)
         }
     }
 

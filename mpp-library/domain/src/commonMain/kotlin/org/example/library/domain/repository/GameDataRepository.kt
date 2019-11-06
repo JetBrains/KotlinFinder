@@ -4,6 +4,7 @@ import com.github.aakira.napier.Napier
 import dev.icerock.moko.network.generated.apis.GameApi
 import dev.icerock.moko.network.generated.models.ConfigResponse
 import dev.icerock.moko.network.generated.models.ProximityResponse
+import dev.icerock.moko.network.generated.models.RegisterResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -58,10 +59,11 @@ class GameDataRepository internal constructor(
                 if (scanResults.isNotEmpty()) {
                     async {
                         val info: ProximityInfo? = sendBeaconsInfo(scanResults)
+
                         _proximityInfoChannel.send(info)
 
-                        val discoveredIds: List<Int> = info?.discoveredBeaconsIds ?: return@async
-                        collectedSpotsRepository.setCollectedSpotIds(discoveredIds)
+                        if (info?.discoveredBeaconsIds != null)
+                            collectedSpotsRepository.setCollectedSpotIds(info.discoveredBeaconsIds)
                     }
                 }
 
@@ -96,6 +98,19 @@ class GameDataRepository internal constructor(
             Napier.e(message = "Failed to get game config", throwable = error)
         } finally {
             return this._gameConfig
+        }
+    }
+
+    suspend fun sendWinnerName(name: String): String? {
+        try {
+            val response: RegisterResponse = this.gameApi.finderRegisterGet(name)
+            Napier.d(message = "Register response: $response")
+
+            return response.message
+        } catch (error: Throwable) {
+            Napier.e(message = "Failed to register winner", throwable = error)
+
+            return null
         }
     }
 

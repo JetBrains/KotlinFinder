@@ -145,6 +145,7 @@ class SpotSearchViewController : UIViewController {
         this.viewModel = viewModel
 
         viewModel.nearestBeaconDistance.addObserver { distance: Int? ->
+            println("distance: $distance")
             val minDistance: Int = 100
 
             this.spotSearchScene.distance =

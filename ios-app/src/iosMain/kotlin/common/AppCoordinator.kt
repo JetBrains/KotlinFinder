@@ -5,14 +5,11 @@ import com.icerockdev.jetfinder.feature.mainMap.presentation.SplashViewModel
 import com.icerockdev.jetfinder.feature.spotSearch.presentation.SpotSearchViewModel
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import org.example.library.Factory
-import platform.UIKit.UIImage
-import platform.UIKit.UINavigationController
-import platform.UIKit.UIWindow
-import platform.UIKit.tintColor
 import screens.MainScreenViewController
 import screens.SpotSearchViewController
 import screens.SplashViewController
 import org.example.library.domain.entity.GameConfig
+import platform.UIKit.*
 
 
 open class BasicCoordinator(
@@ -33,6 +30,7 @@ class AppCoordinator(
     window: UIWindow,
     factory: Factory
 ) : BasicCoordinator(window, factory), MapViewModel.EventsListener, SplashViewModel.EventsListener {
+    private val mapViewModel: MapViewModel = this.factory.mapFactory.createMapViewModel(EventsDispatcher(this))
 
     override fun start() {
         this.window.tintColor = Colors.orange
@@ -50,9 +48,8 @@ class AppCoordinator(
 
     private fun createMainScreen(): MainScreenViewController {
         val vc: MainScreenViewController = MainScreenViewController()
-        val vm: MapViewModel = this.factory.mapFactory.createMapViewModel(EventsDispatcher(this))
 
-        vc.bindViewModel(vm)
+        vc.bindViewModel(this.mapViewModel)
 
         return vc
     }
@@ -90,5 +87,53 @@ class AppCoordinator(
                 animated = true
             )
         }
+    }
+
+    override fun showEnterNameAlert() {
+        val alert: UIAlertController = UIAlertController.alertControllerWithTitle(
+            title = "Enter your name",
+            message = null,
+            preferredStyle = UIAlertControllerStyleAlert
+        )
+
+        alert.addTextFieldWithConfigurationHandler(null)
+
+        alert.addAction(
+            UIAlertAction.actionWithTitle(
+                title = "Ok",
+                style = UIAlertActionStyleDefault,
+                handler = {
+                    val text: String = (alert.textFields?.first() as? UITextField)?.text ?: return@actionWithTitle
+                    alert.dismissViewControllerAnimated(true, completion = null)
+
+                    this.mapViewModel.sendWinnerName(name = text, completion = { message: String? ->
+                        if (message == null)
+                            return@sendWinnerName
+
+                        this.showAlert(message)
+                    })
+                }
+            ))
+
+        this.navigationController.topViewController?.presentViewController(alert, animated = true, completion = null)
+    }
+
+    private fun showAlert(text: String) {
+        val alert: UIAlertController = UIAlertController.alertControllerWithTitle(
+            title = null,
+            message = text,
+            preferredStyle = UIAlertControllerStyleAlert
+        )
+
+        alert.addAction(
+            UIAlertAction.actionWithTitle(
+                title = "Ok",
+                style = UIAlertActionStyleCancel,
+                handler = {
+                    alert.dismissViewControllerAnimated(true, completion = null)
+                }
+            ))
+
+        this.navigationController.topViewController?.presentViewController(alert, animated = true, completion = null)
     }
 }

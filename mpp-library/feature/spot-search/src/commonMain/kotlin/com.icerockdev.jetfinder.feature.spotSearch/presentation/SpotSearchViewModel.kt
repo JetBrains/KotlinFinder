@@ -22,7 +22,9 @@ class SpotSearchViewModel(
     private val _isSearchMode: MutableLiveData<Boolean> = MutableLiveData(true)
     val isSearchMode: LiveData<Boolean> = this._isSearchMode.readOnly()
 
-    private val _hintText: MutableLiveData<String> = MutableLiveData("")
+    private val _hintText: MutableLiveData<String> = MutableLiveData(
+        "The more intense and stronger the vibration, the closer you are to the goal!"
+    )
     val hintText: LiveData<String> = this._hintText.readOnly()
 
     init {
@@ -34,28 +36,39 @@ class SpotSearchViewModel(
     }
 
     private fun setProximity(proximity: ProximityInfo?) {
+        println("proximity: $proximity")
+
         if (!this._isSearchMode.value)
             return
 
         this._nearestBeaconDistance.value = proximity?.nearestBeaconStrength
 
-        val found: Boolean = (proximity?.nearestBeaconStrength != null) && ((proximity.nearestBeaconStrength ?: 0) >= 100)
+        //val found: Boolean = (proximity?.nearestBeaconStrength != null) && ((proximity.nearestBeaconStrength ?: 0) >= 100)
 
-        if (found) {
-            val discoveredIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds() ?: return
+        val collectedIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds() ?: emptyList()
+        val discoveredIds: List<Int> = proximity?.discoveredBeaconsIds ?: emptyList()
+
+        val newIds: List<Int> = discoveredIds.minus(collectedIds)
+
+        println("collected: $collectedIds, discovered: $discoveredIds, new: $newIds")
+
+        if (newIds.count() > 0) {
+            println(">>>>>>>> TASK COMPLETED!")
+
+            //val discoveredIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds() ?: return
+            println("discoveredBeacons: $discoveredIds")
 
             //this.collectedSpotsRepository.setCollectedSpotIds(discoveredIds)
 
             val task: TaskItem = this.gameDataRepository.taskForSpotId(
-                (proximity?.discoveredBeaconsIds?.minus(elements = discoveredIds) ?: return).first()
+                (proximity?.discoveredBeaconsIds?.minus(elements = collectedIds) ?: return).first()
             ) ?: return
+            println("task: $task")
 
             this._hintText.value = task.question
             this._isSearchMode.value = false
-        } else if (proximity?.nearestBeaconStrength == null) {
-            this._hintText.value = "The more intense and stronger the vibration, the closer you are to the goal!"
         } else {
-            this._hintText.value = ""
+            this._hintText.value = "The more intense and stronger the vibration, the closer you are to the goal!"
         }
     }
 }

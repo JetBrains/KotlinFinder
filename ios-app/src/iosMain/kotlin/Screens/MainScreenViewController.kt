@@ -258,6 +258,10 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         this.presentViewController(alert, animated = true, completion = null)
     }
 
+    private fun showEnterNameAlert() {
+
+    }
+
     override fun viewForZoomingInScrollView(scrollView: UIScrollView): UIView {
         return this.mapImageView
     }
