@@ -24,7 +24,8 @@ import org.example.library.domain.entity.toDonain
 @FlowPreview
 @UseExperimental(ExperimentalCoroutinesApi::class)
 class GameDataRepository internal constructor(
-    private val gameApi: GameApi
+    private val gameApi: GameApi,
+    private val collectedSpotsRepository: CollectedSpotsRepository
 ) {
     val beaconsChannel: Channel<BeaconInfo> = Channel(Channel.BUFFERED)
     private var _gameConfig: GameConfig? = null
@@ -58,6 +59,9 @@ class GameDataRepository internal constructor(
                     async {
                         val info: ProximityInfo? = sendBeaconsInfo(scanResults)
                         _proximityInfoChannel.send(info)
+
+                        val discoveredIds: List<Int> = info?.discoveredBeaconsIds ?: return@async
+                        collectedSpotsRepository.setCollectedSpotIds(discoveredIds)
                     }
                 }
 

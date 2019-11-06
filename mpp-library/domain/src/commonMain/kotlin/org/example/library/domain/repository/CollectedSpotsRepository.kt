@@ -23,6 +23,6 @@ class CollectedSpotsRepository(
     }
 
     fun collectedSpotIds(): List<Int>? {
-        return this.storage.collectedSpotIdsStr?.split(":")?.map{ it.toInt() }
+        return this.collectedSpotsIds.value//this.storage.collectedSpotIdsStr?.split(":")?.map{ it.toInt() }
     }
 }

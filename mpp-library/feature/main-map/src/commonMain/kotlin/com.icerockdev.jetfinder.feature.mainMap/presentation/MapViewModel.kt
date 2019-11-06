@@ -70,7 +70,7 @@ class MapViewModel(
     }
 
     private fun setHintStr() {
-        val collectedSpotIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds() ?: return
+        val collectedSpotIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds() ?: emptyList()
         val tasks: List<TaskItem> = this.gameDataRepository.gameConfig()?.tasks ?: return
 
         val uncompletedTasks: List<TaskItem> = tasks.filter {

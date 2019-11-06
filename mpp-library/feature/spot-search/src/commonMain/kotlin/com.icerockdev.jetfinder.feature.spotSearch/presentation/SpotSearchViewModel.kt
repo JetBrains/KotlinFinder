@@ -44,7 +44,7 @@ class SpotSearchViewModel(
         if (found) {
             val discoveredIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds() ?: return
 
-            this.collectedSpotsRepository.setCollectedSpotIds(discoveredIds)
+            //this.collectedSpotsRepository.setCollectedSpotIds(discoveredIds)
 
             val task: TaskItem = this.gameDataRepository.taskForSpotId(
                 (proximity?.discoveredBeaconsIds?.minus(elements = discoveredIds) ?: return).first()

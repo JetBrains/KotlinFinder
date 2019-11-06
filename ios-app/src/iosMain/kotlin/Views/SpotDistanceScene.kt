@@ -40,7 +40,6 @@ class SpotDistanceScene : SKScene {
         super.didMoveToView(view)
 
         this.backgroundColor = UIColor.clearColor
-
     }
 
     override fun didChangeSize(oldSize: CValue<CGSize>) {
