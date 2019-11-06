@@ -49,10 +49,11 @@ class DomainFactory(
             install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
-                        Napier.d(message = message)
+                        //Napier.d(message = message)
+                        println(message)
                     }
                 }
-                level = LogLevel.NONE
+                level = LogLevel.ALL
             }
             install(HttpCookies) {
                 // Will keep an in-memory map with all the cookies from previous requests.
