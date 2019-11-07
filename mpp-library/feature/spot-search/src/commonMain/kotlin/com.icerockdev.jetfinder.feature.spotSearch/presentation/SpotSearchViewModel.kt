@@ -36,6 +36,8 @@ class SpotSearchViewModel(
         }
 
         this.gameDataRepository.currentDiscoveredBeaconId.addObserver { beaconId: Int? ->
+            Napier.d("New beacon: $beaconId")
+
             if (!this._isSearchMode.value)
                 return@addObserver
 
@@ -44,11 +46,11 @@ class SpotSearchViewModel(
             } else {
                 Napier.d(">>>>>>>> TASK COMPLETED!")
 
-                val task: TaskItem = this.gameDataRepository.taskForSpotId(beaconId) ?: return@addObserver
+                val task: TaskItem? = this.gameDataRepository.taskForSpotId(beaconId)
 
                 Napier.d("task: $task")
 
-                this._hintText.value = task.question
+                this._hintText.value = task?.question ?: ""
                 this._isSearchMode.value = false
             }
         }
