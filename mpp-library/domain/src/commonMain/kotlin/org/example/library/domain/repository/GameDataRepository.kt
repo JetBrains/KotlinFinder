@@ -19,7 +19,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.example.library.domain.UI
 import org.example.library.domain.entity.*
-import org.example.library.domain.entity.toDonain
+import org.example.library.domain.entity.toDomain
 
 
 @FlowPreview
@@ -29,7 +29,7 @@ class GameDataRepository internal constructor(
     private val collectedSpotsRepository: CollectedSpotsRepository
 ) {
     val beaconsChannel: Channel<BeaconInfo> = Channel(Channel.BUFFERED)
-    private var _gameConfig: GameConfig? = null
+    var gameConfig: GameConfig? = null
 
     private val _proximityInfoChannel: Channel<ProximityInfo?> = Channel()
     val proximityInfo: Flow<ProximityInfo?> = channelFlow {
@@ -72,46 +72,28 @@ class GameDataRepository internal constructor(
         }
     }
 
-    fun gameConfig(): GameConfig? {
-        return this._gameConfig
-    }
-
     fun taskForSpotId(id: Int): TaskItem? {
-        val items: List<TaskItem> = this.gameConfig()?.tasks ?: return null
+        val items: List<TaskItem> = this.gameConfig?.tasks ?: return null
 
-        for (item: TaskItem in items) {
-            if (item.code == id) {
-                return item
-            }
+        return items.firstOrNull { item: TaskItem ->
+            item.code == id
         }
-
-        return null
     }
 
     suspend fun loadGameConfig(): GameConfig? {
-        try {
-            val config: ConfigResponse = this.gameApi.finderConfigGet()
-            Napier.d(message = "Game config response = $config")
+        val config: ConfigResponse = this.gameApi.finderConfigGet()
+        Napier.d(message = "Game config response = $config")
 
-            this._gameConfig = config.toDonain()
-        } catch (error: Throwable) {
-            Napier.e(message = "Failed to get game config", throwable = error)
-        } finally {
-            return this._gameConfig
-        }
+        this.gameConfig = config.toDomain()
+
+        return this.gameConfig
     }
 
     suspend fun sendWinnerName(name: String): String? {
-        try {
-            val response: RegisterResponse = this.gameApi.finderRegisterGet(name)
-            Napier.d(message = "Register response: $response")
+        val response: RegisterResponse = this.gameApi.finderRegisterGet(name)
+        Napier.d(message = "Register response: $response")
 
-            return response.message
-        } catch (error: Throwable) {
-            Napier.e(message = "Failed to register winner", throwable = error)
-
-            return null
-        }
+        return response.message
     }
 
     private suspend fun sendBeaconsInfo(beacons: List<BeaconInfo>): ProximityInfo? {

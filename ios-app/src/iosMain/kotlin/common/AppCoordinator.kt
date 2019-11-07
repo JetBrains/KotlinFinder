@@ -73,20 +73,38 @@ class AppCoordinator(
         return vc
     }
 
-    override fun showSpotSearchScreen() {
+    override fun routeToSpotSearchScreen() {
         this.navigationController.pushViewController(this.createSpotSearchScreen(), animated = true)
     }
 
-    override fun gameConfigLoaded(config: GameConfig?) {
-        if (config == null) {
-            // TODO: handle error
-        } else {
-            this.navigationController.setNavigationBarHidden(false)
-            this.navigationController.setViewControllers(
-                listOf(this.createMainScreen()),
-                animated = true
-            )
-        }
+    override fun routeToMainscreen() {
+        this.navigationController.setNavigationBarHidden(false)
+        this.navigationController.setViewControllers(
+            listOf(this.createMainScreen()),
+            animated = true
+        )
+    }
+
+    override fun showError(error: Throwable, retryingAction: (() -> Unit)?) {
+        this.showRetryAlert(error.toString(), action = retryingAction)
+    }
+
+    override fun showHint(hint: String) {
+        val alert: UIAlertController = UIAlertController.alertControllerWithTitle(
+            title = "Hint!",
+            message = hint,
+            preferredStyle = UIAlertControllerStyleAlert
+        )
+
+        alert.addAction(UIAlertAction.actionWithTitle(
+            title = "Ok",
+            style = UIAlertActionStyleCancel,
+            handler = {
+                alert.dismissViewControllerAnimated(true, completion = null)
+            }
+        ))
+
+        this.navigationController.topViewController?.presentViewController(alert, animated = true, completion = null)
     }
 
     override fun showEnterNameAlert() {
@@ -106,19 +124,20 @@ class AppCoordinator(
                     val text: String = (alert.textFields?.first() as? UITextField)?.text ?: return@actionWithTitle
                     alert.dismissViewControllerAnimated(true, completion = null)
 
-                    this.mapViewModel.sendWinnerName(name = text, completion = { message: String? ->
-                        if (message == null)
-                            return@sendWinnerName
-
-                        this.showAlert(message)
-                    })
+                    this.mapViewModel.sendWinnerName(name = text)
                 }
             ))
 
         this.navigationController.topViewController?.presentViewController(alert, animated = true, completion = null)
     }
 
-    private fun showAlert(text: String) {
+    override fun showRegistrationMessage(message: String) {
+        this.showAlert(message, action = null)
+    }
+
+    private fun showAlert(text: String,
+                          buttonTitle: String = "Ok",
+                          action: (() -> Unit)?) {
         val alert: UIAlertController = UIAlertController.alertControllerWithTitle(
             title = null,
             message = text,
@@ -127,13 +146,18 @@ class AppCoordinator(
 
         alert.addAction(
             UIAlertAction.actionWithTitle(
-                title = "Ok",
+                title = buttonTitle,
                 style = UIAlertActionStyleCancel,
                 handler = {
+                    action?.invoke()
                     alert.dismissViewControllerAnimated(true, completion = null)
                 }
             ))
 
         this.navigationController.topViewController?.presentViewController(alert, animated = true, completion = null)
+    }
+
+    private fun showRetryAlert(text: String, action: (() -> Unit)?) {
+        this.showAlert(text = text, buttonTitle = "Retry", action = action)
     }
 }

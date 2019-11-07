@@ -25,7 +25,7 @@ internal fun ConfigItem.toDomain(): TaskItem = TaskItem (
 )
 
 
-internal fun ConfigResponse.toDonain(): GameConfig = GameConfig(
+internal fun ConfigResponse.toDomain(): GameConfig = GameConfig(
     index = index,
     active = active,
     tasks = config.map {

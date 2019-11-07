@@ -1,5 +1,6 @@
 package screens
 
+import com.github.aakira.napier.Napier
 import com.icerockdev.jetfinder.feature.spotSearch.presentation.SpotSearchViewModel
 import common.centerInSuperview
 import common.fillSuperview
@@ -145,7 +146,7 @@ class SpotSearchViewController : UIViewController {
         this.viewModel = viewModel
 
         viewModel.nearestBeaconDistance.addObserver { distance: Int? ->
-            println("distance: $distance")
+            Napier.d("distance: $distance")
             val minDistance: Int = 100
 
             this.spotSearchScene.distance =

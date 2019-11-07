@@ -54,14 +54,12 @@ class DomainFactory(
             install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
-                        //Napier.d(message = message)
-                        println(message)
+                        Napier.d(message = message)
                     }
                 }
                 level = LogLevel.ALL
             }
             install(HttpCookies) {
-                // Will keep an in-memory map with all the cookies from previous requests.
                 storage = cookiesStorage
             }
 
@@ -77,17 +75,17 @@ class DomainFactory(
         )
     }
 
-    val spotSearchRepository: SpotSearchRepository by lazy {
-        SpotSearchRepository(
-            context = this.context,
-            gameDataRepository = this.gameDataRepository)
-    }
-
     val gameDataRepository: GameDataRepository by lazy {
         GameDataRepository(this.gameApi, this.collectedSpotsRepository)
     }
 
     val collectedSpotsRepository: CollectedSpotsRepository by lazy {
         CollectedSpotsRepository(this.keyValueStorage)
+    }
+
+    val spotSearchRepository: SpotSearchRepository by lazy {
+        SpotSearchRepository(
+            context = this.context,
+            gameDataRepository = this.gameDataRepository)
     }
 }

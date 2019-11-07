@@ -1,5 +1,6 @@
 package com.icerockdev.jetfinder.feature.spotSearch.presentation
 
+import com.github.aakira.napier.Napier
 import dev.icerock.moko.mvvm.livedata.LiveData
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.livedata.readOnly
@@ -36,7 +37,7 @@ class SpotSearchViewModel(
     }
 
     private fun setProximity(proximity: ProximityInfo?) {
-        println("proximity: $proximity")
+        Napier.d("proximity: $proximity")
 
         if (!this._isSearchMode.value)
             return
@@ -50,20 +51,20 @@ class SpotSearchViewModel(
 
         val newIds: List<Int> = discoveredIds.minus(collectedIds)
 
-        println("collected: $collectedIds, discovered: $discoveredIds, new: $newIds")
+        Napier.d("collected: $collectedIds, discovered: $discoveredIds, new: $newIds")
 
         if (newIds.count() > 0) {
-            println(">>>>>>>> TASK COMPLETED!")
+            Napier.d(">>>>>>>> TASK COMPLETED!")
 
             //val discoveredIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds() ?: return
-            println("discoveredBeacons: $discoveredIds")
+            Napier.d("discoveredBeacons: $discoveredIds")
 
             //this.collectedSpotsRepository.setCollectedSpotIds(discoveredIds)
 
             val task: TaskItem = this.gameDataRepository.taskForSpotId(
                 (proximity?.discoveredBeaconsIds?.minus(elements = collectedIds) ?: return).first()
             ) ?: return
-            println("task: $task")
+            Napier.d("task: $task")
 
             this._hintText.value = task.question
             this._isSearchMode.value = false

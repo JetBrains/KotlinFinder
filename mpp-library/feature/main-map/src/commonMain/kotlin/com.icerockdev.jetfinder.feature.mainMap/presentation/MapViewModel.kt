@@ -29,16 +29,20 @@ class MapViewModel(
         COMPLETED
     }
 
-    interface EventsListener {
-        fun showSpotSearchScreen()
+    interface EventsListener: ErrorEventsListener {
+        fun routeToSpotSearchScreen()
         fun showEnterNameAlert()
+        fun showHint(hint: String)
+        fun showRegistrationMessage(message: String)
     }
 
     private val _findTaskButtonState = MutableLiveData<FindTaskButtonState>(FindTaskButtonState.TOO_FAR)
     val findTaskButtonState: LiveData<FindTaskButtonState> = _findTaskButtonState.readOnly()
 
-    private val _hintStr: MutableLiveData<String?> = MutableLiveData(null)
-    val hintStr: LiveData<String?> = _hintStr.readOnly()
+    private var hintStr: String? = null
+
+    private val _hintButtonEnabled: MutableLiveData<Boolean> = MutableLiveData(false)
+    val hintButtonEnabled: LiveData<Boolean> = this._hintButtonEnabled.readOnly()
 
     private val _currentStep: MutableLiveData<Int> = MutableLiveData(0)
     val currentStep: LiveData<Int> = this._currentStep.readOnly()
@@ -58,8 +62,11 @@ class MapViewModel(
 
             this.setHintStr()
 
-            if ((this.gameDataRepository.gameConfig() != null && ids?.count() != null) &&
-                (this.gameDataRepository.gameConfig()?.active == ids.count())) {
+            if ((this.gameDataRepository.gameConfig != null && ids?.count() != null) &&
+                (this.gameDataRepository.gameConfig?.active == ids.count())) {
+
+                this.spotSearchRepository.stopScanning()
+
                 this.eventsDispatcher.dispatchEvent {
                     showEnterNameAlert()
                 }
@@ -73,29 +80,49 @@ class MapViewModel(
 
     fun findTaskButtonTapped() {
         eventsDispatcher.dispatchEvent {
-            showSpotSearchScreen()
+            routeToSpotSearchScreen()
         }
     }
 
-    fun sendWinnerName(name: String, completion: ((String?) -> Unit)) {
+    fun sendWinnerName(name: String) {
         viewModelScope.launch {
-            val message: String? = gameDataRepository.sendWinnerName(name)
+            try {
+                val message: String = gameDataRepository.sendWinnerName(name) ?: return@launch
 
-            completion(message)
+                eventsDispatcher.dispatchEvent {
+                    showRegistrationMessage(message)
+                }
+
+            } catch (error: Throwable) {
+                eventsDispatcher.dispatchEvent {
+                    showError(error, retryingAction = {
+                        sendWinnerName(name)
+                    })
+                }
+            }
+        }
+    }
+
+    fun hintButtonTapped() {
+        this.eventsDispatcher.dispatchEvent {
+            showHint(hintStr ?: return@dispatchEvent)
         }
     }
 
     private fun setHintStr() {
         val collectedSpotIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds() ?: emptyList()
-        val tasks: List<TaskItem> = this.gameDataRepository.gameConfig()?.tasks ?: return
+        val tasks: List<TaskItem> = this.gameDataRepository.gameConfig?.tasks ?: return
 
         val uncompletedTasks: List<TaskItem> = tasks.filter {
             collectedSpotIds.indexOf(it.code) == -1
         }
 
-        if (uncompletedTasks.count() == 0)
-            this._hintStr.value = null
-        else
-            this._hintStr.value = uncompletedTasks.first().hint
+        if (uncompletedTasks.count() == 0) {
+            this.hintStr = null
+            this._hintButtonEnabled.value = false
+        } else {
+            this.hintStr = uncompletedTasks.first().hint
+            this._hintButtonEnabled.value = true
+        }
     }
 }

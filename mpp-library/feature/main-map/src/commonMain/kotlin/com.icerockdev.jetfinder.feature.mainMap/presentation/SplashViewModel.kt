@@ -9,21 +9,34 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
+interface ErrorEventsListener {
+    fun showError(error: Throwable, retryingAction: (() -> Unit)?)
+}
+
+
 class SplashViewModel(
     private val gameDataRepository: GameDataRepository,
     override val eventsDispatcher: EventsDispatcher<EventsListener>
 ): ViewModel(), EventsDispatcherOwner<SplashViewModel.EventsListener> {
 
-    interface EventsListener {
-        fun gameConfigLoaded(config: GameConfig?)
+    interface EventsListener: ErrorEventsListener {
+        fun routeToMainscreen()
     }
 
     fun loadData() {
         this.viewModelScope.launch {
-            val config: GameConfig? = gameDataRepository.loadGameConfig()
-
-            eventsDispatcher.dispatchEvent {
-                gameConfigLoaded(config)
+            try {
+                gameDataRepository.loadGameConfig()
+                
+                eventsDispatcher.dispatchEvent {
+                    routeToMainscreen()
+                }
+            } catch (error: Throwable) {
+                eventsDispatcher.dispatchEvent {
+                    showError(error, retryingAction = {
+                        loadData()
+                    })
+                }
             }
         }
     }

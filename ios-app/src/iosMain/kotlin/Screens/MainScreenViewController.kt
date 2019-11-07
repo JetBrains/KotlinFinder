@@ -9,7 +9,32 @@ import platform.CoreGraphics.CGSizeMake
 import platform.Foundation.NSCoder
 import platform.Foundation.NSNumber
 import platform.QuartzCore.CAShapeLayer
-import platform.UIKit.*
+import platform.UIKit.UIScrollView
+import platform.UIKit.UIScrollViewDelegateProtocol
+import platform.UIKit.UIView
+import platform.UIKit.UIImageView
+import platform.UIKit.UIImage
+import platform.UIKit.UIButton
+import platform.UIKit.UIViewController
+import platform.UIKit.UIRectCornerTopRight
+import platform.UIKit.addSubview
+import platform.UIKit.backgroundColor
+import platform.UIKit.bottomAnchor
+import platform.UIKit.centerXAnchor
+import platform.UIKit.heightAnchor
+import platform.UIKit.leftAnchor
+import platform.UIKit.navigationController
+import platform.UIKit.rightAnchor
+import platform.UIKit.topAnchor
+import platform.UIKit.translatesAutoresizingMaskIntoConstraints
+import platform.UIKit.UIColor
+import platform.UIKit.UIBezierPath
+import platform.UIKit.UIRectCornerTopLeft
+import platform.UIKit.UIControlEventTouchUpInside
+import platform.UIKit.UIAlertController
+import platform.UIKit.UIAlertControllerStyleAlert
+import platform.UIKit.UIAlertAction
+import platform.UIKit.UIAlertActionStyleCancel
 import views.CollectWordView
 import views.CommonButton
 
@@ -227,8 +252,8 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             }
         }
 
-        viewModel.hintStr.addObserver { str: String? ->
-            this.hintButton.setEnabled(str != null)
+        viewModel.hintButtonEnabled.addObserver { enabled: Boolean ->
+            this.hintButton.setEnabled(enabled)
         }
     }
 
@@ -239,27 +264,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
 
     @ObjCAction
     private fun hintButtonTapped() {
-        val hintStr: String = this.viewModel.hintStr.value ?: return
-
-        val alert: UIAlertController = UIAlertController.alertControllerWithTitle(
-            title = "Hint!",
-            message = hintStr,
-            preferredStyle = UIAlertControllerStyleAlert
-        )
-
-        alert.addAction(UIAlertAction.actionWithTitle(
-            title = "Ok",
-            style = UIAlertActionStyleCancel,
-            handler = {
-                alert.dismissViewControllerAnimated(true, completion = null)
-            }
-        ))
-
-        this.presentViewController(alert, animated = true, completion = null)
-    }
-
-    private fun showEnterNameAlert() {
-
+        this.viewModel.hintButtonTapped()
     }
 
     override fun viewForZoomingInScrollView(scrollView: UIScrollView): UIView {
