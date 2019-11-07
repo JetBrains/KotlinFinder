@@ -25,6 +25,7 @@ import org.example.library.domain.repository.CollectedLettersRepository
 import org.example.library.domain.repository.GameDataRepository
 import org.example.library.domain.repository.SpotSearchRepository
 import org.example.library.domain.storage.KeyValueStorage
+import org.example.library.domain.storage.PersistentCookiesStorage
 
 class DomainFactory(
     private val settings: Settings,
@@ -35,6 +36,10 @@ class DomainFactory(
     private val json: Json by lazy {
         @Suppress("EXPERIMENTAL_API_USAGE")
         Json.nonstrict
+    }
+
+    private val cookiesStorage: PersistentCookiesStorage by lazy {
+        PersistentCookiesStorage(storage = this.keyValueStorage)
     }
 
     private val httpClient: HttpClient by lazy {
@@ -57,7 +62,7 @@ class DomainFactory(
             }
             install(HttpCookies) {
                 // Will keep an in-memory map with all the cookies from previous requests.
-                storage = AcceptAllCookiesStorage()
+                storage = cookiesStorage
             }
 
             // disable standard BadResponseStatus - exceptionfactory do it for us

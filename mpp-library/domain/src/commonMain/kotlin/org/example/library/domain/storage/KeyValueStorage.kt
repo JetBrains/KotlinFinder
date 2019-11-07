@@ -11,4 +11,5 @@ import com.russhwolf.settings.nullableString
 class KeyValueStorage(settings: Settings) {
     var token by settings.nullableString("pref_token")
     var collectedLettersCount: Int by settings.int("collected_letters_count")
+    var cookies: String? by settings.nullableString("cookies")
 }
