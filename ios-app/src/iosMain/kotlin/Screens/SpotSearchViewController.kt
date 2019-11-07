@@ -147,11 +147,9 @@ class SpotSearchViewController : UIViewController {
 
         viewModel.nearestBeaconDistance.addObserver { distance: Int? ->
             Napier.d("distance: $distance")
-            val minDistance: Int = 100
+            val maxDistance: Int = 100
 
-            this.spotSearchScene.distance =
-                this.spotSearchScene.maxDistance * (minDistance - (distance
-                    ?: minDistance)) / minDistance
+            this.spotSearchScene.distance = (distance ?: 0) / (maxDistance / 5.0f)
         }
 
         viewModel.isSearchMode.addObserver { searchMode: Boolean ->
