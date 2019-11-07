@@ -121,7 +121,7 @@ class MapViewModel(
             this.hintStr = null
             this._hintButtonEnabled.value = false
         } else {
-            this.hintStr = uncompletedTasks.first().hint
+            this.hintStr = uncompletedTasks.random().hint
             this._hintButtonEnabled.value = true
         }
     }

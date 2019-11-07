@@ -27,7 +27,7 @@ class SplashViewModel(
         this.viewModelScope.launch {
             try {
                 gameDataRepository.loadGameConfig()
-                
+
                 eventsDispatcher.dispatchEvent {
                     routeToMainscreen()
                 }

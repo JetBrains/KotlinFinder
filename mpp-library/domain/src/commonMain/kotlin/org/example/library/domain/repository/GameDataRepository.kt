@@ -1,6 +1,9 @@
 package org.example.library.domain.repository
 
 import com.github.aakira.napier.Napier
+import dev.icerock.moko.mvvm.livedata.LiveData
+import dev.icerock.moko.mvvm.livedata.MutableLiveData
+import dev.icerock.moko.mvvm.livedata.readOnly
 import dev.icerock.moko.network.generated.apis.GameApi
 import dev.icerock.moko.network.generated.models.ConfigResponse
 import dev.icerock.moko.network.generated.models.ProximityResponse
@@ -31,6 +34,9 @@ class GameDataRepository internal constructor(
     val beaconsChannel: Channel<BeaconInfo> = Channel(Channel.BUFFERED)
     var gameConfig: GameConfig? = null
 
+    private val _currentDiscoveredBeaconId: MutableLiveData<Int?> = MutableLiveData(null)
+    val currentDiscoveredBeaconId: LiveData<Int?> = this._currentDiscoveredBeaconId.readOnly()
+
     private val _proximityInfoChannel: Channel<ProximityInfo?> = Channel()
     val proximityInfo: Flow<ProximityInfo?> = channelFlow {
         val job = launch {
@@ -56,11 +62,22 @@ class GameDataRepository internal constructor(
                     beacon = beaconsChannel.poll()
                 }
 
+                Napier.d("scanResults count: ${scanResults.count()}")
+
                 if (scanResults.isNotEmpty()) {
                     async {
                         val info: ProximityInfo? = sendBeaconsInfo(scanResults)
 
                         _proximityInfoChannel.send(info)
+
+                        val collectedIds: List<Int> = collectedSpotsRepository.collectedSpotIds() ?: emptyList()
+                        val discoveredIds: List<Int> = info?.discoveredBeaconsIds ?: emptyList()
+
+                        val newIds: List<Int> = discoveredIds.minus(collectedIds)
+
+                        Napier.d("collected: $collectedIds, discovered: $discoveredIds, new: $newIds")
+
+                        _currentDiscoveredBeaconId.value = newIds.firstOrNull()
 
                         if (info?.discoveredBeaconsIds != null)
                             collectedSpotsRepository.setCollectedSpotIds(info.discoveredBeaconsIds)

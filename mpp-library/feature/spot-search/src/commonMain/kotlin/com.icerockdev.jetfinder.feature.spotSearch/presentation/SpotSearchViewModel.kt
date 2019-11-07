@@ -34,6 +34,24 @@ class SpotSearchViewModel(
                 setProximity(info)
             }
         }
+
+        this.gameDataRepository.currentDiscoveredBeaconId.addObserver { beaconId: Int? ->
+            if (!this._isSearchMode.value)
+                return@addObserver
+
+            if (beaconId == null) {
+                this._hintText.value = "The more intense and stronger the vibration, the closer you are to the goal!"
+            } else {
+                Napier.d(">>>>>>>> TASK COMPLETED!")
+
+                val task: TaskItem = this.gameDataRepository.taskForSpotId(beaconId) ?: return@addObserver
+
+                Napier.d("task: $task")
+
+                this._hintText.value = task.question
+                this._isSearchMode.value = false
+            }
+        }
     }
 
     private fun setProximity(proximity: ProximityInfo?) {
@@ -43,33 +61,5 @@ class SpotSearchViewModel(
             return
 
         this._nearestBeaconDistance.value = proximity?.nearestBeaconStrength
-
-        //val found: Boolean = (proximity?.nearestBeaconStrength != null) && ((proximity.nearestBeaconStrength ?: 0) >= 100)
-
-        val collectedIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds() ?: emptyList()
-        val discoveredIds: List<Int> = proximity?.discoveredBeaconsIds ?: emptyList()
-
-        val newIds: List<Int> = discoveredIds.minus(collectedIds)
-
-        Napier.d("collected: $collectedIds, discovered: $discoveredIds, new: $newIds")
-
-        if (newIds.count() > 0) {
-            Napier.d(">>>>>>>> TASK COMPLETED!")
-
-            //val discoveredIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds() ?: return
-            Napier.d("discoveredBeacons: $discoveredIds")
-
-            //this.collectedSpotsRepository.setCollectedSpotIds(discoveredIds)
-
-            val task: TaskItem = this.gameDataRepository.taskForSpotId(
-                (proximity?.discoveredBeaconsIds?.minus(elements = collectedIds) ?: return).first()
-            ) ?: return
-            Napier.d("task: $task")
-
-            this._hintText.value = task.question
-            this._isSearchMode.value = false
-        } else {
-            this._hintText.value = "The more intense and stronger the vibration, the closer you are to the goal!"
-        }
     }
 }
