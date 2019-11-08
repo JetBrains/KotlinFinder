@@ -4,39 +4,14 @@ import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import common.fillContainer
 import common.fillSuperview
 import kotlinx.cinterop.ObjCAction
-import platform.CoreGraphics.CGRectMake
-import platform.CoreGraphics.CGSizeMake
+import platform.CoreGraphics.*
 import platform.Foundation.NSCoder
 import platform.Foundation.NSNumber
 import platform.QuartzCore.CAShapeLayer
-import platform.UIKit.UIScrollView
-import platform.UIKit.UIScrollViewDelegateProtocol
-import platform.UIKit.UIView
-import platform.UIKit.UIImageView
-import platform.UIKit.UIImage
-import platform.UIKit.UIButton
-import platform.UIKit.UIViewController
-import platform.UIKit.UIRectCornerTopRight
-import platform.UIKit.addSubview
-import platform.UIKit.backgroundColor
-import platform.UIKit.bottomAnchor
-import platform.UIKit.centerXAnchor
-import platform.UIKit.heightAnchor
-import platform.UIKit.leftAnchor
-import platform.UIKit.navigationController
-import platform.UIKit.rightAnchor
-import platform.UIKit.topAnchor
-import platform.UIKit.translatesAutoresizingMaskIntoConstraints
-import platform.UIKit.UIColor
-import platform.UIKit.UIBezierPath
-import platform.UIKit.UIRectCornerTopLeft
-import platform.UIKit.UIControlEventTouchUpInside
-import platform.UIKit.UIAlertController
-import platform.UIKit.UIAlertControllerStyleAlert
-import platform.UIKit.UIAlertAction
-import platform.UIKit.UIAlertActionStyleCancel
+import platform.UIKit.*
 import views.CollectWordView
 import views.CommonButton
+import kotlin.math.min
 
 
 class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol {
@@ -50,6 +25,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
     private val shadowView: UIView = UIView()
     private val mapImageView: UIImageView = UIImageView(UIImage.imageNamed("mapImage"))
     private val hintButton: UIButton = UIButton.buttonWithType(3)
+    private val resetCookiesButton: UIButton = UIButton(frame = CGRectMake(0.0, 0.0, 0.0, 0.0))
 
     private lateinit var viewModel: MapViewModel
 
@@ -74,6 +50,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         this.scrollView.addSubview(this.mapImageView)
         this.controlWordContainerView.addSubview(this.collectWordView)
         this.controlWordContainerView.addSubview(this.hintButton)
+        this.controlWordContainerView.addSubview(this.resetCookiesButton)
 
         this.shadowView.backgroundColor = UIColor.whiteColor
 
@@ -84,7 +61,8 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             shadowView,
             mapImageView,
             collectWordView,
-            this.hintButton
+            this.hintButton,
+            this.resetCookiesButton
         ).forEach { it.translatesAutoresizingMaskIntoConstraints = false }
 
         this.collectWordView.topAnchor.constraintEqualToAnchor(
@@ -108,6 +86,16 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         this.hintButton.rightAnchor.constraintEqualToAnchor(
             this.controlWordContainerView.rightAnchor,
             constant = -20.0
+        ).setActive(true)
+
+        this.resetCookiesButton.topAnchor.constraintEqualToAnchor(
+            this.controlWordContainerView.topAnchor,
+            constant = 20.0
+        ).setActive(true)
+
+        this.resetCookiesButton.leftAnchor.constraintEqualToAnchor(
+            this.controlWordContainerView.leftAnchor,
+            constant = 20.0
         ).setActive(true)
 
         this.scrollView.leftAnchor.constraintEqualToAnchor(this.view.leftAnchor).setActive(true)
@@ -186,6 +174,14 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             action = platform.darwin.sel_registerName("hintButtonTapped"),
             forControlEvents = UIControlEventTouchUpInside
         )
+
+        this.resetCookiesButton.setTitle("RESET", 0u)
+        this.resetCookiesButton.setTitleColor(UIColor.redColor, 0)
+        this.resetCookiesButton.addTarget(
+            target = this,
+            action = platform.darwin.sel_registerName("resetCookiesButtonTapped"),
+            forControlEvents = UIControlEventTouchUpInside
+        )
     }
 
     override fun viewWillAppear(animated: Boolean) {
@@ -200,6 +196,15 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         if (this.isMovingFromParentViewController()) {
             viewModel.onCleared()
         }
+    }
+
+    override fun viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+
+        this.scrollView.minimumZoomScale = min(
+            CGRectGetWidth(this.scrollView.frame) / CGRectGetWidth(this.mapImageView.frame),
+            CGRectGetHeight(this.scrollView.frame) / CGRectGetHeight(this.mapImageView.frame))
+        this.scrollView.zoomScale = 1.0
     }
 
     override fun viewDidLayoutSubviews() {
@@ -265,6 +270,11 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
     @ObjCAction
     private fun hintButtonTapped() {
         this.viewModel.hintButtonTapped()
+    }
+
+    @ObjCAction
+    private fun resetCookiesButtonTapped() {
+        this.viewModel.resetCookiesButtonTapped()
     }
 
     override fun viewForZoomingInScrollView(scrollView: UIScrollView): UIView {

@@ -4,7 +4,6 @@ import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcherOwner
 import dev.icerock.moko.mvvm.livedata.LiveData
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
-import dev.icerock.moko.mvvm.livedata.map
 import dev.icerock.moko.mvvm.livedata.readOnly
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.collect
@@ -109,6 +108,10 @@ class MapViewModel(
         this.eventsDispatcher.dispatchEvent {
             showHint(hintStr ?: return@dispatchEvent)
         }
+    }
+
+    fun resetCookiesButtonTapped() {
+        this.gameDataRepository.resetCookies()
     }
 
     private fun setHintStr() {

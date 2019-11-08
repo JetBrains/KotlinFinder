@@ -112,6 +112,12 @@ class GameDataRepository internal constructor(
         }
     }
 
+    fun resetCookies() {
+        this.storage.cookies = null
+
+        Napier.d("COOKIES CLEARED")
+    }
+
     suspend fun loadGameConfig(): GameConfig? {
         val config: ConfigResponse = this.gameApi.finderConfigGet()
         Napier.d(message = "Game config response = $config")
