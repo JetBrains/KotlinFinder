@@ -25,6 +25,8 @@ class SpotSearchRepository(
 ) : BlueFalconDelegate {
     private val bf: BlueFalcon = BlueFalcon(context, null)
 
+    private val lastBeaconRssi = mutableMapOf<String, Int>()
+
     fun startScanning() {
         if (this.bf.isScanning) {
             return
@@ -81,7 +83,14 @@ class SpotSearchRepository(
         val name: String = bluetoothPeripheral.name ?: return
         val rssi: Int = bluetoothPeripheral.rssi?.toInt() ?: return
 
-        val beaconInfo = BeaconInfo(name = name, rssi = rssi)
+        val processedRssi = if (rssi == 127) {
+            lastBeaconRssi[name] ?: return
+        } else {
+            lastBeaconRssi[name] = rssi
+            rssi
+        }
+
+        val beaconInfo = BeaconInfo(name = name, rssi = processedRssi)
 
         GlobalScope.launch(Dispatchers.UI) {
             Napier.d("beaconInfo: $beaconInfo")
