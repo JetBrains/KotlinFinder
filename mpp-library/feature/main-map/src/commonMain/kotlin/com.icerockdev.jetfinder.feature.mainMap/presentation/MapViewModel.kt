@@ -49,10 +49,12 @@ class MapViewModel(
     init {
         viewModelScope.launch {
             gameDataRepository.proximityInfo.collect { info: ProximityInfo? ->
-                val state = if (info?.nearestBeaconStrength == null) FindTaskButtonState.TOO_FAR
-                else FindTaskButtonState.ACTIVE
-
-                _findTaskButtonState.value = state
+                if (info?.nearestBeaconStrength == null)
+                    _findTaskButtonState.value = FindTaskButtonState.TOO_FAR
+                else if (!gameDataRepository.isGameEnded.value)
+                    _findTaskButtonState.value = FindTaskButtonState.ACTIVE
+                else
+                    _findTaskButtonState.value = FindTaskButtonState.COMPLETED
             }
         }
 
