@@ -62,13 +62,15 @@ class MapViewModel(
 
             this.setHintStr()
 
-            if ((this.gameDataRepository.gameConfig != null && ids?.count() != null) &&
-                (this.gameDataRepository.gameConfig?.active == ids.count())) {
+            this.gameDataRepository.isGameEnded.addObserver { ended: Boolean ->
+                if (ended && !this.gameDataRepository.isUserRegistered()) {
+                    this.spotSearchRepository.stopScanning()
 
-                this.spotSearchRepository.stopScanning()
+                    this._hintButtonEnabled.value = false
 
-                this.eventsDispatcher.dispatchEvent {
-                    showEnterNameAlert()
+                    this.eventsDispatcher.dispatchEvent {
+                        showEnterNameAlert()
+                    }
                 }
             }
         }

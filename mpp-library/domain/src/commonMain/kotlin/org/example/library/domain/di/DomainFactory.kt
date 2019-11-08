@@ -76,7 +76,10 @@ class DomainFactory(
     }
 
     val gameDataRepository: GameDataRepository by lazy {
-        GameDataRepository(this.gameApi, this.collectedSpotsRepository)
+        GameDataRepository(
+            gameApi = this.gameApi,
+            collectedSpotsRepository = this.collectedSpotsRepository,
+            storage = this.keyValueStorage)
     }
 
     val collectedSpotsRepository: CollectedSpotsRepository by lazy {
