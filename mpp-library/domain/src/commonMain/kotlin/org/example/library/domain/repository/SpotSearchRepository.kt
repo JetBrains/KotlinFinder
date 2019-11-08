@@ -83,7 +83,10 @@ class SpotSearchRepository(
 
         val beaconInfo = BeaconInfo(name = name, rssi = rssi)
 
-        GlobalScope.launch(Dispatchers.UI) { gameDataRepository.beaconsChannel.send(beaconInfo) }
+        GlobalScope.launch(Dispatchers.UI) {
+            Napier.d("beaconInfo: $beaconInfo")
+            gameDataRepository.beaconsChannel.send(beaconInfo)
+        }
     }
 
     override fun didDiscoverDevice(bluetoothPeripheral: BluetoothPeripheral) {

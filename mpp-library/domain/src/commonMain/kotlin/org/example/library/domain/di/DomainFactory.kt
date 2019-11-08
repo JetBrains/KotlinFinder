@@ -11,7 +11,6 @@ import dev.icerock.moko.network.exceptionfactory.HttpExceptionFactory
 import dev.icerock.moko.network.exceptionfactory.parser.ErrorExceptionParser
 import dev.icerock.moko.network.exceptionfactory.parser.ValidationExceptionParser
 import dev.icerock.moko.network.features.ExceptionFeature
-import dev.icerock.moko.network.features.TokenFeature
 import dev.icerock.moko.network.generated.apis.GameApi
 import io.ktor.client.HttpClient
 import io.ktor.client.features.cookies.AcceptAllCookiesStorage
@@ -21,7 +20,7 @@ import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.Logging
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.json.Json
-import org.example.library.domain.repository.CollectedLettersRepository
+import org.example.library.domain.repository.CollectedSpotsRepository
 import org.example.library.domain.repository.GameDataRepository
 import org.example.library.domain.repository.SpotSearchRepository
 import org.example.library.domain.storage.KeyValueStorage
@@ -58,10 +57,9 @@ class DomainFactory(
                         Napier.d(message = message)
                     }
                 }
-                level = LogLevel.NONE
+                level = LogLevel.ALL
             }
             install(HttpCookies) {
-                // Will keep an in-memory map with all the cookies from previous requests.
                 storage = cookiesStorage
             }
 
@@ -78,16 +76,16 @@ class DomainFactory(
     }
 
     val gameDataRepository: GameDataRepository by lazy {
-        GameDataRepository(this.gameApi)
+        GameDataRepository(this.gameApi, this.collectedSpotsRepository)
+    }
+
+    val collectedSpotsRepository: CollectedSpotsRepository by lazy {
+        CollectedSpotsRepository(this.keyValueStorage)
     }
 
     val spotSearchRepository: SpotSearchRepository by lazy {
         SpotSearchRepository(
             context = this.context,
             gameDataRepository = this.gameDataRepository)
-    }
-
-    val collectedLettersRepository: CollectedLettersRepository by lazy {
-        CollectedLettersRepository(this.keyValueStorage)
     }
 }

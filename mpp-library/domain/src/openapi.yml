@@ -50,6 +50,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProximityResponse'
+  /finder/register:
+    get:
+      tags:
+        - game
+      summary: 'send proximity nearby devices to get target info'
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+          description: Participant name
+          required: true
+          example: "USERNAME"
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
 components:
   schemas:
     StatusResponse:
@@ -136,3 +156,26 @@ components:
         - OK
         - ERROR
       example: "OK"
+    RegisterResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Message to winner"
+        winner:
+          type: integer
+          example: 1
+        place:
+          type: integer
+          example: 3
+        winnerCount:
+          type: integer
+          example: 19
+        result:
+          $ref: '#/components/schemas/ResultField'
+      required:
+        - message
+        - winner
+        - place
+        - winnerCount
+        - result

@@ -9,17 +9,14 @@ import platform.CoreGraphics.CGSizeMake
 import platform.Foundation.NSCoder
 import platform.Foundation.NSNumber
 import platform.QuartzCore.CAShapeLayer
-import platform.UIKit.UIBezierPath
-import platform.UIKit.UIColor
-import platform.UIKit.UIControlEventTouchUpInside
-import platform.UIKit.UIImage
-import platform.UIKit.UIImageView
-import platform.UIKit.UIRectCornerTopLeft
-import platform.UIKit.UIRectCornerTopRight
 import platform.UIKit.UIScrollView
 import platform.UIKit.UIScrollViewDelegateProtocol
 import platform.UIKit.UIView
+import platform.UIKit.UIImageView
+import platform.UIKit.UIImage
+import platform.UIKit.UIButton
 import platform.UIKit.UIViewController
+import platform.UIKit.UIRectCornerTopRight
 import platform.UIKit.addSubview
 import platform.UIKit.backgroundColor
 import platform.UIKit.bottomAnchor
@@ -30,6 +27,14 @@ import platform.UIKit.navigationController
 import platform.UIKit.rightAnchor
 import platform.UIKit.topAnchor
 import platform.UIKit.translatesAutoresizingMaskIntoConstraints
+import platform.UIKit.UIColor
+import platform.UIKit.UIBezierPath
+import platform.UIKit.UIRectCornerTopLeft
+import platform.UIKit.UIControlEventTouchUpInside
+import platform.UIKit.UIAlertController
+import platform.UIKit.UIAlertControllerStyleAlert
+import platform.UIKit.UIAlertAction
+import platform.UIKit.UIAlertActionStyleCancel
 import views.CollectWordView
 import views.CommonButton
 
@@ -44,6 +49,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
     private val roundedCornersMaskLayer: CAShapeLayer = CAShapeLayer()
     private val shadowView: UIView = UIView()
     private val mapImageView: UIImageView = UIImageView(UIImage.imageNamed("mapImage"))
+    private val hintButton: UIButton = UIButton.buttonWithType(3)
 
     private lateinit var viewModel: MapViewModel
 
@@ -67,6 +73,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
 
         this.scrollView.addSubview(this.mapImageView)
         this.controlWordContainerView.addSubview(this.collectWordView)
+        this.controlWordContainerView.addSubview(this.hintButton)
 
         this.shadowView.backgroundColor = UIColor.whiteColor
 
@@ -76,19 +83,32 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             controlWordContainerView,
             shadowView,
             mapImageView,
-            collectWordView
+            collectWordView,
+            this.hintButton
         ).forEach { it.translatesAutoresizingMaskIntoConstraints = false }
 
         this.collectWordView.topAnchor.constraintEqualToAnchor(
             this.shadowView.topAnchor,
             constant = 20.0
         ).setActive(true)
+
         this.collectWordView.bottomAnchor.constraintEqualToAnchor(
             this.shadowView.bottomAnchor,
             constant = -30.0
         ).setActive(true)
+
         this.collectWordView.centerXAnchor.constraintEqualToAnchor(this.shadowView.centerXAnchor)
             .setActive(true)
+
+        this.hintButton.topAnchor.constraintEqualToAnchor(
+            this.controlWordContainerView.topAnchor,
+            constant = 20.0
+        ).setActive(true)
+
+        this.hintButton.rightAnchor.constraintEqualToAnchor(
+            this.controlWordContainerView.rightAnchor,
+            constant = -20.0
+        ).setActive(true)
 
         this.scrollView.leftAnchor.constraintEqualToAnchor(this.view.leftAnchor).setActive(true)
         this.scrollView.topAnchor.constraintEqualToAnchor(this.view.topAnchor).setActive(true)
@@ -160,6 +180,12 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             action = platform.darwin.sel_registerName("findTaskButtonTapped"),
             forControlEvents = UIControlEventTouchUpInside
         )
+
+        this.hintButton.addTarget(
+            target = this,
+            action = platform.darwin.sel_registerName("hintButtonTapped"),
+            forControlEvents = UIControlEventTouchUpInside
+        )
     }
 
     override fun viewWillAppear(animated: Boolean) {
@@ -225,11 +251,20 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
                 }
             }
         }
+
+        viewModel.hintButtonEnabled.addObserver { enabled: Boolean ->
+            this.hintButton.setEnabled(enabled)
+        }
     }
 
     @ObjCAction
-    fun findTaskButtonTapped() {
+    private fun findTaskButtonTapped() {
         this.viewModel.findTaskButtonTapped()
+    }
+
+    @ObjCAction
+    private fun hintButtonTapped() {
+        this.viewModel.hintButtonTapped()
     }
 
     override fun viewForZoomingInScrollView(scrollView: UIScrollView): UIView {
