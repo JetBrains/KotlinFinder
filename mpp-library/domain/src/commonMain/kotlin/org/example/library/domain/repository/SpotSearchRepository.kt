@@ -48,6 +48,11 @@ class SpotSearchRepository(
         return this.bf.isScanning
     }
 
+    fun restartScanning() {
+        Napier.d(">>> SCANNING RESTARTED")
+        this.doScanning()
+    }
+
     private fun doScanning() {
         GlobalScope.launch(Dispatchers.UI) {
             while (isActive) {

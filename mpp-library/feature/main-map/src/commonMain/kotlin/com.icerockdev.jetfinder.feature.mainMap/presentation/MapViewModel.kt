@@ -47,6 +47,10 @@ class MapViewModel(
     val currentStep: LiveData<Int> = this._currentStep.readOnly()
 
     init {
+        this.gameDataRepository.startScanning(didReceiveNoDevicesBlock = {
+            this.spotSearchRepository.restartScanning()
+        })
+
         viewModelScope.launch {
             gameDataRepository.proximityInfo.collect { info: ProximityInfo? ->
                 if (info?.nearestBeaconStrength == null)
