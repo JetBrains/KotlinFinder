@@ -81,8 +81,8 @@ class SpotSearchViewController : UIViewController {
         this.spotSearchStatusContainerView.addSubview(this.spotSearchViewContainer)
         this.spotSearchViewContainer.fillSuperview()
         this.spotSearchViewContainer.backgroundColor = UIColor.clearColor
-        this.spotSearchViewContainer.showsFPS = true
-        this.spotSearchViewContainer.showsNodeCount = true
+        this.spotSearchViewContainer.showsFPS = false
+        this.spotSearchViewContainer.showsNodeCount = false
 
         this.spotSearchStatusContainerView.addSubview(this.successImageView)
         this.successImageView.centerInSuperview()
