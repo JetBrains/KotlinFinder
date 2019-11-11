@@ -59,7 +59,7 @@ class SpotSearchViewModel(
     private fun setProximity(proximity: ProximityInfo?) {
         Napier.d("proximity: $proximity")
 
-        if (!this._isSearchMode.value)
+        if (!this._isSearchMode.value || (proximity?.nearestBeaconStrength == null))
             return
 
         this._nearestBeaconDistance.value = proximity?.nearestBeaconStrength

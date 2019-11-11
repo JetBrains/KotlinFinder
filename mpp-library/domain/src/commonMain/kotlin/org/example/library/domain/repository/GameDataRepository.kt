@@ -97,7 +97,7 @@ class GameDataRepository internal constructor(
                     didReceiveNoDevicesBlock?.invoke()
                 }
 
-                delay(1000)
+                delay(500)
             }
         }
     }

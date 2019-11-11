@@ -31,6 +31,7 @@ class AppCoordinator(
     factory: Factory
 ) : BasicCoordinator(window, factory), MapViewModel.EventsListener, SplashViewModel.EventsListener {
     private val mapViewModel: MapViewModel = this.factory.mapFactory.createMapViewModel(EventsDispatcher(this))
+    private val spotSearchViewController: SpotSearchViewController = SpotSearchViewController()
 
     override fun start() {
         this.window.tintColor = Colors.orange
@@ -55,12 +56,11 @@ class AppCoordinator(
     }
 
     private fun createSpotSearchScreen(): SpotSearchViewController {
-        val vc: SpotSearchViewController = SpotSearchViewController()
         val vm: SpotSearchViewModel = this.factory.spotSearchFactory.createSpotSearchViewModel()
 
-        vc.bindViewModel(vm)
+        this.spotSearchViewController.bindViewModel(vm)
 
-        return vc
+        return this.spotSearchViewController
     }
 
     private fun createSplashScreen(): SplashViewController {

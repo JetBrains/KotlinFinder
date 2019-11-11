@@ -132,6 +132,8 @@ class SpotSearchViewController : UIViewController {
         super.viewWillAppear(animated)
 
         this.navigationController?.setNavigationBarHidden(false, animated = false)
+
+        this.spotSearchViewContainer.paused = false
     }
 
     override fun viewDidDisappear(animated: Boolean) {
@@ -140,6 +142,8 @@ class SpotSearchViewController : UIViewController {
         if (this.isMovingFromParentViewController()) {
             viewModel.onCleared()
         }
+
+        this.spotSearchViewContainer.paused = true
     }
 
     fun bindViewModel(viewModel: SpotSearchViewModel) {
