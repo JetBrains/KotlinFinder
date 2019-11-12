@@ -7,7 +7,7 @@
 		<key>controller-AgC-eL-Hgc</key>
 		<dict>
 			<key>controllerClass</key>
-			<string>Watchapp3InterfaceController</string>
+			<string>MainInterfaceController</string>
 		</dict>
 	</dict>
 	<key>root</key>
