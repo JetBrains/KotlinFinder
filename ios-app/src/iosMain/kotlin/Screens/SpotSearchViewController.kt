@@ -81,8 +81,8 @@ class SpotSearchViewController : UIViewController {
         this.spotSearchStatusContainerView.addSubview(this.spotSearchViewContainer)
         this.spotSearchViewContainer.fillSuperview()
         this.spotSearchViewContainer.backgroundColor = UIColor.clearColor
-        this.spotSearchViewContainer.showsFPS = true
-        this.spotSearchViewContainer.showsNodeCount = true
+        this.spotSearchViewContainer.showsFPS = false
+        this.spotSearchViewContainer.showsNodeCount = false
 
         this.spotSearchStatusContainerView.addSubview(this.successImageView)
         this.successImageView.centerInSuperview()
@@ -132,6 +132,8 @@ class SpotSearchViewController : UIViewController {
         super.viewWillAppear(animated)
 
         this.navigationController?.setNavigationBarHidden(false, animated = false)
+
+        this.spotSearchViewContainer.paused = false
     }
 
     override fun viewDidDisappear(animated: Boolean) {
@@ -140,6 +142,8 @@ class SpotSearchViewController : UIViewController {
         if (this.isMovingFromParentViewController()) {
             viewModel.onCleared()
         }
+
+        this.spotSearchViewContainer.paused = true
     }
 
     fun bindViewModel(viewModel: SpotSearchViewModel) {

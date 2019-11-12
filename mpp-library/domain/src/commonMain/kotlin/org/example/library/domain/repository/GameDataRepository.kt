@@ -23,19 +23,24 @@ import kotlinx.coroutines.launch
 import org.example.library.domain.UI
 import org.example.library.domain.entity.*
 import org.example.library.domain.entity.toDomain
+import org.example.library.domain.storage.KeyValueStorage
 
 
 @FlowPreview
 @UseExperimental(ExperimentalCoroutinesApi::class)
 class GameDataRepository internal constructor(
     private val gameApi: GameApi,
-    private val collectedSpotsRepository: CollectedSpotsRepository
+    private val collectedSpotsRepository: CollectedSpotsRepository,
+    private val storage: KeyValueStorage
 ) {
     val beaconsChannel: Channel<BeaconInfo> = Channel(Channel.BUFFERED)
     var gameConfig: GameConfig? = null
 
     private val _currentDiscoveredBeaconId: MutableLiveData<Int?> = MutableLiveData(null)
     val currentDiscoveredBeaconId: LiveData<Int?> = this._currentDiscoveredBeaconId.readOnly()
+
+    private val _isGameEnded: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isGameEnded: LiveData<Boolean> = this._isGameEnded.readOnly()
 
     private val _proximityInfoChannel: Channel<ProximityInfo?> = Channel()
     val proximityInfo: Flow<ProximityInfo?> = channelFlow {
@@ -52,7 +57,7 @@ class GameDataRepository internal constructor(
         }
     }
 
-    init {
+    fun startScanning(didReceiveNoDevicesBlock: (() -> Unit)?) {
         GlobalScope.launch(Dispatchers.UI) {
             while (isActive) {
                 val scanResults = mutableListOf<BeaconInfo>()
@@ -66,7 +71,11 @@ class GameDataRepository internal constructor(
 
                 if (scanResults.isNotEmpty()) {
                     async {
+                        if (_isGameEnded.value)
+                            return@async
+
                         val info: ProximityInfo? = sendBeaconsInfo(scanResults)
+                        val config: GameConfig = gameConfig ?: return@async
 
                         _proximityInfoChannel.send(info)
 
@@ -81,12 +90,20 @@ class GameDataRepository internal constructor(
 
                         if (info?.discoveredBeaconsIds != null)
                             collectedSpotsRepository.setCollectedSpotIds(info.discoveredBeaconsIds)
+
+                        _isGameEnded.value = (discoveredIds.count() == config.active)
                     }
+                } else {
+                    didReceiveNoDevicesBlock?.invoke()
                 }
 
-                delay(1000)
+                delay(500)
             }
         }
+    }
+
+    fun isUserRegistered(): Boolean {
+        return this.storage.isUserRegistered
     }
 
     fun taskForSpotId(id: Int): TaskItem? {
@@ -95,6 +112,12 @@ class GameDataRepository internal constructor(
         return items.firstOrNull { item: TaskItem ->
             item.code == id
         }
+    }
+
+    fun resetCookies() {
+        this.storage.cookies = null
+
+        Napier.d("COOKIES CLEARED")
     }
 
     suspend fun loadGameConfig(): GameConfig? {

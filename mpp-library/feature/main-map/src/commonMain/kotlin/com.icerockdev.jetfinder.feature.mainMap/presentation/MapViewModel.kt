@@ -4,7 +4,6 @@ import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcherOwner
 import dev.icerock.moko.mvvm.livedata.LiveData
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
-import dev.icerock.moko.mvvm.livedata.map
 import dev.icerock.moko.mvvm.livedata.readOnly
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.collect
@@ -48,12 +47,18 @@ class MapViewModel(
     val currentStep: LiveData<Int> = this._currentStep.readOnly()
 
     init {
+        this.gameDataRepository.startScanning(didReceiveNoDevicesBlock = {
+            this.spotSearchRepository.restartScanning()
+        })
+
         viewModelScope.launch {
             gameDataRepository.proximityInfo.collect { info: ProximityInfo? ->
-                val state = if (info?.nearestBeaconStrength == null) FindTaskButtonState.TOO_FAR
-                else FindTaskButtonState.ACTIVE
-
-                _findTaskButtonState.value = state
+                if (info?.nearestBeaconStrength == null)
+                    _findTaskButtonState.value = FindTaskButtonState.TOO_FAR
+                else if (!gameDataRepository.isGameEnded.value)
+                    _findTaskButtonState.value = FindTaskButtonState.ACTIVE
+                else
+                    _findTaskButtonState.value = FindTaskButtonState.COMPLETED
             }
         }
 
@@ -62,13 +67,15 @@ class MapViewModel(
 
             this.setHintStr()
 
-            if ((this.gameDataRepository.gameConfig != null && ids?.count() != null) &&
-                (this.gameDataRepository.gameConfig?.active == ids.count())) {
+            this.gameDataRepository.isGameEnded.addObserver { ended: Boolean ->
+                if (ended && !this.gameDataRepository.isUserRegistered()) {
+                    this.spotSearchRepository.stopScanning()
 
-                this.spotSearchRepository.stopScanning()
+                    this._hintButtonEnabled.value = false
 
-                this.eventsDispatcher.dispatchEvent {
-                    showEnterNameAlert()
+                    this.eventsDispatcher.dispatchEvent {
+                        showEnterNameAlert()
+                    }
                 }
             }
         }
@@ -107,6 +114,10 @@ class MapViewModel(
         this.eventsDispatcher.dispatchEvent {
             showHint(hintStr ?: return@dispatchEvent)
         }
+    }
+
+    fun resetCookiesButtonTapped() {
+        this.gameDataRepository.resetCookies()
     }
 
     private fun setHintStr() {
