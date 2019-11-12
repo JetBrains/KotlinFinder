@@ -5,8 +5,8 @@ import platform.WatchKit.WKExtensionDelegateProtocolMeta
 import platform.darwin.NSObject
 
 
-@ExportObjCClass
 @Suppress("CONFLICTING_OVERLOADS")
+@ExportObjCClass
 class ExtensionDelegate: NSObject, WKExtensionDelegateProtocol {
 
     companion object : NSObject(), WKExtensionDelegateProtocolMeta {}

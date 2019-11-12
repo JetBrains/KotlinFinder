@@ -17,6 +17,7 @@
 		45FAED15234EC97A008C0653 /* kotlin in Resources */ = {isa = PBXBuildFile; fileRef = 45FAED14234EC97A008C0653 /* kotlin */; };
 		B078B37C235612BC0063160D /* SFProDisplay-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B078B37A235612BC0063160D /* SFProDisplay-Regular.ttf */; };
 		B078B37D235612BC0063160D /* SFProDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B078B37B235612BC0063160D /* SFProDisplay-Bold.ttf */; };
+		B092A281237AB3CD00929745 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B092A22F237A97C500929745 /* Interface.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,8 @@
 		45FAED14234EC97A008C0653 /* kotlin */ = {isa = PBXFileReference; lastKnownFileType = folder; name = kotlin; path = src/iosMain/kotlin; sourceTree = "<group>"; };
 		B078B37A235612BC0063160D /* SFProDisplay-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Regular.ttf"; sourceTree = "<group>"; };
 		B078B37B235612BC0063160D /* SFProDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Bold.ttf"; sourceTree = "<group>"; };
+		B092A22F237A97C500929745 /* Interface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Interface.storyboard; sourceTree = "<group>"; };
+		B092A27B237AA5A500929745 /* MainInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainInterfaceController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +131,7 @@
 				45B9D1A4236EEF6400E10F5D /* Interface.plist */,
 				45B9D185236EED4000E10F5D /* Assets.xcassets */,
 				45B9D187236EED4000E10F5D /* Info.plist */,
+				B092A22F237A97C500929745 /* Interface.storyboard */,
 			);
 			path = watch;
 			sourceTree = "<group>";
@@ -137,6 +141,7 @@
 			children = (
 				45B9D195236EED4100E10F5D /* Assets.xcassets */,
 				45B9D197236EED4100E10F5D /* Info.plist */,
+				B092A27B237AA5A500929745 /* MainInterfaceController.swift */,
 			);
 			path = "watch Extension";
 			sourceTree = "<group>";
@@ -241,9 +246,11 @@
 					};
 					45B9D17F236EED3D00E10F5D = {
 						CreatedOnToolsVersion = 11.1;
+						LastSwiftMigration = 1120;
 					};
 					45B9D18B236EED4100E10F5D = {
 						CreatedOnToolsVersion = 11.1;
+						LastSwiftMigration = 1120;
 					};
 				};
 			};
@@ -285,6 +292,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				45B9D1A5236EEF6400E10F5D /* Interface.plist in Resources */,
+				B092A281237AB3CD00929745 /* Interface.storyboard in Resources */,
 				45B9D186236EED4000E10F5D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -418,14 +426,22 @@
 		45B9D19C236EED4100E10F5D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = watch/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.alex009.jetfinder.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
+				SWIFT_VERSION = 5.0;
 				WATCHOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Debug;
@@ -433,13 +449,21 @@
 		45B9D19D236EED4100E10F5D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = watch/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.alex009.jetfinder.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
+				SWIFT_VERSION = 5.0;
 				WATCHOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Release;
