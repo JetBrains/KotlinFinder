@@ -14,7 +14,7 @@
         <!--Word-->
         <scene sceneID="wuZ-Vm-eOX">
             <objects>
-                <controller title="Word" id="fx0-0D-ogB" customClass="MainInterfaceController" customModule="watch_Extension">
+                <controller identifier="word" title="Word" id="fx0-0D-ogB" customClass="MainInterfaceController" customModule="watch_Extension">
                     <items>
                         <group width="1" height="6" alignment="left" id="VfW-0b-Y4z"/>
                         <group width="1" alignment="left" layout="vertical" spacing="10" id="yUH-uu-khL">
@@ -34,10 +34,31 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="-339" y="211"/>
+            <point key="canvasLocation" x="-342" y="211"/>
+        </scene>
+        <!--Search-->
+        <scene sceneID="7GV-Oo-rYC">
+            <objects>
+                <controller identifier="search" title="Search" id="l9p-qN-zeu" customClass="SpotSearchInterfaceController" customModule="watch_Extension">
+                    <items>
+                        <group width="0.80000000000000004" height="0.80000000000000004" alignment="center" verticalAlignment="center" id="wPd-Yt-PZh">
+                            <items>
+                                <button width="1" alignment="left" backgroundImage="findTask" id="oou-HM-8uJ"/>
+                                <spriteKitScene alignment="left" hidden="YES" id="Mut-Ck-gXC"/>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="findTaskButton" destination="oou-HM-8uJ" id="Oqj-tx-kRk"/>
+                        <outlet property="searchScene" destination="Mut-Ck-gXC" id="yv5-oV-MMh"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="-31" y="211"/>
         </scene>
     </scenes>
     <resources>
+        <image name="findTask" width="208" height="208"/>
         <image name="kotlin0" width="80" height="80"/>
     </resources>
 </document>

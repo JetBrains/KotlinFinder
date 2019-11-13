@@ -19,6 +19,7 @@
 		B078B37D235612BC0063160D /* SFProDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B078B37B235612BC0063160D /* SFProDisplay-Bold.ttf */; };
 		B092A281237AB3CD00929745 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B092A22F237A97C500929745 /* Interface.storyboard */; };
 		B092A283237BEA0D00929745 /* MainInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B092A27B237AA5A500929745 /* MainInterfaceController.swift */; };
+		B092A285237C3A9600929745 /* SpotSearchInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B092A284237C3A9600929745 /* SpotSearchInterfaceController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,7 @@
 		B078B37B235612BC0063160D /* SFProDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Bold.ttf"; sourceTree = "<group>"; };
 		B092A22F237A97C500929745 /* Interface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Interface.storyboard; sourceTree = "<group>"; };
 		B092A27B237AA5A500929745 /* MainInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainInterfaceController.swift; sourceTree = "<group>"; };
+		B092A284237C3A9600929745 /* SpotSearchInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotSearchInterfaceController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +145,7 @@
 				45B9D195236EED4100E10F5D /* Assets.xcassets */,
 				45B9D197236EED4100E10F5D /* Info.plist */,
 				B092A27B237AA5A500929745 /* MainInterfaceController.swift */,
+				B092A284237C3A9600929745 /* SpotSearchInterfaceController.swift */,
 			);
 			path = "watch Extension";
 			sourceTree = "<group>";
@@ -354,6 +357,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B092A283237BEA0D00929745 /* MainInterfaceController.swift in Sources */,
+				B092A285237C3A9600929745 /* SpotSearchInterfaceController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

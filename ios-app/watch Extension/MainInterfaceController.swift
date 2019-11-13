@@ -18,6 +18,10 @@ class MainInterfaceController: WKInterfaceController {
         super.awake(withContext: context)
 
         self.setStepsCount(count: 0)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            self.pushController(withName: "search", context: nil)
+        }
     }
 
     override func willActivate() {
