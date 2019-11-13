@@ -14,13 +14,17 @@
         <!--Main Interface Controller-->
         <scene sceneID="wuZ-Vm-eOX">
             <objects>
-                <controller id="fx0-0D-ogB" customClass="MainInterfaceController">
+                <controller id="fx0-0D-ogB" customClass="MainInterfaceController" customModule="watch_Extension">
                     <items>
-                        <imageView width="100" height="100" alignment="center" verticalAlignment="center" image="kotlin0" contentMode="scaleAspectFit" id="o23-RC-Jac"/>
-                        <label alignment="center" verticalAlignment="bottom" text="KOTLIN" textAlignment="center" baselineAdjustment="alignCenters" id="NgQ-qV-VSb">
-                            <color key="textColor" red="1" green="1" blue="1" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
-                            <fontDescription key="font" name="SFProDisplay-Bold" family="SF Pro Display" pointSize="30"/>
-                        </label>
+                        <group width="1" alignment="left" layout="vertical" spacing="10" id="yUH-uu-khL">
+                            <items>
+                                <imageView width="0.69999999999999996" height="0.69999999999999996" alignment="center" verticalAlignment="center" image="kotlin0" contentMode="scaleAspectFit" id="o23-RC-Jac"/>
+                                <label width="1" alignment="center" verticalAlignment="center" text="KOTLIN" textAlignment="center" baselineAdjustment="alignCenters" id="NgQ-qV-VSb">
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <fontDescription key="font" name="SFProDisplay-Bold" family="SF Pro Display" pointSize="30"/>
+                                </label>
+                            </items>
+                        </group>
                     </items>
                     <connections>
                         <outlet property="progressImage" destination="o23-RC-Jac" id="xEW-KZ-Kfk"/>

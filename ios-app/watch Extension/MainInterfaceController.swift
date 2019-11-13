@@ -10,8 +10,7 @@ import WatchKit
 import Foundation
 
 
-class MainInterfaceControllerA: WKInterfaceController {
-
+class MainInterfaceController: WKInterfaceController {
     @IBOutlet var progressImage: WKInterfaceImage!
     @IBOutlet var progressLabel: WKInterfaceLabel!
 
@@ -31,4 +30,9 @@ class MainInterfaceControllerA: WKInterfaceController {
         super.didDeactivate()
     }
 
+    private func setStepsCount(count: Int) {
+        self.progressImage.setImageNamed("kotlin\(count)")
+
+
+    }
 }

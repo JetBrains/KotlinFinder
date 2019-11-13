@@ -18,6 +18,7 @@
 		B078B37C235612BC0063160D /* SFProDisplay-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B078B37A235612BC0063160D /* SFProDisplay-Regular.ttf */; };
 		B078B37D235612BC0063160D /* SFProDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B078B37B235612BC0063160D /* SFProDisplay-Bold.ttf */; };
 		B092A281237AB3CD00929745 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B092A22F237A97C500929745 /* Interface.storyboard */; };
+		B092A283237BEA0D00929745 /* MainInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B092A27B237AA5A500929745 /* MainInterfaceController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -220,6 +221,7 @@
 				45B9D1A6236EF07B00E10F5D /* Compile Kotlin/Native */,
 				45B9D189236EED4100E10F5D /* Frameworks */,
 				45B9D18A236EED4100E10F5D /* Resources */,
+				B092A282237BEA0600929745 /* Sources */,
 			);
 			buildRules = (
 			);
@@ -345,6 +347,17 @@
 			shellScript = "$SRCROOT/../gradlew -p $SRCROOT packForXCode -Pdisable.android=true\n";
 		};
 /* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B092A282237BEA0600929745 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B092A283237BEA0D00929745 /* MainInterfaceController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
 		45B9D18F236EED4100E10F5D /* PBXTargetDependency */ = {
