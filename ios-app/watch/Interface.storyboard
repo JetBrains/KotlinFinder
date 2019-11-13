@@ -11,11 +11,12 @@
         </array>
     </customFonts>
     <scenes>
-        <!--Main Interface Controller-->
+        <!--Word-->
         <scene sceneID="wuZ-Vm-eOX">
             <objects>
-                <controller id="fx0-0D-ogB" customClass="MainInterfaceController" customModule="watch_Extension">
+                <controller title="Word" id="fx0-0D-ogB" customClass="MainInterfaceController" customModule="watch_Extension">
                     <items>
+                        <group width="1" height="6" alignment="left" id="VfW-0b-Y4z"/>
                         <group width="1" alignment="left" layout="vertical" spacing="10" id="yUH-uu-khL">
                             <items>
                                 <imageView width="0.69999999999999996" height="0.69999999999999996" alignment="center" verticalAlignment="center" image="kotlin0" contentMode="scaleAspectFit" id="o23-RC-Jac"/>
@@ -25,6 +26,7 @@
                                 </label>
                             </items>
                         </group>
+                        <group width="1" height="6" alignment="left" id="6wQ-lb-AC5"/>
                     </items>
                     <connections>
                         <outlet property="progressImage" destination="o23-RC-Jac" id="xEW-KZ-Kfk"/>
