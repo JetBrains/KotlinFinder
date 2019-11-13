@@ -94,6 +94,9 @@ components:
         index:
           type: integer
           example: 1
+        winnerCount:
+          type: integer
+          example: 7
         active:
           type: integer
           example: 2
@@ -107,6 +110,7 @@ components:
         - index
         - result
         - config
+        - winnerCount
     ProximityResponse:
       type: object
       properties:
