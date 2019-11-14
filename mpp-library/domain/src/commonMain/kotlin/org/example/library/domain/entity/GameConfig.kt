@@ -14,6 +14,7 @@ data class TaskItem (
 data class GameConfig (
     val index: Int,
     val active: Int?,
+    val winnerCount: Int,
     val tasks: List<TaskItem>
 )
 
@@ -28,6 +29,7 @@ internal fun ConfigItem.toDomain(): TaskItem = TaskItem (
 internal fun ConfigResponse.toDomain(): GameConfig = GameConfig(
     index = index,
     active = active,
+    winnerCount = winnerCount,
     tasks = config.map {
         it.toDomain()
     }
