@@ -98,6 +98,8 @@ class MapViewModel(
             try {
                 val message: String = gameDataRepository.sendWinnerName(name) ?: return@launch
 
+                gameDataRepository.setUserRegistered(true)
+
                 eventsDispatcher.dispatchEvent {
                     showRegistrationMessage(message)
                 }

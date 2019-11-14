@@ -24,6 +24,7 @@ import org.example.library.domain.UI
 import org.example.library.domain.entity.*
 import org.example.library.domain.entity.toDomain
 import org.example.library.domain.storage.KeyValueStorage
+import org.example.library.domain.storage.PersistentCookiesStorage
 
 
 @FlowPreview
@@ -31,7 +32,8 @@ import org.example.library.domain.storage.KeyValueStorage
 class GameDataRepository internal constructor(
     private val gameApi: GameApi,
     private val collectedSpotsRepository: CollectedSpotsRepository,
-    private val storage: KeyValueStorage
+    private val storage: KeyValueStorage,
+    private val cookiesStorage: PersistentCookiesStorage
 ) {
     val beaconsChannel: Channel<BeaconInfo> = Channel(Channel.BUFFERED)
     var gameConfig: GameConfig? = null
@@ -106,6 +108,10 @@ class GameDataRepository internal constructor(
         return this.storage.isUserRegistered
     }
 
+    fun setUserRegistered(registered: Boolean) {
+        this.storage.isUserRegistered = registered
+    }
+
     fun taskForSpotId(id: Int): TaskItem? {
         val items: List<TaskItem> = this.gameConfig?.tasks ?: return null
 
@@ -116,6 +122,11 @@ class GameDataRepository internal constructor(
 
     fun resetCookies() {
         this.storage.cookies = null
+        this.storage.isUserRegistered = false
+
+        this.cookiesStorage.banCookie()
+
+        this.collectedSpotsRepository.setCollectedSpotIds(emptyList())
 
         Napier.d("COOKIES CLEARED")
     }
