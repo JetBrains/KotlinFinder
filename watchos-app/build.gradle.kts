@@ -8,7 +8,7 @@ plugins {
 
 kotlin {
     targets {
-        val configureIos: KotlinNativeTarget.() -> Unit = {
+        val configureTarget: KotlinNativeTarget.() -> Unit = {
             binaries {
                 framework("MultiPlatformLibrary") {
 
@@ -16,14 +16,20 @@ kotlin {
             }
         }
 
-        watchosArm64("watchosArm64", configureIos)
-        watchosX86("watchosX86", configureIos)
+        watchosArm64("watchosArm64", configureTarget)
+        watchosArm32("watchosArm32", configureTarget)
+        watchosX86("watchosX86", configureTarget)
     }
 
     sourceSets {
         val watchosArm64Main by getting {
             kotlin.srcDir(file("src/watchosArm64Main/kotlin"))
         }
+
+        val watchosArm32Main by getting {
+            kotlin.srcDir(file("src/watchosArm32Main/kotlin"))
+        }
+
         val watchosX86Main by getting {
             kotlin.srcDir(file("src/watchosX86Main/kotlin"))
         }
@@ -31,8 +37,6 @@ kotlin {
 }
 
 dependencies {
-//    mppLibrary(Deps.Libs.MultiPlatform.kotlinStdLib)
-//    mppLibrary(Deps.Libs.MultiPlatform.coroutines)
 }
 
 tasks.mapNotNull { it as? org.jetbrains.kotlin.gradle.tasks.KotlinNativeLink }

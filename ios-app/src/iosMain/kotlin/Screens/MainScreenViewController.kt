@@ -176,7 +176,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         )
 
         this.resetCookiesButton.setTitle("RESET", 0u)
-        this.resetCookiesButton.setTitleColor(UIColor.redColor, 0)
+        this.resetCookiesButton.setTitleColor(UIColor.redColor, 0u)
         this.resetCookiesButton.addTarget(
             target = this,
             action = platform.darwin.sel_registerName("resetCookiesButtonTapped"),

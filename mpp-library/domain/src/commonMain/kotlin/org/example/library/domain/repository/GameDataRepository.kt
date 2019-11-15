@@ -31,7 +31,8 @@ import org.example.library.domain.storage.KeyValueStorage
 class GameDataRepository internal constructor(
     private val gameApi: GameApi,
     private val collectedSpotsRepository: CollectedSpotsRepository,
-    private val storage: KeyValueStorage
+    private val storage: KeyValueStorage,
+    private val watchSyncRepository: WatchSyncRepository
 ) {
     val beaconsChannel: Channel<BeaconInfo> = Channel(Channel.BUFFERED)
     var gameConfig: GameConfig? = null
@@ -92,6 +93,11 @@ class GameDataRepository internal constructor(
                             collectedSpotsRepository.setCollectedSpotIds(info.discoveredBeaconsIds)
 
                         _isGameEnded.value = (discoveredIds.count() == config.active)
+
+                        watchSyncRepository.sendData(
+                            currentStep = info?.discoveredBeaconsIds?.size ?: 0,
+                            signalStrength = info?.nearestBeaconStrength
+                        )
                     }
                 } else {
                     didReceiveNoDevicesBlock?.invoke()

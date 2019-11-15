@@ -13,10 +13,10 @@ Pod::Spec.new do |spec|
 
     spec.pod_target_xcconfig = {
         'MPP_LIBRARY_NAME' => 'MultiPlatformLibrary',
-        'GRADLE_TASK[sdk=iphonesimulator*][config=*ebug]' => 'syncMultiPlatformLibraryDebugFrameworkIosX64',
-        'GRADLE_TASK[sdk=iphonesimulator*][config=*elease]' => 'syncMultiPlatformLibraryReleaseFrameworkIosX64',
-        'GRADLE_TASK[sdk=iphoneos*][config=*ebug]' => 'syncMultiPlatformLibraryDebugFrameworkIosArm64',
-        'GRADLE_TASK[sdk=iphoneos*][config=*elease]' => 'syncMultiPlatformLibraryReleaseFrameworkIosArm64'
+        'GRADLE_TASK[sdk=watchsimulator*][config=*ebug]' => 'syncMultiPlatformLibraryDebugFrameworkWatchosX86',
+        'GRADLE_TASK[sdk=watchsimulator*][config=*elease]' => 'syncMultiPlatformLibraryReleaseFrameworkWatchosX86',
+        'GRADLE_TASK[sdk=watchos*][config=*ebug]' => 'syncMultiPlatformLibraryDebugFrameworkWatchosArm64',
+        'GRADLE_TASK[sdk=watchos*][config=*elease]' => 'syncMultiPlatformLibraryReleaseFrameworkWatchosArm64'
     }
 
     spec.script_phases = [

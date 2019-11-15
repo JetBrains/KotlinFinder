@@ -9,16 +9,21 @@
 import WatchKit
 import Foundation
 import SpriteKit
+import MultiPlatformLibrary
 
 
 class SpotSearchInterfaceController: WKInterfaceController {
     @IBOutlet private var findTaskButton: WKInterfaceButton!
     @IBOutlet private var searchScene: WKInterfaceSKScene!
 
+    private var searchSceneProxy: SpotDistanceSceneProxy = SpotDistanceSceneProxy()
+
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
 
-        self.setFindTask()
+        self.searchSceneProxy.presentOnScene(superScene: self.searchScene)
+
+        self.setSpotSearch()
     }
 
     override func willActivate() {

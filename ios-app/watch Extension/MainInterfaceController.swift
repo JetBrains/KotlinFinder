@@ -8,20 +8,21 @@
 
 import WatchKit
 import Foundation
+import MultiPlatformLibrary
 
 
-class MainInterfaceController: WKInterfaceController {
+class MainInterfaceController: WKInterfaceController, CollectWordViewModelEventsListener {
     @IBOutlet private var progressImage: WKInterfaceImage!
     @IBOutlet private var progressLabel: WKInterfaceLabel!
+
+    private weak var viewModel: CollectWordViewModel?
 
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
 
-        self.setStepsCount(count: 0)
+        self.viewModel = Factory.Companion.init().shared.createCollectWordViewModel(eventsListener: self)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-            self.pushController(withName: "search", context: nil)
-        }
+        self.setStepsCount(count: Int(self.viewModel?.currentStep ?? 0))
     }
 
     override func willActivate() {
@@ -30,8 +31,9 @@ class MainInterfaceController: WKInterfaceController {
     }
 
     override func didDeactivate() {
-        // This method is called when watch view controller is no longer visible
         super.didDeactivate()
+
+        self.viewModel?.clear()
     }
 
     private func setStepsCount(count: Int) {
@@ -55,5 +57,9 @@ class MainInterfaceController: WKInterfaceController {
                           message: "Please go to the mobile application to enter your name",
                           preferredStyle: .alert,
                           actions: [WKAlertAction(title: "Ok", style: .cancel, handler: {})])
+    }
+
+    func didChangeCurrentStep(newStep: Int32) {
+        self.setStepsCount(count: Int(newStep))
     }
 }

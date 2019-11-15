@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15505" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="fx0-0D-ogB">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15505" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="l9p-qN-zeu">
     <device id="watch38"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
@@ -14,7 +14,7 @@
         <!--Word-->
         <scene sceneID="wuZ-Vm-eOX">
             <objects>
-                <controller identifier="word" title="Word" id="fx0-0D-ogB" customClass="MainInterfaceController" customModule="watch_Extension">
+                <controller identifier="word" title="Word" id="fx0-0D-ogB" customClass="MainInterfaceController" customModule="watchExtension">
                     <items>
                         <group width="1" height="6" alignment="left" id="VfW-0b-Y4z"/>
                         <group width="1" alignment="left" layout="vertical" spacing="10" id="yUH-uu-khL">
@@ -39,7 +39,7 @@
         <!--Search-->
         <scene sceneID="7GV-Oo-rYC">
             <objects>
-                <controller identifier="search" title="Search" id="l9p-qN-zeu" customClass="SpotSearchInterfaceController" customModule="watch_Extension">
+                <controller identifier="search" title="Search" id="l9p-qN-zeu" customClass="SpotSearchInterfaceController" customModule="watchExtension">
                     <items>
                         <group width="0.80000000000000004" height="0.80000000000000004" alignment="center" verticalAlignment="center" id="wPd-Yt-PZh">
                             <items>
