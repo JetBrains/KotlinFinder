@@ -1,36 +1,19 @@
 package org.example.library.domain.entity
 
-import dev.icerock.moko.network.generated.models.ConfigItem
 import dev.icerock.moko.network.generated.models.ConfigResponse
 
-
-data class TaskItem (
-    val code: Int,
-    val question: String,
-    val hint: String
-)
-
-
-data class GameConfig (
+data class GameConfig(
     val index: Int,
     val active: Int?,
     val winnerCount: Int,
-    val tasks: List<TaskItem>
+    val hints: Map<Int, String>,
+    val facts: List<String>
 )
-
-
-internal fun ConfigItem.toDomain(): TaskItem = TaskItem (
-    code = code,
-    question = question,
-    hint = hint
-)
-
 
 internal fun ConfigResponse.toDomain(): GameConfig = GameConfig(
     index = index,
-    active = active,
+    active = activeBeacons,
     winnerCount = winnerCount,
-    tasks = config.map {
-        it.toDomain()
-    }
+    hints = hints?.associate { it.code to it.hint }.orEmpty(),
+    facts = facts.orEmpty()
 )
