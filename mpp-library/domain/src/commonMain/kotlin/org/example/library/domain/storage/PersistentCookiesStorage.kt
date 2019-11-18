@@ -41,6 +41,10 @@ class PersistentCookiesStorage(
         this.storage.cookies = null
     }
 
+    fun lastCookie(): String? {
+        return this.lastCookie
+    }
+
     private fun cookiesFromStorage(): MutableMap<String, String> {
         val cookiesStr: String = this.storage.cookies ?: return mutableMapOf()
         val pairs: List<String> = cookiesStr.split(",")

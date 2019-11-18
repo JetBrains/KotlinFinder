@@ -132,6 +132,12 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         this.collectWordView.setText("KOTLIN")
         this.collectWordView.setCollectedLettersCount(0)
 
+        this.findTaskButton.titleLabel?.setMinimumScaleFactor(0.5)
+        this.findTaskButton.titleLabel?.setNumberOfLines(0)
+        this.findTaskButton.titleLabel?.setAdjustsFontSizeToFitWidth(true)
+        this.findTaskButton.titleLabel?.lineBreakMode = NSLineBreakByWordWrapping
+        this.findTaskButton.titleLabel?.textAlignment = NSTextAlignmentCenter
+
         with(controlWordContainerView) {
             with(layer) {
                 mask = this@MainScreenViewController.roundedCornersMaskLayer
@@ -252,7 +258,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
                 MapViewModel.FindTaskButtonState.COMPLETED -> {
                     this.findTaskButton.enabled = false
                     this.findTaskButton.setStyle(CommonButton.Style.ORANGE)
-                    this.findTaskButton.setTitle(viewModel.winnerName, forState = 0u)
+                    this.findTaskButton.setTitle("${this.viewModel.winnerName} (${this.viewModel.cookie()})", forState = 0u)
                 }
             }
         }

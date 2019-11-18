@@ -126,6 +126,10 @@ class MapViewModel(
         this.gameDataRepository.resetCookies()
     }
 
+    fun cookie(): String? {
+        return this.gameDataRepository.cookie()
+    }
+
     private fun setHintStr() {
         val collectedSpotIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds().orEmpty()
         val hints = this.gameDataRepository.gameConfig?.hints.orEmpty()
