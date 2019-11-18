@@ -108,10 +108,6 @@ class GameDataRepository internal constructor(
         this.storage.isUserRegistered = registered
     }
 
-    fun getHintForSpot(id: Int): String? {
-        return this.gameConfig?.hints?.get(id)
-    }
-
     fun resetCookies() {
         this.storage.cookies = null
         this.storage.isUserRegistered = false
