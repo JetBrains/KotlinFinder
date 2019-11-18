@@ -17,7 +17,7 @@ class SpotSearchViewModel(
     private val gameDataRepository: GameDataRepository,
     private val collectedSpotsRepository: CollectedSpotsRepository
 ) : ViewModel() {
-    private val _nearestBeaconDistance: MutableLiveData<Int?> = MutableLiveData(null)
+    private val _nearestBeaconDistance: MutableLiveData<Int?> = MutableLiveData<Int?>(null)
     val nearestBeaconDistance: LiveData<Int?> = _nearestBeaconDistance.readOnly()
 
     private val _isSearchMode: MutableLiveData<Boolean> = MutableLiveData(true)

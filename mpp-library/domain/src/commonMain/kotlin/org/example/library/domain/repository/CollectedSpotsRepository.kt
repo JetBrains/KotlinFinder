@@ -10,7 +10,7 @@ class CollectedSpotsRepository(
     private val storage: KeyValueStorage
 ) {
 
-    private val _collectedSpotsIds: MutableLiveData<List<Int>?> = MutableLiveData(null)
+    private val _collectedSpotsIds: MutableLiveData<List<Int>?> = MutableLiveData(emptyList())
     val collectedSpotsIds: LiveData<List<Int>?> = this._collectedSpotsIds.readOnly()
 
     init {

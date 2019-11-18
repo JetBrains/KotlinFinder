@@ -38,7 +38,7 @@ class GameDataRepository internal constructor(
     val beaconsChannel: Channel<BeaconInfo> = Channel(Channel.BUFFERED)
     var gameConfig: GameConfig? = null
 
-    private val _currentDiscoveredBeaconId: MutableLiveData<Int?> = MutableLiveData(null)
+    private val _currentDiscoveredBeaconId: MutableLiveData<Int?> = MutableLiveData<Int?>(null)
     val currentDiscoveredBeaconId: LiveData<Int?> = this._currentDiscoveredBeaconId.readOnly()
 
     private val _isGameEnded: MutableLiveData<Boolean> = MutableLiveData(false)

@@ -24,6 +24,7 @@ dependencies {
     mppLibrary(Deps.Libs.MultiPlatform.mokoMvvm)
     mppLibrary(Deps.Libs.MultiPlatform.mokoResources)
     mppLibrary(Deps.Libs.MultiPlatform.bluefalcon)
+    mppLibrary(Deps.Libs.MultiPlatform.napier)
     mppModule(Modules.MultiPlatform.domain)
 
     androidLibrary(Deps.Libs.Android.lifecycle)
