@@ -50,7 +50,7 @@ class SpotSearchRepository(
             while (isActive) {
                 //if (tryStartScan()) break
 
-                gameDataRepository.beaconsChannel.send(BeaconInfo("MBPAnton", 50))
+                gameDataRepository.beaconsChannel.send(BeaconInfo("MBPAnton", -50))
 
                 delay(500)
             }

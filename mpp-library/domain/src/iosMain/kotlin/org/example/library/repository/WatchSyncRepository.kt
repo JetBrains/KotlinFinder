@@ -6,6 +6,7 @@ import platform.WatchConnectivity.WCSession
 import platform.WatchConnectivity.WCSessionActivationState
 import platform.WatchConnectivity.WCSessionDelegateProtocol
 import platform.darwin.NSObject
+import kotlin.native.concurrent.freeze
 
 
 actual class WatchSyncRepository {
@@ -27,7 +28,7 @@ actual class WatchSyncRepository {
             println("send data to watch")
 
             session.updateApplicationContext(
-                applicationContext = data,
+                applicationContext = data.freeze(),
                 error = null
             )
         } catch (error: Throwable) {

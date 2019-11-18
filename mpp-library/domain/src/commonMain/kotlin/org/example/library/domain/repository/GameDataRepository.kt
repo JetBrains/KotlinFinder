@@ -95,7 +95,7 @@ class GameDataRepository internal constructor(
                         _isGameEnded.value = (discoveredIds.count() == config.active)
 
                         watchSyncRepository.sendData(
-                            currentStep = info?.discoveredBeaconsIds?.size ?: 0,
+                            currentStep = 1, //info?.discoveredBeaconsIds?.size ?: 0,
                             signalStrength = info?.nearestBeaconStrength
                         )
                     }
