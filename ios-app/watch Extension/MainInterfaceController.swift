@@ -62,4 +62,8 @@ class MainInterfaceController: WKInterfaceController, CollectWordViewModelEvents
     func didChangeCurrentStep(newStep: Int32) {
         self.setStepsCount(count: Int(newStep))
     }
+
+    func showCompletedGameAlert() {
+        self.presentCompletionAlert()
+    }
 }

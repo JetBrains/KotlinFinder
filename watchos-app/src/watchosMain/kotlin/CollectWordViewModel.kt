@@ -9,6 +9,7 @@ class CollectWordViewModel(
 
     interface EventsListener {
         fun didChangeCurrentStep(newStep: Int)
+        fun showCompletedGameAlert()
     }
 
     init {
@@ -23,5 +24,11 @@ class CollectWordViewModel(
 
     override fun didReceiveSessionData(data: SessionData) {
         this.eventsListener.didChangeCurrentStep(data.currentStep)
+
+        if (data.currentStep == 6) {
+            this.sessionListener.removeDelegate(this)
+
+            this.eventsListener.showCompletedGameAlert()
+        }
     }
 }

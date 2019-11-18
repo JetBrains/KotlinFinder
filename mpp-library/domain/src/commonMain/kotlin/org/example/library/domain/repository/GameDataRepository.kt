@@ -8,22 +8,18 @@ import dev.icerock.moko.network.generated.apis.GameApi
 import dev.icerock.moko.network.generated.models.ConfigResponse
 import dev.icerock.moko.network.generated.models.ProximityResponse
 import dev.icerock.moko.network.generated.models.RegisterResponse
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import org.example.library.domain.UI
-import org.example.library.domain.entity.*
+import org.example.library.domain.entity.BeaconInfo
+import org.example.library.domain.entity.GameConfig
+import org.example.library.domain.entity.ProximityInfo
 import org.example.library.domain.entity.toDomain
 import org.example.library.domain.storage.KeyValueStorage
+import org.example.library.domain.storage.PersistentCookiesStorage
 
 
 @FlowPreview
@@ -32,6 +28,7 @@ class GameDataRepository internal constructor(
     private val gameApi: GameApi,
     private val collectedSpotsRepository: CollectedSpotsRepository,
     private val storage: KeyValueStorage,
+    private val cookiesStorage: PersistentCookiesStorage,
     private val watchSyncRepository: WatchSyncRepository
 ) {
     val beaconsChannel: Channel<BeaconInfo> = Channel(Channel.BUFFERED)
@@ -42,6 +39,8 @@ class GameDataRepository internal constructor(
 
     private val _isGameEnded: MutableLiveData<Boolean> = MutableLiveData(false)
     val isGameEnded: LiveData<Boolean> = this._isGameEnded.readOnly()
+
+    val winnerName: String? get() = storage.winnerName
 
     private val _proximityInfoChannel: Channel<ProximityInfo?> = Channel()
     val proximityInfo: Flow<ProximityInfo?> = channelFlow {
@@ -80,7 +79,8 @@ class GameDataRepository internal constructor(
 
                         _proximityInfoChannel.send(info)
 
-                        val collectedIds: List<Int> = collectedSpotsRepository.collectedSpotIds() ?: emptyList()
+                        val collectedIds: List<Int> =
+                            collectedSpotsRepository.collectedSpotIds() ?: emptyList()
                         val discoveredIds: List<Int> = info?.discoveredBeaconsIds ?: emptyList()
 
                         val newIds: List<Int> = discoveredIds.minus(collectedIds)
@@ -92,18 +92,19 @@ class GameDataRepository internal constructor(
                         if (info?.discoveredBeaconsIds != null)
                             collectedSpotsRepository.setCollectedSpotIds(info.discoveredBeaconsIds)
 
-                        _isGameEnded.value = (discoveredIds.count() == config.active)
+                        _isGameEnded.value = (discoveredIds.count() == config.winnerCount)
 
                         watchSyncRepository.sendData(
-                            currentStep = 1, //info?.discoveredBeaconsIds?.size ?: 0,
-                            signalStrength = info?.nearestBeaconStrength
+                            currentStep = 1,//info?.discoveredBeaconsIds?.size ?: 0,
+                            signalStrength = 50,//info?.nearestBeaconStrength,
+                            discoveredBeaconId = _currentDiscoveredBeaconId.value
                         )
                     }
                 } else {
                     didReceiveNoDevicesBlock?.invoke()
                 }
 
-                delay(500)
+                delay(1000)
             }
         }
     }
@@ -112,16 +113,17 @@ class GameDataRepository internal constructor(
         return this.storage.isUserRegistered
     }
 
-    fun taskForSpotId(id: Int): TaskItem? {
-        val items: List<TaskItem> = this.gameConfig?.tasks ?: return null
-
-        return items.firstOrNull { item: TaskItem ->
-            item.code == id
-        }
+    fun setUserRegistered(registered: Boolean) {
+        this.storage.isUserRegistered = registered
     }
 
     fun resetCookies() {
         this.storage.cookies = null
+        this.storage.isUserRegistered = false
+
+        this.cookiesStorage.banCookie()
+
+        this.collectedSpotsRepository.setCollectedSpotIds(emptyList())
 
         Napier.d("COOKIES CLEARED")
     }
@@ -136,6 +138,8 @@ class GameDataRepository internal constructor(
     }
 
     suspend fun sendWinnerName(name: String): String? {
+        storage.winnerName = name
+        
         val response: RegisterResponse = this.gameApi.finderRegisterGet(name)
         Napier.d(message = "Register response: $response")
 
@@ -153,7 +157,8 @@ class GameDataRepository internal constructor(
             return null
         }
 
-        val beaconsString: String = onlyLast.joinToString(separator = ",") { "${it.name}:${it.rssi}" }
+        val beaconsString: String =
+            onlyLast.joinToString(separator = ",") { "${it.name}:${it.rssi}" }
 
         Napier.d(message = "proximity = $beaconsString")
 

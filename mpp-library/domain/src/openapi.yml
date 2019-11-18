@@ -94,19 +94,28 @@ components:
         index:
           type: integer
           example: 1
-        active:
+        winnerCount:
+          type: integer
+          example: 7
+        activeBeacons:
           type: integer
           example: 2
-        config:
+        facts:
           type: array
           items:
-            $ref: '#/components/schemas/ConfigItem'
+            type: string
+            example: "Did you know that ***?"
+        hints:
+          type: array
+          items:
+            $ref: '#/components/schemas/HintItem'
         result:
           $ref: '#/components/schemas/ResultField'
       required:
         - index
         - result
-        - config
+        - activeBeacons
+        - winnerCount
     ProximityResponse:
       type: object
       properties:
@@ -122,15 +131,12 @@ components:
             $ref: '#/components/schemas/ProximityItem'
         result:
           $ref: '#/components/schemas/ResultField'
-    ConfigItem:
+    HintItem:
       type: object
       properties:
         code:
           type: integer
           example: 1
-        question:
-          type: string
-          example: "Who?"
         hint:
           type: string
           example: "Me!"

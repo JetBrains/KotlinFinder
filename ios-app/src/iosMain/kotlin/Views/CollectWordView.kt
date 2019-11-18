@@ -64,9 +64,16 @@ class CollectWordView : UIView {
     }
 
     fun setCollectedLettersCount(count: Int) {
-        for (i in 0..(count - 1)) {
-            (this.wordStackView.arrangedSubviews()[i] as? UILabel)?.textColor =
-                UIColor.colorNamed("blackTextColor")!!
+        if (count == 0) {
+            for (i in 0..(this.wordStackView.arrangedSubviews.count() - 1)) {
+                (this.wordStackView.arrangedSubviews()[i] as? UILabel)?.textColor =
+                    UIColor.colorNamed("blackInactiveTextColor")!!
+            }
+        } else {
+            for (i in 0..(count - 1)) {
+                (this.wordStackView.arrangedSubviews()[i] as? UILabel)?.textColor =
+                    UIColor.colorNamed("blackTextColor")!!
+            }
         }
 
         this.imageView.image = UIImage.imageNamed("kotlin$count")

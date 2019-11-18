@@ -9,7 +9,8 @@ import platform.darwin.NSObject
 
 data class SessionData (
     val currentStep: Int,
-    val signalStrength: Int?
+    val signalStrength: Int?,
+    val discoveredBeaconId: Int?
 )
 
 
@@ -20,8 +21,6 @@ class SessionListener: NSObject(), WCSessionDelegateProtocol {
 
     val session: WCSession = WCSession.defaultSession
     private val delegates: MutableSet<Delegate> = mutableSetOf()
-
-    //companion object : NSObject(), WCSessionDelegateProtocolMeta {}
 
     init {
         this.session.delegate = this
@@ -51,7 +50,8 @@ class SessionListener: NSObject(), WCSessionDelegateProtocol {
 
         val data: SessionData = SessionData(
             currentStep = (didReceiveApplicationContext["step"] as? Int) ?: 0,
-            signalStrength = (didReceiveApplicationContext["strength"] as? Int?)
+            signalStrength = (didReceiveApplicationContext["strength"] as? Int?),
+            discoveredBeaconId = (didReceiveApplicationContext["discoveredBeaconId"] as? Int?)
         )
 
         for (d: Delegate in this.delegates)

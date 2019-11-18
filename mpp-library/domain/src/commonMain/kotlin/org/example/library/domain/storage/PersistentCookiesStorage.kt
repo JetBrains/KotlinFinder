@@ -9,6 +9,8 @@ class PersistentCookiesStorage(
     private val storage: KeyValueStorage
 ): CookiesStorage {
     private val cookies: MutableMap<String, String>
+    private var lastCookie: String? = null
+    private val bannedCookies: MutableSet<String> = mutableSetOf()
 
     init {
         this.cookies = this.cookiesFromStorage()
@@ -19,12 +21,25 @@ class PersistentCookiesStorage(
     }
 
     override suspend fun addCookie(requestUrl: Url, cookie: Cookie): Unit {
+        if (this.bannedCookies.contains(cookie.value))
+            return
+
         this.cookies.set(key = cookie.name, value = cookie.value)
+        this.lastCookie = cookie.value
 
         this.storage.cookies = this.stringFromCookies(this.cookies)
     }
 
     override fun close() {}
+
+    fun banCookie() {
+        val cookie: String = this.lastCookie ?: return
+
+        this.bannedCookies.add(cookie)
+
+        this.cookies.clear()
+        this.storage.cookies = null
+    }
 
     private fun cookiesFromStorage(): MutableMap<String, String> {
         val cookiesStr: String = this.storage.cookies ?: return mutableMapOf()

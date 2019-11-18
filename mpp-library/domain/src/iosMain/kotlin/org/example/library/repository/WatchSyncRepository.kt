@@ -18,14 +18,22 @@ actual class WatchSyncRepository {
         this.session.activateSession()
     }
 
-    actual fun sendData(currentStep: Int, signalStrength: Int?) {
-        val data: Map<Any?, *> = mapOf(
+    actual fun sendData(currentStep: Int, signalStrength: Int?, discoveredBeaconId: Int?) {
+        val data: MutableMap<Any?, Any> = mutableMapOf(
+            "step" to currentStep
+        ) /* mapOf(
             "step" to currentStep,
-            "strength" to (signalStrength ?: -1)
-        )
+            "strength" to (signalStrength ?: -1),
+        )*/
+
+        if (signalStrength != null)
+            data["strength"] = signalStrength
+        
+        if (discoveredBeaconId != null)
+            data["discoveredBeaconId"] = discoveredBeaconId
 
         try {
-            println("send data to watch")
+            println("send data $data to watch")
 
             session.updateApplicationContext(
                 applicationContext = data.freeze(),

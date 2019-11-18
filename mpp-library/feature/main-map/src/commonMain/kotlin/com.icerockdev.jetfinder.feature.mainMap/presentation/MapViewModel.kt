@@ -9,7 +9,6 @@ import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.example.library.domain.entity.ProximityInfo
-import org.example.library.domain.entity.TaskItem
 import org.example.library.domain.repository.CollectedSpotsRepository
 import org.example.library.domain.repository.GameDataRepository
 import org.example.library.domain.repository.SpotSearchRepository
@@ -28,14 +27,15 @@ class MapViewModel(
         COMPLETED
     }
 
-    interface EventsListener: ErrorEventsListener {
+    interface EventsListener : ErrorEventsListener {
         fun routeToSpotSearchScreen()
         fun showEnterNameAlert()
         fun showHint(hint: String)
         fun showRegistrationMessage(message: String)
     }
 
-    private val _findTaskButtonState = MutableLiveData<FindTaskButtonState>(FindTaskButtonState.TOO_FAR)
+    private val _findTaskButtonState =
+        MutableLiveData<FindTaskButtonState>(FindTaskButtonState.TOO_FAR)
     val findTaskButtonState: LiveData<FindTaskButtonState> = _findTaskButtonState.readOnly()
 
     private var hintStr: String? = null
@@ -46,6 +46,8 @@ class MapViewModel(
     private val _currentStep: MutableLiveData<Int> = MutableLiveData(0)
     val currentStep: LiveData<Int> = this._currentStep.readOnly()
 
+    val winnerName: String? get() = gameDataRepository.winnerName
+
     init {
         this.gameDataRepository.startScanning(didReceiveNoDevicesBlock = {
             this.spotSearchRepository.restartScanning()
@@ -53,7 +55,7 @@ class MapViewModel(
 
         viewModelScope.launch {
             gameDataRepository.proximityInfo.collect { info: ProximityInfo? ->
-                if (info?.nearestBeaconStrength == null)
+                if (info?.nearestBeaconStrength == null && !gameDataRepository.isGameEnded.value)
                     _findTaskButtonState.value = FindTaskButtonState.TOO_FAR
                 else if (!gameDataRepository.isGameEnded.value)
                     _findTaskButtonState.value = FindTaskButtonState.ACTIVE
@@ -69,6 +71,8 @@ class MapViewModel(
 
             this.gameDataRepository.isGameEnded.addObserver { ended: Boolean ->
                 if (ended && !this.gameDataRepository.isUserRegistered()) {
+                    _findTaskButtonState.value = FindTaskButtonState.COMPLETED
+
                     this.spotSearchRepository.stopScanning()
 
                     this._hintButtonEnabled.value = false
@@ -96,6 +100,8 @@ class MapViewModel(
             try {
                 val message: String = gameDataRepository.sendWinnerName(name) ?: return@launch
 
+                gameDataRepository.setUserRegistered(true)
+
                 eventsDispatcher.dispatchEvent {
                     showRegistrationMessage(message)
                 }
@@ -121,18 +127,18 @@ class MapViewModel(
     }
 
     private fun setHintStr() {
-        val collectedSpotIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds() ?: emptyList()
-        val tasks: List<TaskItem> = this.gameDataRepository.gameConfig?.tasks ?: return
+        val collectedSpotIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds().orEmpty()
+        val hints = this.gameDataRepository.gameConfig?.hints.orEmpty()
 
-        val uncompletedTasks: List<TaskItem> = tasks.filter {
-            collectedSpotIds.indexOf(it.code) == -1
+        val notCollectedHints = hints.filter {
+            collectedSpotIds.contains(it.key).not()
         }
 
-        if (uncompletedTasks.count() == 0) {
+        if (notCollectedHints.count() == 0) {
             this.hintStr = null
             this._hintButtonEnabled.value = false
         } else {
-            this.hintStr = uncompletedTasks.random().hint
+            this.hintStr = notCollectedHints.values.random()
             this._hintButtonEnabled.value = true
         }
     }
