@@ -118,7 +118,7 @@ class SpotSearchViewController : UIViewController {
             constant = 0.0
         ).setActive(true)
 
-        this.spotSearchScene.distance = 5.0f
+        this.spotSearchScene.distance = 0.0f
     }
 
     override fun viewDidLayoutSubviews() {
@@ -153,7 +153,7 @@ class SpotSearchViewController : UIViewController {
             Napier.d("distance: $distance")
             val maxDistance: Int = 100
 
-            this.spotSearchScene.distance = (distance ?: 0) / (maxDistance / 5.0f)
+            this.spotSearchScene.distance = (distance ?: 0) / maxDistance.toFloat()
         }
 
         viewModel.isSearchMode.addObserver { searchMode: Boolean ->
