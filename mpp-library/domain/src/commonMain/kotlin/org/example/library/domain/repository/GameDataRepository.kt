@@ -39,6 +39,8 @@ class GameDataRepository internal constructor(
     private val _isGameEnded: MutableLiveData<Boolean> = MutableLiveData(false)
     val isGameEnded: LiveData<Boolean> = this._isGameEnded.readOnly()
 
+    val winnerName: String? get() = storage.winnerName
+
     private val _proximityInfoChannel: Channel<ProximityInfo?> = Channel()
     val proximityInfo: Flow<ProximityInfo?> = channelFlow {
         val job = launch {
@@ -129,6 +131,8 @@ class GameDataRepository internal constructor(
     }
 
     suspend fun sendWinnerName(name: String): String? {
+        storage.winnerName = name
+        
         val response: RegisterResponse = this.gameApi.finderRegisterGet(name)
         Napier.d(message = "Register response: $response")
 
