@@ -2,6 +2,7 @@ package screens
 
 import com.github.aakira.napier.Napier
 import com.icerockdev.jetfinder.feature.spotSearch.presentation.SpotSearchViewModel
+import common.FeedbackGenerator
 import common.centerInSuperview
 import common.fillSuperview
 import kotlinx.cinterop.ObjCAction
@@ -43,6 +44,7 @@ class SpotSearchViewController : UIViewController {
     private val successImageView: UIImageView = UIImageView(UIImage.imageNamed("spotFound"))
     private val spotSearchViewContainer: SKView = SKView()
     private val spotSearchScene: SpotDistanceScene = SpotDistanceScene()
+    private val feedbackGenerator: FeedbackGenerator = FeedbackGenerator()
 
     private lateinit var viewModel: SpotSearchViewModel
 
@@ -154,6 +156,8 @@ class SpotSearchViewController : UIViewController {
             val maxDistance: Int = 100
 
             this.spotSearchScene.distance = (distance ?: 0) / maxDistance.toFloat()
+
+            this.feedbackGenerator.feedback(this.spotSearchScene.distance.toDouble())
         }
 
         viewModel.isSearchMode.addObserver { searchMode: Boolean ->
