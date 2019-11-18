@@ -13,7 +13,6 @@ import dev.icerock.moko.network.exceptionfactory.parser.ValidationExceptionParse
 import dev.icerock.moko.network.features.ExceptionFeature
 import dev.icerock.moko.network.generated.apis.GameApi
 import io.ktor.client.HttpClient
-import io.ktor.client.features.cookies.AcceptAllCookiesStorage
 import io.ktor.client.features.cookies.HttpCookies
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logger
@@ -80,7 +79,8 @@ class DomainFactory(
             gameApi = this.gameApi,
             collectedSpotsRepository = this.collectedSpotsRepository,
             storage = this.keyValueStorage,
-            cookiesStorage = this.cookiesStorage)
+            cookiesStorage = this.cookiesStorage
+        )
     }
 
     val collectedSpotsRepository: CollectedSpotsRepository by lazy {
@@ -90,6 +90,7 @@ class DomainFactory(
     val spotSearchRepository: SpotSearchRepository by lazy {
         SpotSearchRepository(
             context = this.context,
-            gameDataRepository = this.gameDataRepository)
+            gameDataRepository = this.gameDataRepository
+        )
     }
 }
