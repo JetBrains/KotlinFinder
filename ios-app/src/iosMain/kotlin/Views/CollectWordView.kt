@@ -1,6 +1,7 @@
 package views
 
 import kotlinx.cinterop.CValue
+import kotlinx.cinterop.ObjCAction
 import platform.CoreGraphics.CGRect
 import platform.Foundation.NSCoder
 import platform.UIKit.*
@@ -10,6 +11,8 @@ class CollectWordView : UIView {
     private val imageView: UIImageView = UIImageView()
     private val wordStackView: UIStackView = UIStackView()
     private val titleLabel: UILabel = UILabel()
+
+    var didLongTapImageViewBlock: (() -> Unit)? = null
 
     @OverrideInit
     constructor(coder: NSCoder) : super(coder)
@@ -48,6 +51,16 @@ class CollectWordView : UIView {
             .setActive(true)
         this.titleLabel.topAnchor.constraintEqualToAnchor(this.topAnchor, constant = 2.0)
             .setActive(true)
+
+        val longTapRecoginzer: UILongPressGestureRecognizer = UILongPressGestureRecognizer(
+            target = this,
+            action = platform.darwin.sel_registerName("didLongTapImageView")
+        )
+
+        longTapRecoginzer.minimumPressDuration = 2.0
+
+        this.imageView.addGestureRecognizer(longTapRecoginzer)
+        this.imageView.setUserInteractionEnabled(true)
     }
 
     fun setText(text: String) {
@@ -77,5 +90,10 @@ class CollectWordView : UIView {
         }
 
         this.imageView.image = UIImage.imageNamed("kotlin$count")
+    }
+
+    @ObjCAction
+    private fun didLongTapImageView() {
+        this.didLongTapImageViewBlock?.invoke()
     }
 }
