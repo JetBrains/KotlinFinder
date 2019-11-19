@@ -5,6 +5,7 @@ import platform.WatchConnectivity.WCSession
 import platform.WatchConnectivity.WCSessionActivationState
 import platform.WatchConnectivity.WCSessionDelegateProtocol
 import platform.darwin.NSObject
+import kotlin.native.concurrent.freeze
 
 
 data class SessionData (
@@ -50,11 +51,34 @@ class SessionListener: NSObject(), WCSessionDelegateProtocol {
 
         val data: SessionData = SessionData(
             currentStep = (didReceiveApplicationContext["step"] as? Int) ?: 0,
-            signalStrength = (didReceiveApplicationContext["strength"] as? Int?),
-            discoveredBeaconId = (didReceiveApplicationContext["discoveredBeaconId"] as? Int?)
+            signalStrength = (didReceiveApplicationContext["strength"] as? Byte)?.toInt(),
+            discoveredBeaconId = (didReceiveApplicationContext["discoveredBeaconId"] as? Int)
         )
 
-        for (d: Delegate in this.delegates)
+        println("received session data: $data")
+
+        for (d: Delegate in this.delegates.freeze())
             d.didReceiveSessionData(data)
     }
+
+   /* override fun session(
+        session: WCSession,
+        didReceiveMessage: Map<Any?, *>,
+        replyHandler: (Map<Any?, *>?) -> Unit
+    ) {
+        println("received message: $didReceiveMessage")
+
+        val data: SessionData = SessionData(
+            currentStep = (didReceiveMessage["step"] as? Int) ?: 0,
+            signalStrength = (didReceiveMessage["strength"] as? Int),
+            discoveredBeaconId = (didReceiveMessage["discoveredBeaconId"] as? Int)
+        )
+
+        println("received data: $data")
+
+        for (d: Delegate in this.delegates.freeze())
+            d.didReceiveSessionData(data)
+
+        replyHandler(null)
+    }*/
 }

@@ -6,6 +6,8 @@ import platform.WatchConnectivity.WCSession
 import platform.WatchConnectivity.WCSessionActivationState
 import platform.WatchConnectivity.WCSessionDelegateProtocol
 import platform.darwin.NSObject
+import platform.darwin.dispatch_async
+import platform.darwin.dispatch_get_main_queue
 import kotlin.native.concurrent.freeze
 
 
@@ -19,34 +21,49 @@ actual class WatchSyncRepository {
     }
 
     actual fun sendData(currentStep: Int, signalStrength: Int?, discoveredBeaconId: Int?) {
-        val data: MutableMap<Any?, Any> = mutableMapOf(
-            "step" to currentStep
-        ) /* mapOf(
-            "step" to currentStep,
-            "strength" to (signalStrength ?: -1),
-        )*/
+        if (!this.sessionDelegate.isSessionActivated)
+            return
 
-        if (signalStrength != null)
-            data["strength"] = signalStrength
-        
-        if (discoveredBeaconId != null)
-            data["discoveredBeaconId"] = discoveredBeaconId
+        dispatch_async(dispatch_get_main_queue()) {
+            val data: MutableMap<Any?, Any> = mutableMapOf(
+                "step" to currentStep
+            ) /* mapOf(
+                "step" to currentStep,
+                "strength" to (signalStrength ?: -1),
+            )*/
 
-        try {
-            println("send data $data to watch")
+            if (signalStrength != null)
+                data["strength"] = signalStrength
 
-            session.updateApplicationContext(
-                applicationContext = data.freeze(),
-                error = null
-            )
-        } catch (error: Throwable) {
-            println("error while sending data: $error")
+            if (discoveredBeaconId != null)
+                data["discoveredBeaconId"] = discoveredBeaconId
+
+            try {
+                println("send data $data to watch")
+
+                /*this.session.sendMessage(
+                    message = data.freeze(),
+                    replyHandler = {},
+                    errorHandler = {
+                        println("ERROR!!!!")
+                    }
+                )*/
+
+                this.session.updateApplicationContext(
+                    applicationContext = data.freeze(),
+                    error = null
+                )
+            } catch (error: Throwable) {
+                println("error while sending data: $error")
+            }
         }
+
     }
 }
 
 
 private class SessionDelegate: NSObject(), WCSessionDelegateProtocol {
+    var isSessionActivated: Boolean = false; private set
 
     override fun session(
         session: WCSession,
@@ -54,6 +71,8 @@ private class SessionDelegate: NSObject(), WCSessionDelegateProtocol {
         error: NSError?
     ) {
         println("session activated")
+
+        this.isSessionActivated = true
     }
 
     override fun sessionDidBecomeInactive(session: WCSession) {

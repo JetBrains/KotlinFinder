@@ -15,4 +15,12 @@ class Factory {
             eventsListener = eventsListener,
             sessionListener = this.sessionListener
         )
+
+    fun createSpotSearchViewModel(
+        eventsListener: SpotSearchViewModel.EventsListener
+    ): SpotSearchViewModel =
+        SpotSearchViewModel(
+            eventsListener = eventsListener,
+            sessionListener = this.sessionListener
+        )
 }

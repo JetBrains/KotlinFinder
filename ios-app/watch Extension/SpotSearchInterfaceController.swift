@@ -12,14 +12,17 @@ import SpriteKit
 import MultiPlatformLibrary
 
 
-class SpotSearchInterfaceController: WKInterfaceController {
+class SpotSearchInterfaceController: WKInterfaceController, SpotSearchViewModelEventsListener {
     @IBOutlet private var findTaskButton: WKInterfaceButton!
     @IBOutlet private var searchScene: WKInterfaceSKScene!
 
     private var searchSceneProxy: SpotDistanceSceneProxy = SpotDistanceSceneProxy()
+    private weak var viewModel: SpotSearchViewModel?
 
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
+
+        self.viewModel = Factory.Companion.init().shared.createSpotSearchViewModel(eventsListener: self)
 
         self.searchSceneProxy.presentOnScene(superScene: self.searchScene)
 
@@ -34,6 +37,8 @@ class SpotSearchInterfaceController: WKInterfaceController {
     override func didDeactivate() {
         // This method is called when watch view controller is no longer visible
         super.didDeactivate()
+
+        self.viewModel?.clear()
     }
 
     private func setSpotSearch() {
@@ -58,5 +63,16 @@ class SpotSearchInterfaceController: WKInterfaceController {
     private func setFindTask() {
         self.findTaskButton.setHidden(false)
         self.searchScene.setHidden(true)
+    }
+
+    func didChangeDistance(distance: KotlinInt?) {
+        print("change dist: \(String(describing: distance?.intValue))")
+        DispatchQueue.main.async {
+            self.searchSceneProxy.setDistance(distance: Float(distance?.intValue ?? 0) / 100.0)
+        }
+    }
+
+    func didFoundSpot() {
+        self.setSpotFound()
     }
 }

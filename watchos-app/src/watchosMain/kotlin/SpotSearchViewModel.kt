@@ -1,15 +1,14 @@
 package main
 
 
-class CollectWordViewModel(
-    private val eventsListener: EventsListener,
+class SpotSearchViewModel(
+    private val eventsListener: SpotSearchViewModel.EventsListener,
     private val sessionListener: SessionListener
 ): ViewModel(), SessionListener.Delegate {
-    var currentStep: Int = 0; private set
 
     interface EventsListener {
-        fun didChangeCurrentStep(newStep: Int)
-        fun showCompletedGameAlert()
+        fun didChangeDistance(distance: Int?)
+        fun didFoundSpot()
        // fun didFoundActiveTask()
     }
 
@@ -18,18 +17,18 @@ class CollectWordViewModel(
     }
 
     override fun clear() {
-        super.clear()
-
         this.sessionListener.removeDelegate(this)
     }
 
     override fun didReceiveSessionData(data: SessionData) {
-        this.eventsListener.didChangeCurrentStep(data.currentStep)
-
-        if (data.currentStep == 6) {
+        println("+> DRD")
+        if (data.discoveredBeaconId != null) {
             this.sessionListener.removeDelegate(this)
 
-            this.eventsListener.showCompletedGameAlert()
+            this.eventsListener.didFoundSpot()
+        } else {
+            println("+> DRD DCD")
+            this.eventsListener.didChangeDistance(data.signalStrength)
         }
     }
 }

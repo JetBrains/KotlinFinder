@@ -20,6 +20,7 @@ import org.example.library.domain.entity.ProximityInfo
 import org.example.library.domain.entity.toDomain
 import org.example.library.domain.storage.KeyValueStorage
 import org.example.library.domain.storage.PersistentCookiesStorage
+import kotlin.random.Random
 
 
 @FlowPreview
@@ -96,7 +97,7 @@ class GameDataRepository internal constructor(
 
                         watchSyncRepository.sendData(
                             currentStep = 1,//info?.discoveredBeaconsIds?.size ?: 0,
-                            signalStrength = 50,//info?.nearestBeaconStrength,
+                            signalStrength = 50 + Random.nextInt(from = 10, until = 40),//info?.nearestBeaconStrength,
                             discoveredBeaconId = _currentDiscoveredBeaconId.value
                         )
                     }
