@@ -135,8 +135,18 @@ class AppCoordinator(
         this.showAlert(message, action = null)
     }
 
+    override fun showResetCookiesAlert(resetAction: () -> Unit) {
+        this.showAlert(
+            text = "Reset cookies?",
+            buttonTitle = "Reset",
+            addCancelButton = true,
+            action = resetAction
+        )
+    }
+
     private fun showAlert(text: String,
                           buttonTitle: String = "Ok",
+                          addCancelButton: Boolean = false,
                           action: (() -> Unit)?) {
         val alert: UIAlertController = UIAlertController.alertControllerWithTitle(
             title = null,
@@ -147,12 +157,23 @@ class AppCoordinator(
         alert.addAction(
             UIAlertAction.actionWithTitle(
                 title = buttonTitle,
-                style = UIAlertActionStyleCancel,
+                style = UIAlertActionStyleDefault,
                 handler = {
                     action?.invoke()
                     alert.dismissViewControllerAnimated(true, completion = null)
                 }
             ))
+
+        if (addCancelButton) {
+            alert.addAction(
+                UIAlertAction.actionWithTitle(
+                    title = "Cancel",
+                    style = UIAlertActionStyleCancel,
+                    handler = {
+                        alert.dismissViewControllerAnimated(true, completion = null)
+                    }
+                ))
+        }
 
         this.navigationController.topViewController?.presentViewController(alert, animated = true, completion = null)
     }
