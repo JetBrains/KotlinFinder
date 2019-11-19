@@ -21,13 +21,13 @@ class SpotSearchViewModel(
     }
 
     override fun didReceiveSessionData(data: SessionData) {
-        println("+> DRD")
         if (data.discoveredBeaconId != null) {
+            println("beacon collected")
+
             this.sessionListener.removeDelegate(this)
 
             this.eventsListener.didFoundSpot()
         } else {
-            println("+> DRD DCD")
             this.eventsListener.didChangeDistance(data.signalStrength)
         }
     }

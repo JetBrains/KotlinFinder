@@ -37,7 +37,7 @@ class SpotDistanceScene : SKScene {
     )
 
     private val bars: NSMutableArray = NSMutableArray()
-    private val initialBarHeight: CGFloat = 10.0f
+    private val initialBarHeight: CGFloat = 8.0f
     private val maxScale: Float = 5.0f
 
     var distance: Float = 0.0f

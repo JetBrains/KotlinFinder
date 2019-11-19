@@ -73,6 +73,8 @@ class SpotSearchInterfaceController: WKInterfaceController, SpotSearchViewModelE
     }
 
     func didFoundSpot() {
+        WKInterfaceDevice.current().play(.success)
+
         self.setSpotFound()
     }
 }

@@ -5,6 +5,8 @@ import platform.WatchConnectivity.WCSession
 import platform.WatchConnectivity.WCSessionActivationState
 import platform.WatchConnectivity.WCSessionDelegateProtocol
 import platform.darwin.NSObject
+import platform.darwin.dispatch_async
+import platform.darwin.dispatch_get_main_queue
 import kotlin.native.concurrent.freeze
 
 
@@ -20,7 +22,7 @@ class SessionListener: NSObject(), WCSessionDelegateProtocol {
         fun didReceiveSessionData(data: SessionData)
     }
 
-    val session: WCSession = WCSession.defaultSession
+    private val session: WCSession = WCSession.defaultSession
     private val delegates: MutableSet<Delegate> = mutableSetOf()
 
     init {
@@ -47,7 +49,7 @@ class SessionListener: NSObject(), WCSessionDelegateProtocol {
     }
 
     override fun session(session: WCSession, didReceiveApplicationContext: Map<Any?, *>) {
-        println("received context: $didReceiveApplicationContext")
+        //println("received context: $didReceiveApplicationContext")
 
         val data: SessionData = SessionData(
             currentStep = (didReceiveApplicationContext["step"] as? Int) ?: 0,
@@ -57,28 +59,7 @@ class SessionListener: NSObject(), WCSessionDelegateProtocol {
 
         println("received session data: $data")
 
-        for (d: Delegate in this.delegates.freeze())
-            d.didReceiveSessionData(data)
+        for (d: Delegate in this.delegates)
+            d.didReceiveSessionData(data.freeze())
     }
-
-   /* override fun session(
-        session: WCSession,
-        didReceiveMessage: Map<Any?, *>,
-        replyHandler: (Map<Any?, *>?) -> Unit
-    ) {
-        println("received message: $didReceiveMessage")
-
-        val data: SessionData = SessionData(
-            currentStep = (didReceiveMessage["step"] as? Int) ?: 0,
-            signalStrength = (didReceiveMessage["strength"] as? Int),
-            discoveredBeaconId = (didReceiveMessage["discoveredBeaconId"] as? Int)
-        )
-
-        println("received data: $data")
-
-        for (d: Delegate in this.delegates.freeze())
-            d.didReceiveSessionData(data)
-
-        replyHandler(null)
-    }*/
 }
