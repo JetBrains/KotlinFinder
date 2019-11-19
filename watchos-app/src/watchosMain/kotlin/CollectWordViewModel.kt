@@ -10,7 +10,7 @@ class CollectWordViewModel(
     interface EventsListener {
         fun didChangeCurrentStep(newStep: Int)
         fun showCompletedGameAlert()
-       // fun didFoundActiveTask()
+        fun setFindTaskButtonEnabled(enabled: Boolean)
     }
 
     init {
@@ -26,10 +26,14 @@ class CollectWordViewModel(
     override fun didReceiveSessionData(data: SessionData) {
         this.eventsListener.didChangeCurrentStep(data.currentStep)
 
-        if (data.currentStep == 6) {
+        if (data.isGameEnded) {
             this.sessionListener.removeDelegate(this)
 
             this.eventsListener.showCompletedGameAlert()
+
+            return
         }
+
+        this.eventsListener.setFindTaskButtonEnabled(data.signalStrength != null)
     }
 }

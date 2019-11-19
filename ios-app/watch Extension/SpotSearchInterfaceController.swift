@@ -13,7 +13,7 @@ import MultiPlatformLibrary
 
 
 class SpotSearchInterfaceController: WKInterfaceController, SpotSearchViewModelEventsListener {
-    @IBOutlet private var findTaskButton: WKInterfaceButton!
+    @IBOutlet private var spotFoundInterfaceImage: WKInterfaceImage!
     @IBOutlet private var searchScene: WKInterfaceSKScene!
 
     private var searchSceneProxy: SpotDistanceSceneProxy = SpotDistanceSceneProxy()
@@ -44,7 +44,7 @@ class SpotSearchInterfaceController: WKInterfaceController, SpotSearchViewModelE
     private func setSpotSearch() {
         // TODO: self.animate(withDuration: 0.2) {}
 
-        self.findTaskButton.setHidden(true)
+        self.spotFoundInterfaceImage.setHidden(true)
         self.searchScene.setHidden(false)
         self.searchScene.isPaused = false
 
@@ -54,15 +54,9 @@ class SpotSearchInterfaceController: WKInterfaceController, SpotSearchViewModelE
     private func setSpotFound() {
         // TODO: self.animate(withDuration: 0.2) {}
 
-        self.findTaskButton.setBackgroundImage(UIImage(named: "spotFound"))
-        self.findTaskButton.setHidden(false)
+        self.spotFoundInterfaceImage.setHidden(false)
         self.searchScene.setHidden(true)
         self.searchScene.isPaused = true
-    }
-
-    private func setFindTask() {
-        self.findTaskButton.setHidden(false)
-        self.searchScene.setHidden(true)
     }
 
     func didChangeDistance(distance: KotlinInt?) {

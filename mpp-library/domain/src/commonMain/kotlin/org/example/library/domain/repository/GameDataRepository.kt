@@ -43,7 +43,7 @@ class GameDataRepository internal constructor(
 
     val winnerName: String? get() = storage.winnerName
 
-    var prevSignalStrength: Int = 80
+    var prevSignalStrength: Int = 0
 
     private val _proximityInfoChannel: Channel<ProximityInfo?> = Channel()
     val proximityInfo: Flow<ProximityInfo?> = channelFlow {
@@ -102,12 +102,13 @@ class GameDataRepository internal constructor(
                         val db: Int? = if (prevSignalStrength == 100) 1 else null
 
                         if (prevSignalStrength == 100)
-                            prevSignalStrength = 80
+                            prevSignalStrength = 50
 
                         watchSyncRepository.sendData(
                             currentStep = 0,//info?.discoveredBeaconsIds?.size ?: 0,
                             signalStrength = prevSignalStrength,//info?.nearestBeaconStrength,
-                            discoveredBeaconId = db
+                            discoveredBeaconId = db,
+                            isGameEnded = _isGameEnded.value
                         )
                     }
                 } else {

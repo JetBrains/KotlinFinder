@@ -9,7 +9,6 @@ class SpotSearchViewModel(
     interface EventsListener {
         fun didChangeDistance(distance: Int?)
         fun didFoundSpot()
-       // fun didFoundActiveTask()
     }
 
     init {

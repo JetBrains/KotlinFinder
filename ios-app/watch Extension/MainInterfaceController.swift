@@ -14,6 +14,9 @@ import MultiPlatformLibrary
 class MainInterfaceController: WKInterfaceController, CollectWordViewModelEventsListener {
     @IBOutlet private var progressImage: WKInterfaceImage!
     @IBOutlet private var progressLabel: WKInterfaceLabel!
+    @IBOutlet private var tasksCompletedGroup: WKInterfaceGroup!
+    @IBOutlet private var collectWordGroup: WKInterfaceGroup!
+    @IBOutlet private var findTaskButton: WKInterfaceButton!
 
     private weak var viewModel: CollectWordViewModel?
 
@@ -23,6 +26,7 @@ class MainInterfaceController: WKInterfaceController, CollectWordViewModelEvents
         self.viewModel = Factory.Companion.init().shared.createCollectWordViewModel(eventsListener: self)
 
         self.setStepsCount(count: Int(self.viewModel?.currentStep ?? 0))
+        self.findTaskButton.setEnabled(false)
     }
 
     override func willActivate() {
@@ -52,11 +56,8 @@ class MainInterfaceController: WKInterfaceController, CollectWordViewModelEvents
         return attributedString
     }
 
-    private func presentCompletionAlert() {
-        self.presentAlert(withTitle: "All tasks were completed",
-                          message: "Please go to the mobile application to enter your name",
-                          preferredStyle: .alert,
-                          actions: [WKAlertAction(title: "Ok", style: .cancel, handler: {})])
+    @IBAction private func findTaskButtonTapped() {
+        self.pushController(withName: "search", context: nil)
     }
 
     func didChangeCurrentStep(newStep: Int32) {
@@ -64,6 +65,11 @@ class MainInterfaceController: WKInterfaceController, CollectWordViewModelEvents
     }
 
     func showCompletedGameAlert() {
-        self.presentCompletionAlert()
+        self.collectWordGroup.setHidden(true)
+        self.tasksCompletedGroup.setHidden(false)
+    }
+
+    func setFindTaskButtonEnabled(enabled: Bool) {
+        self.findTaskButton.setEnabled(enabled)
     }
 }

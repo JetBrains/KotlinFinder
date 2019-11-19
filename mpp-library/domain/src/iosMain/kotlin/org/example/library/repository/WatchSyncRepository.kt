@@ -20,13 +20,17 @@ actual class WatchSyncRepository {
         this.session.activateSession()
     }
 
-    actual fun sendData(currentStep: Int, signalStrength: Int?, discoveredBeaconId: Int?) {
+    actual fun sendData(currentStep: Int,
+                        signalStrength: Int?,
+                        discoveredBeaconId: Int?,
+                        isGameEnded: Boolean) {
         if (!this.sessionDelegate.isSessionActivated)
             return
 
         dispatch_async(dispatch_get_main_queue()) {
             val data: MutableMap<Any?, Any> = mutableMapOf(
-                "step" to currentStep
+                "step" to currentStep,
+                "isGameEnded" to isGameEnded
             ) /* mapOf(
                 "step" to currentStep,
                 "strength" to (signalStrength ?: -1),

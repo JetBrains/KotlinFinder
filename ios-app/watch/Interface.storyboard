@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15505" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="l9p-qN-zeu">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15505" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="fx0-0D-ogB">
     <device id="watch38"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="15501"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
     </dependencies>
     <customFonts key="customFonts">
         <array key="SFProDisplay-Bold.ttf">
@@ -16,21 +17,45 @@
             <objects>
                 <controller identifier="word" title="Word" id="fx0-0D-ogB" customClass="MainInterfaceController" customModule="watchExtension">
                     <items>
-                        <group width="1" height="6" alignment="left" id="VfW-0b-Y4z"/>
-                        <group width="1" alignment="left" layout="vertical" spacing="10" id="yUH-uu-khL">
+                        <group width="1" alignment="left" hidden="YES" layout="vertical" id="qyb-sE-JtY">
                             <items>
-                                <imageView width="0.69999999999999996" height="0.69999999999999996" alignment="center" verticalAlignment="center" image="kotlin0" contentMode="scaleAspectFit" id="o23-RC-Jac"/>
-                                <label width="1" alignment="center" verticalAlignment="center" text="KOTLIN" textAlignment="center" baselineAdjustment="alignCenters" id="NgQ-qV-VSb">
-                                    <color key="textColor" red="1" green="1" blue="1" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <fontDescription key="font" name="SFProDisplay-Bold" family="SF Pro Display" pointSize="30"/>
-                                </label>
+                                <group width="1" alignment="left" id="SgR-We-8FY">
+                                    <items>
+                                        <imageView alignment="center" verticalAlignment="center" image="tasksCompleted" id="265-9M-Wh0"/>
+                                    </items>
+                                    <edgeInsets key="margins" left="4" right="4" top="10" bottom="10"/>
+                                </group>
                             </items>
+                            <edgeInsets key="margins" left="0.0" right="0.0" top="6" bottom="0.0"/>
                         </group>
-                        <group width="1" height="6" alignment="left" id="6wQ-lb-AC5"/>
+                        <group width="1" alignment="left" layout="vertical" spacing="4" id="yUH-uu-khL">
+                            <items>
+                                <group width="1" alignment="left" layout="vertical" spacing="0.0" id="LCs-m6-qPH">
+                                    <items>
+                                        <imageView width="0.65000000000000002" height="0.65000000000000002" alignment="center" verticalAlignment="center" image="kotlin0" contentMode="scaleAspectFit" id="o23-RC-Jac"/>
+                                        <label width="1" alignment="center" verticalAlignment="center" text="KOTLIN" textAlignment="center" baselineAdjustment="alignCenters" id="NgQ-qV-VSb">
+                                            <color key="textColor" red="1" green="1" blue="1" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <fontDescription key="font" name="SFProDisplay-Bold" family="SF Pro Display" pointSize="30"/>
+                                        </label>
+                                    </items>
+                                </group>
+                                <button width="0.80000000000000004" height="24" alignment="center" verticalAlignment="center" title="Find a task" id="S5D-5e-Dx0">
+                                    <color key="titleColor" name="orangeColor"/>
+                                    <fontDescription key="font" type="boldSystem" pointSize="15"/>
+                                    <connections>
+                                        <action selector="findTaskButtonTapped" destination="fx0-0D-ogB" id="ERY-94-5fH"/>
+                                    </connections>
+                                </button>
+                            </items>
+                            <edgeInsets key="margins" left="0.0" right="0.0" top="6" bottom="0.0"/>
+                        </group>
                     </items>
                     <connections>
+                        <outlet property="collectWordGroup" destination="yUH-uu-khL" id="c7H-Ov-3um"/>
+                        <outlet property="findTaskButton" destination="S5D-5e-Dx0" id="Kfj-hm-Hge"/>
                         <outlet property="progressImage" destination="o23-RC-Jac" id="xEW-KZ-Kfk"/>
                         <outlet property="progressLabel" destination="NgQ-qV-VSb" id="85N-i5-8BZ"/>
+                        <outlet property="tasksCompletedGroup" destination="qyb-sE-JtY" id="QJC-Eh-HeS"/>
                     </connections>
                 </controller>
             </objects>
@@ -43,14 +68,14 @@
                     <items>
                         <group width="0.80000000000000004" height="0.80000000000000004" alignment="center" verticalAlignment="center" id="wPd-Yt-PZh">
                             <items>
-                                <button width="1" alignment="left" backgroundImage="findTask" id="oou-HM-8uJ"/>
+                                <imageView alignment="left" image="spotFound" id="08U-GP-hdW"/>
                                 <spriteKitScene alignment="left" hidden="YES" id="Mut-Ck-gXC"/>
                             </items>
                         </group>
                     </items>
                     <connections>
-                        <outlet property="findTaskButton" destination="oou-HM-8uJ" id="Oqj-tx-kRk"/>
                         <outlet property="searchScene" destination="Mut-Ck-gXC" id="yv5-oV-MMh"/>
+                        <outlet property="spotFoundInterfaceImage" destination="08U-GP-hdW" id="0aP-Vl-hE9"/>
                     </connections>
                 </controller>
             </objects>
@@ -58,7 +83,11 @@
         </scene>
     </scenes>
     <resources>
-        <image name="findTask" width="208" height="208"/>
         <image name="kotlin0" width="80" height="80"/>
+        <image name="spotFound" width="208" height="208"/>
+        <image name="tasksCompleted" width="256" height="202"/>
+        <namedColor name="orangeColor">
+            <color red="0.90980392156862744" green="0.60784313725490191" blue="0.24705882352941178" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
     </resources>
 </document>

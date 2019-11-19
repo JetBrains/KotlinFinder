@@ -13,7 +13,8 @@ import kotlin.native.concurrent.freeze
 data class SessionData (
     val currentStep: Int,
     val signalStrength: Int?,
-    val discoveredBeaconId: Int?
+    val discoveredBeaconId: Int?,
+    val isGameEnded: Boolean
 )
 
 
@@ -49,12 +50,13 @@ class SessionListener: NSObject(), WCSessionDelegateProtocol {
     }
 
     override fun session(session: WCSession, didReceiveApplicationContext: Map<Any?, *>) {
-        //println("received context: $didReceiveApplicationContext")
+        println("received context: $didReceiveApplicationContext")
 
         val data: SessionData = SessionData(
             currentStep = (didReceiveApplicationContext["step"] as? Int) ?: 0,
             signalStrength = (didReceiveApplicationContext["strength"] as? Byte)?.toInt(),
-            discoveredBeaconId = (didReceiveApplicationContext["discoveredBeaconId"] as? Int)
+            discoveredBeaconId = (didReceiveApplicationContext["discoveredBeaconId"] as? Int),
+            isGameEnded = (didReceiveApplicationContext["isGameEnded"] as Int) != 0
         )
 
         println("received session data: $data")
