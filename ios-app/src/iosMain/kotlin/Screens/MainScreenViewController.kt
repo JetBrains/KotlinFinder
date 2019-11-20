@@ -241,7 +241,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
                 MapViewModel.FindTaskButtonState.COMPLETED -> {
                     this.findTaskButton.enabled = false
                     this.findTaskButton.setStyle(CommonButton.Style.ORANGE)
-                    this.findTaskButton.setTitle("${this.viewModel.winnerName} (${this.viewModel.cookie()})", forState = 0u)
+                    this.findTaskButton.setTitle("${this.viewModel.cookie()}", forState = 0u)
                 }
             }
         }
