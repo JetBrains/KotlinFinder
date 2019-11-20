@@ -76,6 +76,10 @@ class MapActivity :
         //todo goto search
     }
 
+    override fun showResetCookiesAlert(resetAction: () -> Unit) {
+        resetAction()
+    }
+
     override fun showEnterNameAlert() {
         alertInputText(
             getString(R.string.enterName),

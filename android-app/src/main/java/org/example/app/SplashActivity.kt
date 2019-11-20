@@ -31,8 +31,6 @@ class SplashActivity :
 
     override fun showError(error: Throwable, retryingAction: (() -> Unit)?) {
         Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
-        //todo fix and delete
-        routeToMainscreen()
     }
 
     override fun routeToMainscreen() {
