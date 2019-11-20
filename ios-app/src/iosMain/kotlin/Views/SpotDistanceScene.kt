@@ -106,7 +106,7 @@ class SpotDistanceScene : SKScene {
             val barWidth: CGFloat = CGRectGetWidth(bar.middlePart.frame)
 
             var scaleFactor: Float =
-                Random.nextFloat() * 2.0f * (if (Random.nextInt() % 2 == 0) 1 else -1).toFloat() +
+                Random.nextFloat() * 1.0f * (if (Random.nextInt() % 2 == 0) 1 else -1).toFloat() +
                         this.distance * this.maxScale
 
             if (scaleFactor < 0.0 || this.distance == 0.0f)
