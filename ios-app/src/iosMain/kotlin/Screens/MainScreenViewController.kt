@@ -25,6 +25,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
     private val shadowView: UIView = UIView()
     private val mapImageView: UIImageView = UIImageView(UIImage.imageNamed("mapImage"))
     private val hintButton: UIButton = UIButton.buttonWithType(3)
+    private val strengthLabel: UILabel = UILabel()
 
     private lateinit var viewModel: MapViewModel
 
@@ -44,6 +45,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             addSubview(findTaskButton)
             addSubview(shadowView)
             addSubview(controlWordContainerView)
+            addSubview(strengthLabel)
         }
 
         this.scrollView.addSubview(this.mapImageView)
@@ -59,7 +61,8 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             shadowView,
             mapImageView,
             collectWordView,
-            this.hintButton
+            this.hintButton,
+            this.strengthLabel
         ).forEach { it.translatesAutoresizingMaskIntoConstraints = false }
 
         this.collectWordView.topAnchor.constraintEqualToAnchor(
@@ -101,14 +104,22 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             this.view.leftAnchor,
             constant = 16.0
         ).setActive(true)
+
         this.findTaskButton.rightAnchor.constraintEqualToAnchor(
             this.view.rightAnchor,
             constant = -16.0
         ).setActive(true)
+
         this.findTaskButton.bottomAnchor.constraintEqualToAnchor(
             this.shadowView.topAnchor,
             constant = -20.0
         ).setActive(true)
+
+        this.strengthLabel.leftAnchor.constraintEqualToAnchor(this.scrollView.leftAnchor).setActive(true)
+        this.strengthLabel.topAnchor.constraintEqualToAnchor(this.scrollView.topAnchor).setActive(true)
+
+        this.strengthLabel.textColor = UIColor.redColor
+        this.strengthLabel.font = UIFont.boldSystemFontOfSize(30.0)
 
         this.controlWordContainerView.fillContainer(this.shadowView)
 
@@ -248,6 +259,10 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
 
         viewModel.hintButtonEnabled.addObserver { enabled: Boolean ->
             this.hintButton.setEnabled(enabled)
+        }
+        
+        viewModel.signalStrength.addObserver { strength: Int? ->
+            this.strengthLabel.text = "$strength"
         }
     }
 

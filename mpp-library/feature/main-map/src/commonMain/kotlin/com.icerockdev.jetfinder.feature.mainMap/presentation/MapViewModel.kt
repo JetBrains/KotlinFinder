@@ -47,6 +47,9 @@ class MapViewModel(
     private val _currentStep: MutableLiveData<Int> = MutableLiveData(0)
     val currentStep: LiveData<Int> = this._currentStep.readOnly()
 
+    private val _signalStrength: MutableLiveData<Int?> = MutableLiveData(null)
+    val signalStrength: LiveData<Int?> = this._signalStrength.readOnly()
+
     val winnerName: String? get() = gameDataRepository.winnerName
 
     init {
@@ -56,6 +59,8 @@ class MapViewModel(
 
         viewModelScope.launch {
             gameDataRepository.proximityInfo.collect { info: ProximityInfo? ->
+                _signalStrength.value = info?.nearestBeaconStrength
+
                 if (info?.nearestBeaconStrength == null && !gameDataRepository.isGameEnded.value)
                     _findTaskButtonState.value = FindTaskButtonState.TOO_FAR
                 else if (!gameDataRepository.isGameEnded.value)
