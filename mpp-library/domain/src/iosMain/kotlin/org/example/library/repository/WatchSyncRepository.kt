@@ -45,14 +45,6 @@ actual class WatchSyncRepository {
             try {
                 println("send data $data to watch")
 
-                /*this.session.sendMessage(
-                    message = data.freeze(),
-                    replyHandler = {},
-                    errorHandler = {
-                        println("ERROR!!!!")
-                    }
-                )*/
-
                 this.session.updateApplicationContext(
                     applicationContext = data.freeze(),
                     error = null
