@@ -42,15 +42,14 @@ class SpotSearchRepository(
 
     fun restartScanning() {
         Napier.d(">>> SCANNING RESTARTED")
-       // this.doScanning()
+        this.doScanning()
     }
 
     private fun doScanning() {
         GlobalScope.launch(Dispatchers.UI) {
             while (isActive) {
-                //if (tryStartScan()) break
-
-                gameDataRepository.beaconsChannel.send(BeaconInfo("MBPAnton", -50))
+                if (tryStartScan())
+                    break
 
                 delay(500)
             }
