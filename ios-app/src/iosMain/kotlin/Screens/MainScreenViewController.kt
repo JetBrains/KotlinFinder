@@ -25,7 +25,6 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
     private val shadowView: UIView = UIView()
     private val mapImageView: UIImageView = UIImageView(UIImage.imageNamed("mapImage"))
     private val hintButton: UIButton = UIButton.buttonWithType(3)
-    private val resetCookiesButton: UIButton = UIButton(frame = CGRectMake(0.0, 0.0, 0.0, 0.0))
 
     private lateinit var viewModel: MapViewModel
 
@@ -50,7 +49,6 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         this.scrollView.addSubview(this.mapImageView)
         this.controlWordContainerView.addSubview(this.collectWordView)
         this.controlWordContainerView.addSubview(this.hintButton)
-        this.controlWordContainerView.addSubview(this.resetCookiesButton)
 
         this.shadowView.backgroundColor = UIColor.whiteColor
 
@@ -61,8 +59,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             shadowView,
             mapImageView,
             collectWordView,
-            this.hintButton,
-            this.resetCookiesButton
+            this.hintButton
         ).forEach { it.translatesAutoresizingMaskIntoConstraints = false }
 
         this.collectWordView.topAnchor.constraintEqualToAnchor(
@@ -86,16 +83,6 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         this.hintButton.rightAnchor.constraintEqualToAnchor(
             this.controlWordContainerView.rightAnchor,
             constant = -20.0
-        ).setActive(true)
-
-        this.resetCookiesButton.topAnchor.constraintEqualToAnchor(
-            this.controlWordContainerView.topAnchor,
-            constant = 20.0
-        ).setActive(true)
-
-        this.resetCookiesButton.leftAnchor.constraintEqualToAnchor(
-            this.controlWordContainerView.leftAnchor,
-            constant = 20.0
         ).setActive(true)
 
         this.scrollView.leftAnchor.constraintEqualToAnchor(this.view.leftAnchor).setActive(true)
@@ -131,6 +118,12 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
 
         this.collectWordView.setText("KOTLIN")
         this.collectWordView.setCollectedLettersCount(0)
+
+        this.findTaskButton.titleLabel?.setMinimumScaleFactor(0.5)
+        this.findTaskButton.titleLabel?.setNumberOfLines(0)
+        this.findTaskButton.titleLabel?.setAdjustsFontSizeToFitWidth(true)
+        this.findTaskButton.titleLabel?.lineBreakMode = NSLineBreakByWordWrapping
+        this.findTaskButton.titleLabel?.textAlignment = NSTextAlignmentCenter
 
         with(controlWordContainerView) {
             with(layer) {
@@ -175,13 +168,9 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             forControlEvents = UIControlEventTouchUpInside
         )
 
-        this.resetCookiesButton.setTitle("RESET", 0u)
-        this.resetCookiesButton.setTitleColor(UIColor.redColor, 0u)
-        this.resetCookiesButton.addTarget(
-            target = this,
-            action = platform.darwin.sel_registerName("resetCookiesButtonTapped"),
-            forControlEvents = UIControlEventTouchUpInside
-        )
+        this.collectWordView.didLongTapImageViewBlock = {
+            this.viewModel.resetCookiesButtonTapped()
+        }
     }
 
     override fun viewWillAppear(animated: Boolean) {
@@ -252,7 +241,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
                 MapViewModel.FindTaskButtonState.COMPLETED -> {
                     this.findTaskButton.enabled = false
                     this.findTaskButton.setStyle(CommonButton.Style.ORANGE)
-                    this.findTaskButton.setTitle(viewModel.winnerName, forState = 0u)
+                    this.findTaskButton.setTitle("${this.viewModel.winnerName} (${this.viewModel.cookie()})", forState = 0u)
                 }
             }
         }
@@ -270,11 +259,6 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
     @ObjCAction
     private fun hintButtonTapped() {
         this.viewModel.hintButtonTapped()
-    }
-
-    @ObjCAction
-    private fun resetCookiesButtonTapped() {
-        this.viewModel.resetCookiesButtonTapped()
     }
 
     override fun viewForZoomingInScrollView(scrollView: UIScrollView): UIView {

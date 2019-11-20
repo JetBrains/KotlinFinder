@@ -30,9 +30,9 @@
 		<true/>
 	</dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>We need it</string>
+	<string>Bluetooth access required to find beacons in the conference area</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Because we need it.</string>
+	<string>Bluetooth access required to find beacons in the conference area</string>
 	<key>NSMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIAppFonts</key>

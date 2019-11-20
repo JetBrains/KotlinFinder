@@ -32,6 +32,7 @@ class MapViewModel(
         fun showEnterNameAlert()
         fun showHint(hint: String)
         fun showRegistrationMessage(message: String)
+        fun showResetCookiesAlert(resetAction: (() -> Unit))
     }
 
     private val _findTaskButtonState =
@@ -123,7 +124,15 @@ class MapViewModel(
     }
 
     fun resetCookiesButtonTapped() {
-        this.gameDataRepository.resetCookies()
+        this.eventsDispatcher.dispatchEvent {
+            showResetCookiesAlert {
+                gameDataRepository.resetCookies()
+            }
+        }
+    }
+
+    fun cookie(): String? {
+        return this.gameDataRepository.cookie()
     }
 
     private fun setHintStr() {

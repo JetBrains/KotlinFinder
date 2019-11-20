@@ -4,20 +4,29 @@ import platform.CoreGraphics.CGFloat
 import platform.UIKit.UIImpactFeedbackGenerator
 import platform.UIKit.UIImpactFeedbackStyle
 import platform.posix.round
-import kotlin.math.min
 
 
 class FeedbackGenerator {
-    private val generator: UIImpactFeedbackGenerator = UIImpactFeedbackGenerator(UIImpactFeedbackStyle.UIImpactFeedbackStyleMedium)
+    private val generators: List<UIImpactFeedbackGenerator> = listOf(
+        UIImpactFeedbackGenerator(UIImpactFeedbackStyle.UIImpactFeedbackStyleLight),
+        UIImpactFeedbackGenerator(UIImpactFeedbackStyle.UIImpactFeedbackStyleMedium),
+        UIImpactFeedbackGenerator(UIImpactFeedbackStyle.UIImpactFeedbackStyleHeavy)
+    )
 
     init {
-        this.generator.prepare()
+        for (g: UIImpactFeedbackGenerator in this.generators)
+            g.prepare()
     }
 
     fun feedback(intensity: CGFloat) {
-        if (intensity < 0.0)
+        if (intensity <= 0.0)
             return
 
-        this.generator.impactOccurredWithIntensity(intensity * 1000.0)
+        var idx: Int = round(intensity * this.generators.count()).toInt()
+
+        if (idx >= this.generators.count())
+            idx = this.generators.count() - 1
+
+        this.generators[idx].impactOccurred()
     }
 }
