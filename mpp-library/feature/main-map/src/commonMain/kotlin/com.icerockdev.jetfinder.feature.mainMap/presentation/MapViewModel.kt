@@ -9,7 +9,6 @@ import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.example.library.domain.entity.ProximityInfo
-import org.example.library.domain.entity.TaskItem
 import org.example.library.domain.repository.CollectedSpotsRepository
 import org.example.library.domain.repository.GameDataRepository
 import org.example.library.domain.repository.SpotSearchRepository
@@ -33,6 +32,7 @@ class MapViewModel(
         fun showEnterNameAlert()
         fun showHint(hint: String)
         fun showRegistrationMessage(message: String)
+        fun showResetCookiesAlert(resetAction: (() -> Unit))
     }
 
     private val _findTaskButtonState =
@@ -46,6 +46,8 @@ class MapViewModel(
 
     private val _currentStep: MutableLiveData<Int> = MutableLiveData(0)
     val currentStep: LiveData<Int> = this._currentStep.readOnly()
+
+    val winnerName: String? get() = gameDataRepository.winnerName
 
     init {
         this.gameDataRepository.startScanning(didReceiveNoDevicesBlock = {
@@ -122,23 +124,30 @@ class MapViewModel(
     }
 
     fun resetCookiesButtonTapped() {
-        this.gameDataRepository.resetCookies()
+        this.eventsDispatcher.dispatchEvent {
+            showResetCookiesAlert {
+                gameDataRepository.resetCookies()
+            }
+        }
+    }
+
+    fun cookie(): String? {
+        return this.gameDataRepository.cookie()
     }
 
     private fun setHintStr() {
-        val collectedSpotIds: List<Int> =
-            this.collectedSpotsRepository.collectedSpotIds() ?: emptyList()
-        val tasks: List<TaskItem> = this.gameDataRepository.gameConfig?.tasks ?: return
+        val collectedSpotIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds().orEmpty()
+        val hints = this.gameDataRepository.gameConfig?.hints.orEmpty()
 
-        val uncompletedTasks: List<TaskItem> = tasks.filter {
-            collectedSpotIds.indexOf(it.code) == -1
+        val notCollectedHints = hints.filter {
+            collectedSpotIds.contains(it.key).not()
         }
 
-        if (uncompletedTasks.count() == 0) {
+        if (notCollectedHints.count() == 0) {
             this.hintStr = null
             this._hintButtonEnabled.value = false
         } else {
-            this.hintStr = uncompletedTasks.random().hint
+            this.hintStr = notCollectedHints.values.random()
             this._hintButtonEnabled.value = true
         }
     }

@@ -8,7 +8,6 @@ import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.example.library.domain.entity.ProximityInfo
-import org.example.library.domain.entity.TaskItem
 import org.example.library.domain.repository.CollectedSpotsRepository
 import org.example.library.domain.repository.GameDataRepository
 
@@ -46,11 +45,12 @@ class SpotSearchViewModel(
             } else {
                 Napier.d(">>>>>>>> TASK COMPLETED!")
 
-                val task: TaskItem? = this.gameDataRepository.taskForSpotId(beaconId)
+                val collectedCount = this.collectedSpotsRepository.collectedSpotIds()?.count() ?: 0
+                val fact = this.gameDataRepository.gameConfig?.facts?.getOrNull(collectedCount)
 
-                Napier.d("task: $task")
+                Napier.d("fact: $fact")
 
-                this._hintText.value = task?.question ?: ""
+                this._hintText.value = fact ?: ""
                 this._isSearchMode.value = false
             }
         }

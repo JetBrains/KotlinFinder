@@ -23,9 +23,9 @@ class SpotDistanceScene : SKScene {
 
     private val bars: NSMutableArray = NSMutableArray()
     private val initialBarHeight: CGFloat = 10.0
-    val maxDistance: Float = 5.0f
+    private val maxScale: Float = 8.0f
 
-    var distance: Float = 5.0f
+    var distance: Float = 0.0f
 
     @OverrideInit
     constructor(coder: NSCoder) : super(coder)
@@ -104,7 +104,14 @@ class SpotDistanceScene : SKScene {
             bar.bottomPart.removeAllActions()
 
             val barWidth: CGFloat = CGRectGetWidth(bar.middlePart.frame)
-            val scaleFactor: Float = (0.5f + Random.nextFloat()) * this.distance
+
+            var scaleFactor: Float =
+                Random.nextFloat() * 1.0f * (if (Random.nextInt() % 2 == 0) 1 else -1).toFloat() +
+                        this.distance * this.maxScale
+
+            if (scaleFactor < 0.0 || this.distance == 0.0f)
+                scaleFactor = 0.0f
+
             val newHeight: CGFloat = this.initialBarHeight * scaleFactor
             val newY: CGFloat = CGRectGetHeight(this.frame) / 2.0 - newHeight / 2.0
             var duration: NSTimeInterval =
