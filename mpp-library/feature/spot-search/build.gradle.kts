@@ -26,6 +26,7 @@ dependencies {
     mppLibrary(Deps.Libs.MultiPlatform.bluefalcon)
     mppLibrary(Deps.Libs.MultiPlatform.napier)
     mppModule(Modules.MultiPlatform.domain)
+    mppModule(Modules.MultiPlatform.shared)
 
     androidLibrary(Deps.Libs.Android.lifecycle)
 }

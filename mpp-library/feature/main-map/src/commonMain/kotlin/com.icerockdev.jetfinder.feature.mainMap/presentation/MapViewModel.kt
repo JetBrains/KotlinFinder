@@ -28,14 +28,15 @@ class MapViewModel(
         COMPLETED
     }
 
-    interface EventsListener: ErrorEventsListener {
+    interface EventsListener : ErrorEventsListener {
         fun routeToSpotSearchScreen()
         fun showEnterNameAlert()
         fun showHint(hint: String)
         fun showRegistrationMessage(message: String)
     }
 
-    private val _findTaskButtonState = MutableLiveData<FindTaskButtonState>(FindTaskButtonState.TOO_FAR)
+    private val _findTaskButtonState =
+        MutableLiveData<FindTaskButtonState>(FindTaskButtonState.TOO_FAR)
     val findTaskButtonState: LiveData<FindTaskButtonState> = _findTaskButtonState.readOnly()
 
     private var hintStr: String? = null
@@ -125,7 +126,8 @@ class MapViewModel(
     }
 
     private fun setHintStr() {
-        val collectedSpotIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds() ?: emptyList()
+        val collectedSpotIds: List<Int> =
+            this.collectedSpotsRepository.collectedSpotIds() ?: emptyList()
         val tasks: List<TaskItem> = this.gameDataRepository.gameConfig?.tasks ?: return
 
         val uncompletedTasks: List<TaskItem> = tasks.filter {

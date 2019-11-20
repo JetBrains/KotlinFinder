@@ -51,6 +51,8 @@ dependencies {
     implementation(Deps.Libs.Android.kotlinStdLib.name)
 
     implementation(Deps.Libs.Android.appCompat.name)
+    implementation(Deps.Libs.Android.constraintLayout.name)
+    implementation(Deps.Libs.MultiPlatform.napier.android!!)
 
     implementation(project(":mpp-library"))
 }
