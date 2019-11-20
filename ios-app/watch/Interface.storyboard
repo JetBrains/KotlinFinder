@@ -39,7 +39,7 @@
                                         </label>
                                     </items>
                                 </group>
-                                <button width="0.80000000000000004" height="24" alignment="center" verticalAlignment="center" title="Find a task" id="S5D-5e-Dx0">
+                                <button width="0.80000000000000004" height="30" alignment="center" verticalAlignment="center" title="Find a task" id="S5D-5e-Dx0">
                                     <color key="titleColor" name="orangeColor"/>
                                     <fontDescription key="font" type="boldSystem" pointSize="15"/>
                                     <connections>
@@ -87,7 +87,7 @@
         <image name="spotFound" width="208" height="208"/>
         <image name="tasksCompleted" width="256" height="202"/>
         <namedColor name="orangeColor">
-            <color red="0.90980392156862744" green="0.60784313725490191" blue="0.24705882352941178" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.9100000262260437" green="0.60799998044967651" blue="0.24699999392032623" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

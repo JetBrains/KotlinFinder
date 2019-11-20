@@ -29,17 +29,6 @@ class MainInterfaceController: WKInterfaceController, CollectWordViewModelEvents
         self.findTaskButton.setEnabled(false)
     }
 
-    override func willActivate() {
-        // This method is called when watch view controller is about to be visible to user
-        super.willActivate()
-    }
-
-    override func didDeactivate() {
-        super.didDeactivate()
-
-        self.viewModel?.clear()
-    }
-
     private func setStepsCount(count: Int) {
         self.progressImage.setImageNamed("kotlin\(count)")
 
