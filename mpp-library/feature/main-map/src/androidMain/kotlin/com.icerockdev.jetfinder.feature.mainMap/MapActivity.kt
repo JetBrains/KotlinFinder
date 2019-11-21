@@ -21,6 +21,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 
+
 private const val ALL_PERMISSIONS_RESULT = 1011
 
 class MapActivity :
@@ -40,6 +41,14 @@ class MapActivity :
         super.onCreate(savedInstanceState)
 
         requestPermissions()
+
+        binding.map.setImageResource(R.drawable.map)
+        binding.map.post { binding.map.scale = 3f }
+
+        binding.imageView.setOnLongClickListener {
+            viewModel.resetCookiesButtonTapped()
+            false
+        }
 
         viewModel.currentStep.ld().observe(this, Observer { step ->
             stages.getOrNull(step)?.let {
@@ -67,6 +76,8 @@ class MapActivity :
                     }
                 }
             })
+
+
     }
 
     private val stages = mutableListOf(
@@ -80,7 +91,7 @@ class MapActivity :
     )
 
     override fun routeToSpotSearchScreen() {
-        //todo goto search
+        MainMapDependencies.router.routeToSpotSearch(this)
     }
 
     override fun showResetCookiesAlert(resetAction: () -> Unit) {
@@ -148,4 +159,6 @@ class MapActivity :
         setText(firstText)
         append(lastText)
     }
+
 }
+

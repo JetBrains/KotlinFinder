@@ -15,6 +15,7 @@ allprojects {
         maven { url = uri("http://dl.bintray.com/kotlin/kotlin-dev") }
         maven { url = uri("http://dl.bintray.com/kotlin/kotlin-eap") }
         maven { url = uri("https://dl.bintray.com/icerockdev/kotlin-libs") }
+        maven { url = uri("https://jitpack.io") }
     }
 
     // workaround for https://youtrack.jetbrains.com/issue/KT-27170

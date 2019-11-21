@@ -15,13 +15,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <View
+        <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/map"
             android:layout_width="0dp"
             android:layout_height="0dp"
-
             android:layout_marginBottom="16dp"
-            android:background="@color/blue"
+            android:scaleType="fitCenter"
             app:layout_constraintBottom_toTopOf="@+id/imageView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="55dp"
             android:layout_marginBottom="16dp"
+            android:longClickable="true"
             android:src="@drawable/stage0"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -89,15 +89,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/map"
             app:srcCompat="@drawable/artboard" />
-
-        <Button
-            android:id="@+id/reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{() -> viewModel.resetCookiesButtonTapped()}"
-            android:text="reset"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/map" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

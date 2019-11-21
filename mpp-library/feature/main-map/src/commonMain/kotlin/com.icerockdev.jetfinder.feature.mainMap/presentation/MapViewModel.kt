@@ -16,7 +16,7 @@ import org.example.library.domain.repository.SpotSearchRepository
 
 class MapViewModel(
     private val collectedSpotsRepository: CollectedSpotsRepository,
-    private val gameDataRepository: GameDataRepository,
+    val gameDataRepository: GameDataRepository,
     private val spotSearchRepository: SpotSearchRepository,
     override val eventsDispatcher: EventsDispatcher<EventsListener>
 ) : ViewModel(), EventsDispatcherOwner<MapViewModel.EventsListener> {
@@ -51,7 +51,7 @@ class MapViewModel(
 
     init {
         this.gameDataRepository.startScanning(didReceiveNoDevicesBlock = {
-            this.spotSearchRepository.restartScanning()
+            //this.spotSearchRepository.restartScanning()
         })
 
         viewModelScope.launch {

@@ -7,6 +7,7 @@ plugins {
     id("org.jetbrains.kotlin.multiplatform")
     id("kotlin-android-extensions")
     id("dev.icerock.mobile.multiplatform")
+    id("kotlin-kapt")
 }
 
 android {
@@ -15,6 +16,10 @@ android {
     defaultConfig {
         minSdkVersion(Versions.Android.minSdk)
         targetSdkVersion(Versions.Android.targetSdk)
+    }
+
+    dataBinding {
+        isEnabled = true
     }
 }
 
@@ -29,4 +34,7 @@ dependencies {
     mppModule(Modules.MultiPlatform.shared)
 
     androidLibrary(Deps.Libs.Android.lifecycle)
+    androidLibrary(Deps.Libs.Android.constraintLayout)
+    androidLibrary(Deps.Libs.Android.appCompat)
+    androidLibrary(Deps.Libs.Android.material)
 }

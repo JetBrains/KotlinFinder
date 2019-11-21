@@ -12,6 +12,7 @@ pluginManagement {
         maven { url = uri("https://jetbrains.bintray.com/kotlin-native-dependencies") }
         maven { url = uri("https://maven.fabric.io/public") }
         maven { url = uri("https://dl.bintray.com/icerockdev/plugins") }
+        maven { url = uri("https://jitpack.io") }
     }
     resolutionStrategy.eachPlugin {
         // part of plugins defined in Deps.Plugins, part in buildSrc/build.gradle.kts
