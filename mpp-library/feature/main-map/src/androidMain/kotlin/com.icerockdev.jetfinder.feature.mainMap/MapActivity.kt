@@ -17,6 +17,11 @@ import com.icerockdev.shared.utils.alertRetry
 import dev.icerock.moko.mvvm.MvvmEventsActivity
 import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.mvvm.dispatcher.eventsDispatcherOnMain
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+
+private const val ALL_PERMISSIONS_RESULT = 1011
 
 class MapActivity :
     MvvmEventsActivity<ActivityMapBinding, MapViewModel, MapViewModel.EventsListener>(),
@@ -33,6 +38,8 @@ class MapActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        requestPermissions()
 
         viewModel.currentStep.ld().observe(this, Observer { step ->
             stages.getOrNull(step)?.let {
@@ -96,6 +103,29 @@ class MapActivity :
 
     override fun showError(error: Throwable, retryingAction: (() -> Unit)?) {
         alertRetry(error.message ?: "UnknownError", action = retryingAction)
+    }
+
+    private fun requestPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val permissions = arrayListOf(
+                Manifest.permission.INTERNET,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.BLUETOOTH_ADMIN,
+                Manifest.permission.BLUETOOTH
+            )
+
+            val permissionsToRequest = arrayListOf<String>()
+
+            for (perm in permissions) {
+                if (checkSelfPermission(perm) != PackageManager.PERMISSION_GRANTED) {
+                    permissionsToRequest.add(perm)
+                }
+            }
+
+            if (permissionsToRequest.size > 0) {
+                requestPermissions(permissionsToRequest.toTypedArray(), ALL_PERMISSIONS_RESULT)
+            }
+        }
     }
 
     private fun TextView.setTwoColoredText(count: Int) {
