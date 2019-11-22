@@ -16,21 +16,16 @@ import com.icerockdev.shared.utils.alertRetry
 import dev.icerock.moko.mvvm.MvvmEventsActivity
 import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.mvvm.dispatcher.eventsDispatcherOnMain
-import android.Manifest
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import dev.bluefalcon.BluetoothPeripheral
-import dev.bluefalcon.BluetoothPermissionException
 import dev.bluefalcon.log
+import dev.icerock.moko.permissions.PermissionsController
 
-
-private const val ALL_PERMISSIONS_RESULT = 1011
 
 class MapActivity :
     MvvmEventsActivity<ActivityMapBinding, MapViewModel, MapViewModel.EventsListener>(),
@@ -44,14 +39,15 @@ class MapActivity :
 
     override fun viewModelFactory(): ViewModelProvider.Factory = createViewModelFactory {
         MainMapDependencies.factory.createMapViewModel(
-            eventsDispatcher = eventsDispatcherOnMain()
+            eventsDispatcher = eventsDispatcherOnMain(),
+            permissionsController = PermissionsController()
         )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        requestPermissions()
+        viewModel.permissionsController.bind(lifecycle, supportFragmentManager)
+        viewModel.requestPermissions()
 
         binding.map.setImageResource(R.drawable.map)
         binding.map.post { binding.map.scale = 3f }
@@ -73,35 +69,20 @@ class MapActivity :
                 when (state) {
                     MapViewModel.FindTaskButtonState.ACTIVE -> {
                         binding.findTaskButton.isEnabled = true
-                        binding.findTaskButton.text = "Find a task"
+                        binding.findTaskButton.text = getString(R.string.find_task)
                     }
 
                     MapViewModel.FindTaskButtonState.TOO_FAR -> {
                         binding.findTaskButton.isEnabled = false
-                        binding.findTaskButton.text = "You are too far from the task point"
+                        binding.findTaskButton.text = getString(R.string.farTaskPoint)
                     }
 
                     MapViewModel.FindTaskButtonState.COMPLETED -> {
                         binding.findTaskButton.isEnabled = false
-                        binding.findTaskButton.text = "Completed"
+                        binding.findTaskButton.text = getString(R.string.completed)
                     }
                 }
             })
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                throw BluetoothPermissionException()
-            bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            val filterBuilder = ScanFilter.Builder()
-            val filter = filterBuilder.build()
-            val filters = listOf(filter)
-            val settings = ScanSettings.Builder()
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
-                .build()
-            val bluetoothScanner = bluetoothManager?.adapter?.bluetoothLeScanner
-
-            bluetoothScanner?.startScan(filters, settings, mBluetoothScanCallBack)
-        }
     }
 
     private val stages = mutableListOf(
@@ -140,29 +121,6 @@ class MapActivity :
         alertRetry(error.message ?: "UnknownError", action = retryingAction)
     }
 
-    private fun requestPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val permissions = arrayListOf(
-                Manifest.permission.INTERNET,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.BLUETOOTH_ADMIN,
-                Manifest.permission.BLUETOOTH
-            )
-
-            val permissionsToRequest = arrayListOf<String>()
-
-            for (perm in permissions) {
-                if (checkSelfPermission(perm) != PackageManager.PERMISSION_GRANTED) {
-                    permissionsToRequest.add(perm)
-                }
-            }
-
-            if (permissionsToRequest.size > 0) {
-                requestPermissions(permissionsToRequest.toTypedArray(), ALL_PERMISSIONS_RESULT)
-            }
-        }
-    }
-
     private fun TextView.setTwoColoredText(count: Int) {
         val text = this.text.toString()
         val firstText = SpannableString(text.take(count))
@@ -182,6 +140,19 @@ class MapActivity :
         )
         setText(firstText)
         append(lastText)
+    }
+
+    override fun onStartScanner() {
+        bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val filterBuilder = ScanFilter.Builder()
+        val filter = filterBuilder.build()
+        val filters = listOf(filter)
+        val settings = ScanSettings.Builder()
+            .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
+            .build()
+        val bluetoothScanner = bluetoothManager?.adapter?.bluetoothLeScanner
+
+        bluetoothScanner?.startScan(filters, settings, mBluetoothScanCallBack)
     }
 
     override fun onStopScanner() {

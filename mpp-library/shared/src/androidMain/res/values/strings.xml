@@ -6,4 +6,6 @@
     <string name="retry">Retry</string>
     <string name="enterName">Enter your name</string>
     <string name="cancel">Cancel</string>
+    <string name="farTaskPoint">You are too far from the task point</string>
+    <string name="completed">Completed</string>
 </resources>

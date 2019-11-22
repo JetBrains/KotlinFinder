@@ -7,6 +7,10 @@ import dev.icerock.moko.mvvm.livedata.LiveData
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.livedata.readOnly
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import dev.icerock.moko.permissions.DeniedAlwaysException
+import dev.icerock.moko.permissions.DeniedException
+import dev.icerock.moko.permissions.Permission
+import dev.icerock.moko.permissions.PermissionsController
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.example.library.domain.entity.ProximityInfo
@@ -19,7 +23,8 @@ class MapViewModel(
     private val collectedSpotsRepository: CollectedSpotsRepository,
     private val gameDataRepository: GameDataRepository,
     private val spotSearchRepository: SpotSearchRepository,
-    override val eventsDispatcher: EventsDispatcher<EventsListener>
+    override val eventsDispatcher: EventsDispatcher<EventsListener>,
+    val permissionsController: PermissionsController
 ) : ViewModel(), EventsDispatcherOwner<MapViewModel.EventsListener> {
 
     enum class FindTaskButtonState {
@@ -34,6 +39,7 @@ class MapViewModel(
         fun showHint(hint: String)
         fun showRegistrationMessage(message: String)
         fun showResetCookiesAlert(resetAction: (() -> Unit))
+        fun onStartScanner()
         fun onStopScanner()
     }
 
@@ -52,9 +58,6 @@ class MapViewModel(
     val winnerName: String? get() = gameDataRepository.winnerName
 
     init {
-        this.gameDataRepository.startScanning(didReceiveNoDevicesBlock = {
-            //this.spotSearchRepository.restartScanning()
-        })
 
         viewModelScope.launch {
             gameDataRepository.proximityInfo.collect { info: ProximityInfo? ->
@@ -157,5 +160,20 @@ class MapViewModel(
 
     fun deviceFound(device: BluetoothPeripheral) {
         spotSearchRepository.didDiscoverDevice(device)
+    }
+
+    fun requestPermissions() {
+        viewModelScope.launch {
+            try {
+                permissionsController.providePermission(Permission.COARSE_LOCATION)
+                gameDataRepository.startScanning(didReceiveNoDevicesBlock = { })
+                eventsDispatcher.dispatchEvent { onStartScanner() }
+
+            } catch (deniedAlways: DeniedAlwaysException) {
+
+            } catch (denied: DeniedException) {
+
+            }
+        }
     }
 }

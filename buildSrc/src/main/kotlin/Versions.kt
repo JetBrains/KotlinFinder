@@ -40,7 +40,7 @@ object Versions {
             const val mokoResources = Versions.mokoResources
             const val mokoNetwork = Versions.mokoNetwork
             const val mokoFields = "0.1.0-1.3.60-eap-76"
-            const val mokoPermissions = "0.1.0-1.3.60-eap-76"
+            const val mokoPermissions = "0.2.0-1.3.60-eap-76"
 
             const val napier = "1.0.0-1.3.60-eap-76"
             const val settings = "0.3.3-1.3.60-eap-76"

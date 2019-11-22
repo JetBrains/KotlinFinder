@@ -3,6 +3,7 @@ package com.icerockdev.jetfinder.feature.mainMap.di
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import com.icerockdev.jetfinder.feature.mainMap.presentation.SplashViewModel
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
+import dev.icerock.moko.permissions.PermissionsController
 import org.example.library.domain.di.DomainFactory
 
 
@@ -11,20 +12,23 @@ class MapViewModelFactory(
 ) {
 
     fun createMapViewModel(
-        eventsDispatcher: EventsDispatcher<MapViewModel.EventsListener>
+        eventsDispatcher: EventsDispatcher<MapViewModel.EventsListener>,
+        permissionsController: PermissionsController
     ): MapViewModel {
         return MapViewModel(
             collectedSpotsRepository = this.domainFactory.collectedSpotsRepository,
             spotSearchRepository = this.domainFactory.spotSearchRepository,
             gameDataRepository = this.domainFactory.gameDataRepository,
-            eventsDispatcher = eventsDispatcher
+            eventsDispatcher = eventsDispatcher,
+            permissionsController = permissionsController
         )
     }
 
     fun createSplashViewModel(
         eventsDispatcher: EventsDispatcher<SplashViewModel.EventsListener>
     ): SplashViewModel {
-        return SplashViewModel(eventsDispatcher = eventsDispatcher,
+        return SplashViewModel(
+            eventsDispatcher = eventsDispatcher,
             gameDataRepository = this.domainFactory.gameDataRepository
         )
     }

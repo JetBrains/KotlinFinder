@@ -30,6 +30,7 @@ dependencies {
     mppLibrary(Deps.Libs.MultiPlatform.coroutines)
     mppLibrary(Deps.Libs.MultiPlatform.mokoMvvm)
     mppLibrary(Deps.Libs.MultiPlatform.mokoResources)
+    mppLibrary(Deps.Libs.MultiPlatform.mokoPermissions)
     androidLibrary(Deps.Libs.Android.constraintLayout)
     androidLibrary(Deps.Libs.Android.appCompat)
     androidLibrary(Deps.Libs.Android.material)
