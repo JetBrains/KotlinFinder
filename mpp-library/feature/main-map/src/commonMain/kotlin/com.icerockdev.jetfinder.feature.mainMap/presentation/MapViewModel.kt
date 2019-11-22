@@ -1,5 +1,6 @@
 package com.icerockdev.jetfinder.feature.mainMap.presentation
 
+import dev.bluefalcon.BluetoothPeripheral
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcherOwner
 import dev.icerock.moko.mvvm.livedata.LiveData
@@ -16,7 +17,7 @@ import org.example.library.domain.repository.SpotSearchRepository
 
 class MapViewModel(
     private val collectedSpotsRepository: CollectedSpotsRepository,
-    val gameDataRepository: GameDataRepository,
+    private val gameDataRepository: GameDataRepository,
     private val spotSearchRepository: SpotSearchRepository,
     override val eventsDispatcher: EventsDispatcher<EventsListener>
 ) : ViewModel(), EventsDispatcherOwner<MapViewModel.EventsListener> {
@@ -33,6 +34,7 @@ class MapViewModel(
         fun showHint(hint: String)
         fun showRegistrationMessage(message: String)
         fun showResetCookiesAlert(resetAction: (() -> Unit))
+        fun onStopScanner()
     }
 
     private val _findTaskButtonState =
@@ -75,6 +77,7 @@ class MapViewModel(
                     _findTaskButtonState.value = FindTaskButtonState.COMPLETED
 
                     this.spotSearchRepository.stopScanning()
+                    eventsDispatcher.dispatchEvent { onStopScanner() }
 
                     this._hintButtonEnabled.value = false
 
@@ -150,5 +153,9 @@ class MapViewModel(
             this.hintStr = notCollectedHints.values.random()
             this._hintButtonEnabled.value = true
         }
+    }
+
+    fun deviceFound(device: BluetoothPeripheral) {
+        spotSearchRepository.didDiscoverDevice(device)
     }
 }

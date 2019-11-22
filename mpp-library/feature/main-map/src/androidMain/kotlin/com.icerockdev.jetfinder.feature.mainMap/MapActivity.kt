@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.icerockdev.jetfinder.feature.mainMap.BR.*
 import com.icerockdev.jetfinder.feature.mainMap.databinding.ActivityMapBinding
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import com.icerockdev.shared.utils.alert
@@ -18,8 +17,17 @@ import dev.icerock.moko.mvvm.MvvmEventsActivity
 import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.mvvm.dispatcher.eventsDispatcherOnMain
 import android.Manifest
+import android.bluetooth.BluetoothManager
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanFilter
+import android.bluetooth.le.ScanResult
+import android.bluetooth.le.ScanSettings
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import dev.bluefalcon.BluetoothPeripheral
+import dev.bluefalcon.BluetoothPermissionException
+import dev.bluefalcon.log
 
 
 private const val ALL_PERMISSIONS_RESULT = 1011
@@ -30,6 +38,9 @@ class MapActivity :
     override val layoutId: Int = R.layout.activity_map
     override val viewModelClass: Class<MapViewModel> = MapViewModel::class.java
     override val viewModelVariableId: Int = BR.viewModel
+
+    private var bluetoothManager: BluetoothManager? = null
+    private val mBluetoothScanCallBack = BluetoothScanCallBack()
 
     override fun viewModelFactory(): ViewModelProvider.Factory = createViewModelFactory {
         MainMapDependencies.factory.createMapViewModel(
@@ -77,7 +88,20 @@ class MapActivity :
                 }
             })
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                throw BluetoothPermissionException()
+            bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            val filterBuilder = ScanFilter.Builder()
+            val filter = filterBuilder.build()
+            val filters = listOf(filter)
+            val settings = ScanSettings.Builder()
+                .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
+                .build()
+            val bluetoothScanner = bluetoothManager?.adapter?.bluetoothLeScanner
 
+            bluetoothScanner?.startScan(filters, settings, mBluetoothScanCallBack)
+        }
     }
 
     private val stages = mutableListOf(
@@ -160,5 +184,33 @@ class MapActivity :
         append(lastText)
     }
 
+    override fun onStopScanner() {
+        bluetoothManager?.adapter?.bluetoothLeScanner?.stopScan(mBluetoothScanCallBack)
+    }
+
+    inner class BluetoothScanCallBack : ScanCallback() {
+        override fun onScanResult(callbackType: Int, result: ScanResult?) {
+            addScanResult(result)
+        }
+
+        override fun onBatchScanResults(results: MutableList<ScanResult>?) {
+            results?.forEach { addScanResult(it) }
+        }
+
+        override fun onScanFailed(errorCode: Int) {
+            log("Failed to scan with code $errorCode")
+        }
+
+        private fun addScanResult(result: ScanResult?) {
+            result?.let {
+                if (it.device.name != null) {
+                    viewModel.deviceFound(
+                        BluetoothPeripheral(it.device).apply {
+                            rssi = it.rssi.toFloat()
+                        })
+                }
+            }
+        }
+    }
 }
 
