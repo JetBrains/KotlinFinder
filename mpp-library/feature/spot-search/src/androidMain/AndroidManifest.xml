@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.example.library.feature.news" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.icerockdev.jetfinder.feature.spotSearch" >
+    <application>
+        <activity android:name=".SpotSearchActivity" />
+    </application>
+</manifest>

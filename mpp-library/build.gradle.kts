@@ -26,12 +26,14 @@ val mppLibs = listOf(
 val mppModules = listOf(
     Modules.MultiPlatform.domain,
     Modules.MultiPlatform.Feature.mainMap,
-    Modules.MultiPlatform.Feature.spotSearch
+    Modules.MultiPlatform.Feature.spotSearch,
+    Modules.MultiPlatform.shared
 )
 
 dependencies {
     mppLibrary(Deps.Libs.MultiPlatform.kotlinStdLib)
     mppLibrary(Deps.Libs.MultiPlatform.coroutines)
+    mppLibrary(Deps.Libs.MultiPlatform.napier)
 
     androidLibrary(Deps.Libs.Android.lifecycle)
 

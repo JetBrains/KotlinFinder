@@ -31,6 +31,9 @@ object Deps {
             val lifecycle = AndroidLibrary(
                 name = "androidx.lifecycle:lifecycle-extensions:${Versions.Libs.Android.lifecycle}"
             )
+            val photoView = AndroidLibrary(
+                name = "com.github.chrisbanes:PhotoView:2.3.0"
+            )
         }
 
         object MultiPlatform {

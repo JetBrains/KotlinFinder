@@ -11,6 +11,11 @@ object Modules {
             exported = true
         )
 
+        val shared = MultiPlatformModule(
+            name = ":mpp-library:shared",
+            exported = true
+        )
+
         object Feature {
             val mainMap = MultiPlatformModule(
                 name = ":mpp-library:feature:main-map",

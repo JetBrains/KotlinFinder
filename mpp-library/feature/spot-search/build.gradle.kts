@@ -7,6 +7,7 @@ plugins {
     id("org.jetbrains.kotlin.multiplatform")
     id("kotlin-android-extensions")
     id("dev.icerock.mobile.multiplatform")
+    id("kotlin-kapt")
 }
 
 android {
@@ -16,6 +17,10 @@ android {
         minSdkVersion(Versions.Android.minSdk)
         targetSdkVersion(Versions.Android.targetSdk)
     }
+
+    dataBinding {
+        isEnabled = true
+    }
 }
 
 dependencies {
@@ -24,7 +29,12 @@ dependencies {
     mppLibrary(Deps.Libs.MultiPlatform.mokoMvvm)
     mppLibrary(Deps.Libs.MultiPlatform.mokoResources)
     mppLibrary(Deps.Libs.MultiPlatform.bluefalcon)
+    mppLibrary(Deps.Libs.MultiPlatform.napier)
     mppModule(Modules.MultiPlatform.domain)
+    mppModule(Modules.MultiPlatform.shared)
 
     androidLibrary(Deps.Libs.Android.lifecycle)
+    androidLibrary(Deps.Libs.Android.constraintLayout)
+    androidLibrary(Deps.Libs.Android.appCompat)
+    androidLibrary(Deps.Libs.Android.material)
 }
