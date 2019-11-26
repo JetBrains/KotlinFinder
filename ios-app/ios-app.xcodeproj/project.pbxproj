@@ -14,7 +14,6 @@
 		45B9D1A5236EEF6400E10F5D /* Interface.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45B9D1A4236EEF6400E10F5D /* Interface.plist */; };
 		45F4791D219463C7003D25FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45F47912219463C7003D25FA /* LaunchScreen.storyboard */; };
 		45F47921219463C7003D25FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F4791A219463C7003D25FA /* Assets.xcassets */; };
-		45FAED15234EC97A008C0653 /* kotlin in Resources */ = {isa = PBXBuildFile; fileRef = 45FAED14234EC97A008C0653 /* kotlin */; };
 		B078B37C235612BC0063160D /* SFProDisplay-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B078B37A235612BC0063160D /* SFProDisplay-Regular.ttf */; };
 		B078B37D235612BC0063160D /* SFProDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B078B37B235612BC0063160D /* SFProDisplay-Bold.ttf */; };
 		B092A281237AB3CD00929745 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B092A22F237A97C500929745 /* Interface.storyboard */; };
@@ -323,7 +322,6 @@
 			files = (
 				45F4791D219463C7003D25FA /* LaunchScreen.storyboard in Resources */,
 				45F47921219463C7003D25FA /* Assets.xcassets in Resources */,
-				45FAED15234EC97A008C0653 /* kotlin in Resources */,
 				B078B37D235612BC0063160D /* SFProDisplay-Bold.ttf in Resources */,
 				B078B37C235612BC0063160D /* SFProDisplay-Regular.ttf in Resources */,
 			);
