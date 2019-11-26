@@ -3,14 +3,14 @@ package com.icerockdev.jetfinder.feature.spotSearch
 import androidx.lifecycle.ViewModelProvider
 import com.icerockdev.jetfinder.feature.spotSearch.presentation.SpotSearchViewModel
 import dev.icerock.moko.mvvm.MvvmActivity
-import dev.icerock.moko.mvvm.MvvmEventsActivity
 import dev.icerock.moko.mvvm.createViewModelFactory
-import android.Manifest
+import android.app.Activity
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.view.View
 import com.github.aakira.napier.Napier
 import com.icerockdev.jetfinder.feature.spotSearch.databinding.ActivitySpotSearchBinding
-import com.icerockdev.jetfinder.feature.spotSearch.BR.*
+import android.os.Vibrator
+
 
 class SpotSearchActivity : MvvmActivity<ActivitySpotSearchBinding, SpotSearchViewModel>() {
     override val layoutId: Int = R.layout.activity_spot_search
@@ -29,11 +29,29 @@ class SpotSearchActivity : MvvmActivity<ActivitySpotSearchBinding, SpotSearchVie
 
         viewModel.nearestBeaconDistance.addObserver { distance: Int? ->
             Napier.d("distance: $distance")
-            val maxDistance: Int = 100
+            val maxDistance = 100
+            val distance = (distance ?: 0) / maxDistance.toFloat()
+            binding.spotSearch.distance = distance
 
-            binding.spotSearch.update((distance ?: 0) / maxDistance.toFloat())
+            val vibrator = getSystemService(Activity.VIBRATOR_SERVICE) as Vibrator
+            val pattern = longArrayOf(distance.toLong() * 1000L)
+            vibrator.vibrate(pattern, 1)
+        }
 
-            //this.feedbackGenerator.feedback(this.spotSearchScene.distance.toDouble())
+        viewModel.isSearchMode.addObserver { searchMode: Boolean ->
+            if (searchMode) {
+                binding.statusLabel.setText(R.string.searching)
+                binding.searchSuccess.visibility = View.GONE
+                binding.spotSearch.visibility = View.VISIBLE
+            } else {
+                binding.statusLabel.setText(R.string.spot_found)
+                binding.searchSuccess.visibility = View.VISIBLE
+                binding.spotSearch.visibility = View.GONE
+            }
+        }
+
+        viewModel.hintText.addObserver { text: String ->
+            binding.hint.text = text
         }
     }
 }

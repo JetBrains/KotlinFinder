@@ -11,4 +11,6 @@
     <string name="reset">Reset cookie?</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
+    <string name="searching">Searching…</string>
+    <string name="spot_found">Spot found</string>
 </resources>
