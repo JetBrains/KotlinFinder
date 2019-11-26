@@ -220,6 +220,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         }
 
         viewModel.searchViewState.addObserver { state: MapViewModel.SearchViewState ->
+            println("STATE: $state")
             this.spotDistanceView.setState(state)
         }
     }

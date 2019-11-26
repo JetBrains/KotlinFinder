@@ -125,6 +125,7 @@ class MapViewModel(
 
                     this.eventsDispatcher.dispatchEvent {
                         showFact(fact) {
+                            println("continue scanning")
                             _searchViewState.value = SearchViewState.noTask()
                             spotSearchRepository.startScanning()
                         }
@@ -134,6 +135,10 @@ class MapViewModel(
         }
 
         this.spotSearchRepository.startScanning()
+
+        this.gameDataRepository.startScanning(didReceiveNoDevicesBlock = {
+            this.spotSearchRepository.restartScanning()
+        })
 
         this.setHintStr()
     }
