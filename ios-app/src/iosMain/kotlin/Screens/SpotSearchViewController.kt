@@ -9,31 +9,7 @@ import kotlinx.cinterop.ObjCAction
 import platform.Foundation.NSCoder
 import platform.SpriteKit.SKSceneScaleMode
 import platform.SpriteKit.SKView
-import platform.UIKit.NSLineBreakByWordWrapping
-import platform.UIKit.NSTextAlignmentCenter
-import platform.UIKit.UIBarButtonItem
-import platform.UIKit.UIBarButtonItemStyle
-import platform.UIKit.UIColor
-import platform.UIKit.UIFont
-import platform.UIKit.UIImage
-import platform.UIKit.UIImageView
-import platform.UIKit.UILabel
-import platform.UIKit.UILayoutConstraintAxisVertical
-import platform.UIKit.UIStackView
-import platform.UIKit.UIView
-import platform.UIKit.UIViewController
-import platform.UIKit.addSubview
-import platform.UIKit.backgroundColor
-import platform.UIKit.bottomAnchor
-import platform.UIKit.centerXAnchor
-import platform.UIKit.centerYAnchor
-import platform.UIKit.colorNamed
-import platform.UIKit.navigationController
-import platform.UIKit.navigationItem
-import platform.UIKit.setHidden
-import platform.UIKit.topAnchor
-import platform.UIKit.translatesAutoresizingMaskIntoConstraints
-import platform.UIKit.widthAnchor
+import platform.UIKit.*
 import views.SpotDistanceScene
 
 
@@ -45,6 +21,7 @@ class SpotSearchViewController : UIViewController {
     private val spotSearchViewContainer: SKView = SKView()
     private val spotSearchScene: SpotDistanceScene = SpotDistanceScene()
     private val feedbackGenerator: FeedbackGenerator = FeedbackGenerator()
+    private val strengthLabel: UILabel = UILabel()
 
     private lateinit var viewModel: SpotSearchViewModel
 
@@ -120,6 +97,15 @@ class SpotSearchViewController : UIViewController {
             constant = 0.0
         ).setActive(true)
 
+        this.strengthLabel.translatesAutoresizingMaskIntoConstraints = false
+        this.view.addSubview(this.strengthLabel)
+
+        this.strengthLabel.leadingAnchor.constraintEqualToAnchor(this.view.leadingAnchor).setActive(true)
+        this.strengthLabel.topAnchor.constraintEqualToAnchor(this.view.topAnchor, constant = 100.0).setActive(true)
+
+        this.strengthLabel.textColor = UIColor.redColor
+        this.strengthLabel.font = UIFont.boldSystemFontOfSize(30.0)
+
         this.spotSearchScene.distance = 0.0f
     }
 
@@ -153,6 +139,9 @@ class SpotSearchViewController : UIViewController {
 
         viewModel.nearestBeaconDistance.addObserver { distance: Int? ->
             Napier.d("distance: $distance")
+
+            this.strengthLabel.text = "$distance"
+
             val maxDistance: Int = 100
 
             this.spotSearchScene.distance = (distance ?: 0) / maxDistance.toFloat()

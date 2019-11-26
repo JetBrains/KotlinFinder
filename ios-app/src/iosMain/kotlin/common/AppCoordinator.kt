@@ -91,8 +91,8 @@ class AppCoordinator(
 
     override fun showHint(hint: String) {
         val alert: UIAlertController = UIAlertController.alertControllerWithTitle(
-            title = "Hint!",
-            message = hint,
+            title = hint,
+            message = null,
             preferredStyle = UIAlertControllerStyleAlert
         )
 
