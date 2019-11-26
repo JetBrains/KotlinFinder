@@ -22,11 +22,11 @@ class FeedbackGenerator {
         this.generator.prepare()
     }
 
-    fun feedback(intensity: CGFloat) {
+    fun feedback(intensity: Float) {
         if (intensity <= 0.0)
             return
 
-        var idx: Int = round(intensity * this.vibrationTimes.count()).toInt()
+        var idx: Int = round(intensity * this.vibrationTimes.count().toDouble()).toInt()
 
         if (idx >= this.vibrationTimes.count())
             idx = this.vibrationTimes.count() - 1

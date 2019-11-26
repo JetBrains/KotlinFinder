@@ -106,7 +106,7 @@ class SpotSearchViewController : UIViewController {
         this.strengthLabel.textColor = UIColor.redColor
         this.strengthLabel.font = UIFont.boldSystemFontOfSize(30.0)
 
-        this.spotSearchScene.distance = 0.0f
+        this.spotSearchScene.distance = 50.0f
     }
 
     override fun viewDidLayoutSubviews() {

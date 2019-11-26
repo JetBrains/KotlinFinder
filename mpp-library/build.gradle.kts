@@ -26,8 +26,8 @@ val mppLibs = listOf(
 val mppModules = listOf(
     Modules.MultiPlatform.domain,
     Modules.MultiPlatform.Feature.mainMap,
-    Modules.MultiPlatform.Feature.spotSearch,
-    Modules.MultiPlatform.shared
+    Modules.MultiPlatform.Feature.spotSearch/*,
+    Modules.MultiPlatform.shared*/
 )
 
 dependencies {

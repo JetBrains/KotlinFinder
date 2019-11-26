@@ -37,5 +37,5 @@ dependencies {
     androidLibrary(Deps.Libs.Android.photoView)
     androidLibrary(Deps.Libs.Android.lifecycle)
     mppModule(Modules.MultiPlatform.domain)
-    mppModule(Modules.MultiPlatform.shared)
+    //mppModule(Modules.MultiPlatform.shared)
 }

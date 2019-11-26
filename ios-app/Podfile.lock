@@ -1,0 +1,16 @@
+PODS:
+  - MultiPlatformLibrary (0.1.0)
+
+DEPENDENCIES:
+  - MultiPlatformLibrary (from `../watchos-app`)
+
+EXTERNAL SOURCES:
+  MultiPlatformLibrary:
+    :path: "../watchos-app"
+
+SPEC CHECKSUMS:
+  MultiPlatformLibrary: 5bdd821f1eebd2d21b31e212a9ce56f38f3fbb0b
+
+PODFILE CHECKSUM: 244bdf7c91b41bd18da72cfd5ef238fbd43ed98c
+
+COCOAPODS: 1.8.4

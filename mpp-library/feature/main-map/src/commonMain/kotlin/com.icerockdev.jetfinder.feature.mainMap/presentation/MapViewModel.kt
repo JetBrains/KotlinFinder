@@ -1,5 +1,6 @@
 package com.icerockdev.jetfinder.feature.mainMap.presentation
 
+import com.github.aakira.napier.Napier
 import dev.bluefalcon.BluetoothPeripheral
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcherOwner
@@ -27,25 +28,16 @@ class MapViewModel(
     val permissionsController: PermissionsController
 ) : ViewModel(), EventsDispatcherOwner<MapViewModel.EventsListener> {
 
-    enum class FindTaskButtonState {
-        TOO_FAR,
-        ACTIVE,
-        COMPLETED
-    }
-
     interface EventsListener : ErrorEventsListener {
         fun routeToSpotSearchScreen()
         fun showEnterNameAlert()
         fun showHint(hint: String)
+        fun showFact(fact: String)
         fun showRegistrationMessage(message: String)
         fun showResetCookiesAlert(resetAction: (() -> Unit))
         fun onStartScanner()
         fun onStopScanner()
     }
-
-    private val _findTaskButtonState =
-        MutableLiveData<FindTaskButtonState>(FindTaskButtonState.TOO_FAR)
-    val findTaskButtonState: LiveData<FindTaskButtonState> = _findTaskButtonState.readOnly()
 
     private var hintStr: String? = null
 
@@ -61,17 +53,16 @@ class MapViewModel(
     val winnerName: String? get() = gameDataRepository.winnerName
 
     init {
-
         viewModelScope.launch {
             gameDataRepository.proximityInfo.collect { info: ProximityInfo? ->
                 _signalStrength.value = info?.nearestBeaconStrength
 
-                if (info?.nearestBeaconStrength == null && !gameDataRepository.isGameEnded.value)
+                /*if (info?.nearestBeaconStrength == null && !gameDataRepository.isGameEnded.value)
                     _findTaskButtonState.value = FindTaskButtonState.TOO_FAR
                 else if (!gameDataRepository.isGameEnded.value)
                     _findTaskButtonState.value = FindTaskButtonState.ACTIVE
                 else
-                    _findTaskButtonState.value = FindTaskButtonState.COMPLETED
+                    _findTaskButtonState.value = FindTaskButtonState.COMPLETED*/
             }
         }
 
@@ -82,7 +73,7 @@ class MapViewModel(
 
             this.gameDataRepository.isGameEnded.addObserver { ended: Boolean ->
                 if (ended && !this.gameDataRepository.isUserRegistered()) {
-                    _findTaskButtonState.value = FindTaskButtonState.COMPLETED
+                    //_findTaskButtonState.value = FindTaskButtonState.COMPLETED
 
                     this.spotSearchRepository.stopScanning()
                     eventsDispatcher.dispatchEvent { onStopScanner() }
@@ -91,6 +82,25 @@ class MapViewModel(
 
                     this.eventsDispatcher.dispatchEvent {
                         showEnterNameAlert()
+                    }
+                }
+            }
+        }
+
+        this.gameDataRepository.currentDiscoveredBeaconId.addObserver { beaconId: Int? ->
+            Napier.d("New beacon: $beaconId")
+
+            if (beaconId != null)  {
+                Napier.d(">>>>>>>> TASK COMPLETED!")
+
+                val collectedCount: Int = this.collectedSpotsRepository.collectedSpotIds()?.count() ?: 0
+                val fact: String? = this.gameDataRepository.gameConfig?.facts?.getOrNull(collectedCount)
+
+                Napier.d("fact: $fact")
+
+                if (fact != null) {
+                    this.eventsDispatcher.dispatchEvent {
+                        showFact(fact)
                     }
                 }
             }
