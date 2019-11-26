@@ -68,7 +68,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         ).forEach { it.translatesAutoresizingMaskIntoConstraints = false }
 
         this.spotDistanceView.centerXAnchor.constraintEqualToAnchor(this.view.centerXAnchor).setActive(true)
-        this.spotDistanceView.topAnchor.constraintEqualToAnchor(this.view.topAnchor, constant = 80.0).setActive(true)
+        this.spotDistanceView.topAnchor.constraintEqualToAnchor(this.view.topAnchor, constant = 40.0).setActive(true)
 
         this.collectWordView.topAnchor.constraintEqualToAnchor(
             this.shadowView.topAnchor,
@@ -159,8 +159,6 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         this.collectWordView.didLongTapImageViewBlock = {
             this.viewModel.resetCookiesButtonTapped()
         }
-
-        this.spotDistanceView.setDistance(50.0f)
     }
 
     override fun viewWillAppear(animated: Boolean) {
@@ -215,15 +213,14 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             this.hintButton.setEnabled(enabled)
         }
         
-        viewModel.signalStrength.addObserver { strength: Int? ->
+        viewModel.signalStrength.addObserver { strength: Float? ->
             this.strengthLabel.text = "$strength"
 
-            val maxStrength: Int = 100
-            val distance: Float? = strength?.div(maxStrength.toFloat())
+            this.feedbackGenerator.feedback(strength ?: 0.0f)
+        }
 
-            this.spotDistanceView.setDistance(distance)
-
-            this.feedbackGenerator.feedback(distance ?: 0.0f)
+        viewModel.searchViewState.addObserver { state: MapViewModel.SearchViewState ->
+            this.spotDistanceView.setState(state)
         }
     }
 

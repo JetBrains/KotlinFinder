@@ -1,5 +1,6 @@
 package views
 
+import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import common.fillSuperview
 import kotlinx.cinterop.CValue
 import platform.CoreGraphics.CGRect
@@ -41,7 +42,25 @@ class SpotDistanceView: UIView {
         this.setSpotDiscovered(false)
     }
 
-    fun setSpotDiscovered(discovered: Boolean) {
+    fun setState(state: MapViewModel.SearchViewState) {
+        when (state) {
+            is MapViewModel.SearchViewState.noTask -> {
+                this.setSpotDiscovered(false)
+                this.setDistance(null)
+            }
+
+            is MapViewModel.SearchViewState.distance -> {
+                this.setSpotDiscovered(false)
+                this.setDistance(state.distance)
+            }
+
+            is MapViewModel.SearchViewState.discovered -> {
+                this.setSpotDiscovered(true)
+            }
+        }
+    }
+
+    private fun setSpotDiscovered(discovered: Boolean) {
         this.isSpotDiscovered = discovered
 
         if (discovered) {
@@ -53,7 +72,7 @@ class SpotDistanceView: UIView {
         }
     }
 
-    fun setDistance(distance: Float?) {
+    private fun setDistance(distance: Float?) {
         if (this.isSpotDiscovered)
             return
 
