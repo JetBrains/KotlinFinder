@@ -8,4 +8,7 @@
     <string name="cancel">Cancel</string>
     <string name="farTaskPoint">You are too far from the task point</string>
     <string name="completed">Completed</string>
+    <string name="reset">Reset cookie?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 </resources>

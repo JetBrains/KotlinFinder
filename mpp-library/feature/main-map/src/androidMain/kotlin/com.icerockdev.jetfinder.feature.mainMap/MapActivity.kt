@@ -22,6 +22,7 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
+import com.icerockdev.shared.utils.alertYesOrNo
 import dev.bluefalcon.BluetoothPeripheral
 import dev.bluefalcon.log
 import dev.icerock.moko.permissions.PermissionsController
@@ -53,7 +54,7 @@ class MapActivity :
         binding.map.post { binding.map.scale = 3f }
 
         binding.imageView.setOnLongClickListener {
-            viewModel.resetCookiesButtonTapped()
+            this.alertYesOrNo(getString(R.string.reset)) { viewModel.resetCookiesButtonTapped() }
             false
         }
 

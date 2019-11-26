@@ -41,6 +41,22 @@ fun Context.alertRetry(
     }.show()
 }
 
+fun Context.alertYesOrNo(
+    messageDesc: String,
+    action: (() -> Unit)?
+) {
+    AlertDialog.Builder(this).apply {
+        setMessage(messageDesc)
+        setPositiveButton(R.string.retry) { dialog, _ ->
+            action?.invoke()
+            dialog.dismiss()
+        }
+        setNegativeButton(R.string.no){ dialog, which ->
+            dialog.dismiss()
+        }
+    }.show()
+}
+
 fun Context.alertInputText(
     title: String,
     action: (name: String) -> Unit
