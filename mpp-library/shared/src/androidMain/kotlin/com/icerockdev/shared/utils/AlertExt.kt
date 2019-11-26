@@ -12,7 +12,7 @@ fun Context.alert(
     showCancel: Boolean = true,
     cancelAction: (() -> Unit)? = null
 ) {
-    AlertDialog.Builder(this).apply {
+    AlertDialog.Builder(this, R.style.AlertDialogTheme).apply {
         setMessage(messageDesc)
         setPositiveButton(R.string.ok) { dialog, _ ->
             okAction()
@@ -32,8 +32,9 @@ fun Context.alertRetry(
     messageDesc: String,
     action: (() -> Unit)?
 ) {
-    AlertDialog.Builder(this).apply {
+    AlertDialog.Builder(this, R.style.AlertDialogTheme).apply {
         setMessage(messageDesc)
+        setCancelable(false)
         setPositiveButton(R.string.retry) { dialog, _ ->
             action?.invoke()
             dialog.dismiss()
@@ -45,13 +46,13 @@ fun Context.alertYesOrNo(
     messageDesc: String,
     action: (() -> Unit)?
 ) {
-    AlertDialog.Builder(this).apply {
+    AlertDialog.Builder(this, R.style.AlertDialogTheme).apply {
         setMessage(messageDesc)
         setPositiveButton(R.string.retry) { dialog, _ ->
             action?.invoke()
             dialog.dismiss()
         }
-        setNegativeButton(R.string.no){ dialog, which ->
+        setNegativeButton(R.string.no) { dialog, which ->
             dialog.dismiss()
         }
     }.show()
@@ -64,7 +65,7 @@ fun Context.alertInputText(
     val editText = EditText(this).apply {
         inputType = InputType.TYPE_CLASS_TEXT
     }
-    AlertDialog.Builder(this).also {
+    AlertDialog.Builder(this, R.style.AlertDialogTheme).also {
         it.setTitle(title)
         it.setView(editText)
         it.setPositiveButton(R.string.retry) { dialog, _ ->

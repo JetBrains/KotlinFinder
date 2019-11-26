@@ -5,12 +5,12 @@
 package org.example.app
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.icerockdev.jetfinder.feature.mainMap.MainMapDependencies
 import com.icerockdev.jetfinder.feature.mainMap.MapActivity
 
 import com.icerockdev.jetfinder.feature.mainMap.presentation.SplashViewModel
+import com.icerockdev.shared.utils.alertRetry
 import dev.icerock.moko.mvvm.MvvmEventsActivity
 import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.mvvm.dispatcher.eventsDispatcherOnMain
@@ -30,7 +30,7 @@ class SplashActivity :
     }
 
     override fun showError(error: Throwable, retryingAction: (() -> Unit)?) {
-        Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
+        alertRetry(error.message ?: getString(R.string.retry), action = retryingAction)
     }
 
     override fun routeToMainscreen() {
