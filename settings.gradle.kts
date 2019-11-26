@@ -35,6 +35,5 @@ include(":watchos-app")
 listOf(
     Modules.MultiPlatform.domain,
     //Modules.MultiPlatform.shared,
-    Modules.MultiPlatform.Feature.mainMap,
-    Modules.MultiPlatform.Feature.spotSearch
+    Modules.MultiPlatform.Feature.mainMap
 ).forEach { include(it.name) }

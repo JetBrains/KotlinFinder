@@ -56,7 +56,7 @@ class GameDataRepository internal constructor(
         }
     }
 
-    fun startScanning(didReceiveNoDevicesBlock: (() -> Unit)?) {
+    fun startReceivingData(didReceiveNoDevicesBlock: (() -> Unit)?) {
         GlobalScope.launch(Dispatchers.UI) {
             while (isActive) {
                 val scanResults = mutableListOf<BeaconInfo>()

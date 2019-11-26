@@ -63,6 +63,9 @@ class MapViewModel(
     init {
         viewModelScope.launch {
             gameDataRepository.proximityInfo.collect { info: ProximityInfo? ->
+                if (!spotSearchRepository.isScanning())
+                    return@collect
+
                 val maxStrength: Int = 100
                 val distance: Float? = info?.nearestBeaconStrength?.div(maxStrength.toFloat())
 
@@ -136,7 +139,7 @@ class MapViewModel(
 
         this.spotSearchRepository.startScanning()
 
-        this.gameDataRepository.startScanning(didReceiveNoDevicesBlock = {
+        this.gameDataRepository.startReceivingData(didReceiveNoDevicesBlock = {
             this.spotSearchRepository.restartScanning()
         })
 
@@ -208,7 +211,7 @@ class MapViewModel(
             try {
                 permissionsController.providePermission(Permission.COARSE_LOCATION)
 
-                gameDataRepository.startScanning(didReceiveNoDevicesBlock = {
+                gameDataRepository.startReceivingData(didReceiveNoDevicesBlock = {
                     spotSearchRepository.restartScanning()
                 })
 

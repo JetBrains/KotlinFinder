@@ -2,7 +2,6 @@ package common
 
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import com.icerockdev.jetfinder.feature.mainMap.presentation.SplashViewModel
-import com.icerockdev.jetfinder.feature.spotSearch.presentation.SpotSearchViewModel
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import dev.icerock.moko.permissions.PermissionsController
 import org.example.library.Factory
