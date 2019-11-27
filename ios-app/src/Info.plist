@@ -34,7 +34,7 @@
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Bluetooth access required to find beacons in the conference area</string>
 	<key>NSMainStoryboardFile</key>
-	<string>Main</string>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>SFProDisplay-Regular.ttf</string>
