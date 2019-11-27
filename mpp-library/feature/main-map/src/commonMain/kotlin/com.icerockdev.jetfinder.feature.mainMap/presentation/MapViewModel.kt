@@ -76,14 +76,6 @@ class MapViewModel(
                     _searchViewState.value = SearchViewState.distance(strength)
                 else
                     _searchViewState.value = SearchViewState.noTask()
-
-
-                /*if (info?.nearestBeaconStrength == null && !gameDataRepository.isGameEnded.value)
-                    _searchViewState.value = FindTaskButtonState.TOO_FAR
-                else if (!gameDataRepository.isGameEnded.value)
-                    _searchViewState.value = FindTaskButtonState.ACTIVE
-                else
-                    _searchViewState.value = SearchViewState.discovered()*/
             }
         }
 
@@ -91,23 +83,6 @@ class MapViewModel(
             this._currentStep.value = ids?.count() ?: 0
 
             this.setHintStr()
-
-            this.gameDataRepository.isGameEnded.addObserver { ended: Boolean ->
-                if (ended && !this.gameDataRepository.isUserRegistered()) {
-                    this._searchViewState.value = SearchViewState.discovered()
-
-                    this.spotSearchRepository.stopScanning()
-                    eventsDispatcher.dispatchEvent {
-                        onStopScanner()
-                    }
-
-                    this._hintButtonEnabled.value = false
-
-                    this.eventsDispatcher.dispatchEvent {
-                        showEnterNameAlert()
-                    }
-                }
-            }
         }
 
         this.gameDataRepository.currentDiscoveredBeaconId.addObserver { beaconId: Int? ->
@@ -130,7 +105,11 @@ class MapViewModel(
                         showFact(fact) {
                             println("continue scanning")
                             _searchViewState.value = SearchViewState.noTask()
-                            spotSearchRepository.startScanning()
+
+                            if (gameDataRepository.isGameEnded.value && !gameDataRepository.isUserRegistered())
+                                didEndGame()
+                            else
+                                spotSearchRepository.startScanning()
                         }
                     }
                 }
@@ -185,23 +164,6 @@ class MapViewModel(
         return this.gameDataRepository.cookie()
     }
 
-    private fun setHintStr() {
-        val collectedSpotIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds().orEmpty()
-        val hints = this.gameDataRepository.gameConfig?.hints.orEmpty()
-
-        val notCollectedHints = hints.filter {
-            collectedSpotIds.contains(it.key).not()
-        }
-
-        if (notCollectedHints.count() == 0) {
-            this.hintStr = null
-            this._hintButtonEnabled.value = false
-        } else {
-            this.hintStr = notCollectedHints.values.random()
-            this._hintButtonEnabled.value = true
-        }
-    }
-
     fun deviceFound(device: BluetoothPeripheral) {
         spotSearchRepository.didDiscoverDevice(device)
     }
@@ -224,6 +186,40 @@ class MapViewModel(
             } catch (denied: DeniedException) {
 
             }
+        }
+    }
+
+    private fun setHintStr() {
+        val collectedSpotIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds().orEmpty()
+        val hints = this.gameDataRepository.gameConfig?.hints.orEmpty()
+
+        val notCollectedHints = hints.filter {
+            collectedSpotIds.contains(it.key).not()
+        }
+
+        if (notCollectedHints.count() == 0) {
+            this.hintStr = null
+            this._hintButtonEnabled.value = false
+        } else {
+            this.hintStr = notCollectedHints.values.random()
+            this._hintButtonEnabled.value = true
+        }
+    }
+
+    private fun didEndGame() {
+        println(">>>>>>> GAME ENDED")
+
+        this._searchViewState.value = SearchViewState.discovered()
+
+        this.spotSearchRepository.stopScanning()
+        eventsDispatcher.dispatchEvent {
+            onStopScanner()
+        }
+
+        this._hintButtonEnabled.value = false
+
+        this.eventsDispatcher.dispatchEvent {
+            showEnterNameAlert()
         }
     }
 }

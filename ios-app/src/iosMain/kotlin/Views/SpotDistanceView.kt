@@ -66,9 +66,11 @@ class SpotDistanceView: UIView {
         if (discovered) {
             this.backgroundImageView.setImage(this.spotDiscoveredImage)
             this.animationView.setPaused(true)
+            this.animationView.setHidden(true)
         } else {
             this.backgroundImageView.setImage(this.backgroundImage)
             this.animationView.setPaused(false)
+            this.animationView.setHidden(false)
         }
     }
 
