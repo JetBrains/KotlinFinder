@@ -1,5 +1,6 @@
 package com.icerockdev.jetfinder.feature.mainMap.presentation
 
+import com.github.aakira.napier.Napier
 import dev.bluefalcon.BluetoothPeripheral
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcherOwner
@@ -56,6 +57,7 @@ class MapViewModel(
     init {
         viewModelScope.launch {
             gameDataRepository.proximityInfo.collect { info: ProximityInfo? ->
+                Napier.d("got $info")
                 if (info?.nearestBeaconStrength == null && !gameDataRepository.isGameEnded.value)
                     _findTaskButtonState.value = FindTaskButtonState.TOO_FAR
                 else if (!gameDataRepository.isGameEnded.value)

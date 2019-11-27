@@ -20,6 +20,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.example.library.domain.UI
@@ -47,12 +48,19 @@ class GameDataRepository internal constructor(
 
     private val _proximityInfoChannel: Channel<ProximityInfo?> = Channel(Channel.BUFFERED)
     val proximityInfo: Flow<ProximityInfo?> = channelFlow {
-        while (isActive) {
-            val info: ProximityInfo? = _proximityInfoChannel.receive()
-            send(info)
+        val job = launch {
+            while (isActive) {
+                Napier.d("wait proximity...")
+                val info: ProximityInfo? = _proximityInfoChannel.receive()
+                Napier.d("got strength $info")
+                send(info)
+                Napier.d("send $info complete")
+            }
         }
 
-        Napier.e("not active")
+        awaitClose {
+            job.cancel()
+        }
     }
 
     fun startScanning() {

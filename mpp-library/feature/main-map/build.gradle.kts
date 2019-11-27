@@ -31,6 +31,7 @@ dependencies {
     mppLibrary(Deps.Libs.MultiPlatform.mokoMvvm)
     mppLibrary(Deps.Libs.MultiPlatform.mokoResources)
     mppLibrary(Deps.Libs.MultiPlatform.mokoPermissions)
+    mppLibrary(Deps.Libs.MultiPlatform.napier)
 
     androidLibrary(Deps.Libs.Android.constraintLayout)
     androidLibrary(Deps.Libs.Android.appCompat)
