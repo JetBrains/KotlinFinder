@@ -39,8 +39,6 @@ class MapViewModel(
         fun showHint(hint: String)
         fun showRegistrationMessage(message: String)
         fun showResetCookiesAlert(resetAction: (() -> Unit))
-        fun onStartScanner()
-        fun onStopScanner()
     }
 
     private val _findTaskButtonState =
@@ -80,7 +78,6 @@ class MapViewModel(
                     _findTaskButtonState.value = FindTaskButtonState.COMPLETED
 
                     this.spotSearchRepository.stopScanning()
-                    eventsDispatcher.dispatchEvent { onStopScanner() }
 
                     this._hintButtonEnabled.value = false
 
@@ -90,8 +87,6 @@ class MapViewModel(
                 }
             }
         }
-
-        this.spotSearchRepository.startScanning()
 
         this.setHintStr()
     }
@@ -165,10 +160,10 @@ class MapViewModel(
     fun requestPermissions() {
         viewModelScope.launch {
             try {
-                gameDataRepository.startScanning(didReceiveNoDevicesBlock = { })
-                eventsDispatcher.dispatchEvent { onStartScanner() }
                 permissionsController.providePermission(Permission.BLUETOOTH_LE)
 
+                gameDataRepository.startScanning()
+                spotSearchRepository.startScanning()
             } catch (deniedAlways: DeniedAlwaysException) {
 
             } catch (denied: DeniedException) {

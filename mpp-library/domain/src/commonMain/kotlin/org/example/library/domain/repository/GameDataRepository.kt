@@ -8,11 +8,20 @@ import dev.icerock.moko.network.generated.apis.GameApi
 import dev.icerock.moko.network.generated.models.ConfigResponse
 import dev.icerock.moko.network.generated.models.ProximityResponse
 import dev.icerock.moko.network.generated.models.RegisterResponse
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import org.example.library.domain.UI
 import org.example.library.domain.entity.BeaconInfo
 import org.example.library.domain.entity.GameConfig
@@ -21,9 +30,6 @@ import org.example.library.domain.entity.toDomain
 import org.example.library.domain.storage.KeyValueStorage
 import org.example.library.domain.storage.PersistentCookiesStorage
 
-
-@FlowPreview
-@UseExperimental(ExperimentalCoroutinesApi::class)
 class GameDataRepository internal constructor(
     private val gameApi: GameApi,
     private val collectedSpotsRepository: CollectedSpotsRepository,
@@ -41,22 +47,17 @@ class GameDataRepository internal constructor(
 
     val winnerName: String? get() = storage.winnerName
 
-    private val _proximityInfoChannel: Channel<ProximityInfo?> = Channel()
+    private val _proximityInfoChannel: Channel<ProximityInfo?> = Channel(Channel.BUFFERED)
     val proximityInfo: Flow<ProximityInfo?> = channelFlow {
-        val job = launch {
-            while (isActive) {
-                val info: ProximityInfo? = _proximityInfoChannel.receive()
-                Napier.d("got strength $info")
-                send(info)
-            }
+        while (isActive) {
+            val info: ProximityInfo? = _proximityInfoChannel.receive()
+            send(info)
         }
 
-        awaitClose {
-            job.cancel()
-        }
+        Napier.e("not active")
     }
 
-    fun startScanning(didReceiveNoDevicesBlock: (() -> Unit)?) {
+    fun startScanning() {
         GlobalScope.launch(Dispatchers.UI) {
             while (isActive) {
                 val scanResults = mutableListOf<BeaconInfo>()
@@ -66,17 +67,21 @@ class GameDataRepository internal constructor(
                     beacon = beaconsChannel.poll()
                 }
 
-                Napier.d("scanResults count: ${scanResults.count()}")
-
                 if (scanResults.isNotEmpty()) {
                     async {
-                        if (_isGameEnded.value)
-                            return@async
+                        if (_isGameEnded.value) return@async
 
                         val info: ProximityInfo? = sendBeaconsInfo(scanResults)
-                        val config: GameConfig = gameConfig ?: return@async
+                        val config = gameConfig
+
+                        if (config == null) {
+                            Napier.e("game config is null")
+                            return@async
+                        }
 
                         _proximityInfoChannel.send(info)
+
+                        Napier.d("sent info $info")
 
                         val collectedIds: List<Int> =
                             collectedSpotsRepository.collectedSpotIds() ?: emptyList()
@@ -93,8 +98,6 @@ class GameDataRepository internal constructor(
 
                         _isGameEnded.value = (discoveredIds.count() == config.winnerCount)
                     }
-                } else {
-                    didReceiveNoDevicesBlock?.invoke()
                 }
 
                 delay(1000)
@@ -136,7 +139,7 @@ class GameDataRepository internal constructor(
 
     suspend fun sendWinnerName(name: String): String? {
         storage.winnerName = name
-        
+
         val response: RegisterResponse = this.gameApi.finderRegisterGet(name)
         Napier.d(message = "Register response: $response")
 

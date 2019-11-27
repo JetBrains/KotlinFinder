@@ -185,12 +185,4 @@ class AppCoordinator(
     private fun showRetryAlert(text: String, action: (() -> Unit)?) {
         this.showAlert(text = text, buttonTitle = "Retry", action = action)
     }
-
-    override fun onStartScanner() {
-
-    }
-
-    override fun onStopScanner() {
-
-    }
 }
