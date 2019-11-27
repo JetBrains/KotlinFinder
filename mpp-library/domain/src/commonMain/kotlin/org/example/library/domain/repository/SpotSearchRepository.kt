@@ -85,6 +85,8 @@ class SpotSearchRepository(
     }
 
     private fun sendBeaconInfo(bluetoothPeripheral: BluetoothPeripheral) {
+        Napier.d("bluetoothPeripheral: ${bluetoothPeripheral.name} - ${bluetoothPeripheral.rssi}")
+
         val name: String = bluetoothPeripheral.name ?: return
         val rssi: Int = bluetoothPeripheral.rssi?.toInt() ?: return
 
