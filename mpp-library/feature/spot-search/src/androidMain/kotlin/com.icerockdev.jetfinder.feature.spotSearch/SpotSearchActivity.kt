@@ -34,8 +34,8 @@ class SpotSearchActivity : MvvmActivity<ActivitySpotSearchBinding, SpotSearchVie
             binding.spotSearch.distance = distance
 
             val vibrator = getSystemService(Activity.VIBRATOR_SERVICE) as Vibrator
-            val pattern = longArrayOf(distance.toLong() * 1000L)
-            vibrator.vibrate(pattern, 1)
+            val pattern = longArrayOf(100L,100L,100L)
+            vibrator.vibrate(pattern, -1)
         }
 
         viewModel.isSearchMode.addObserver { searchMode: Boolean ->
