@@ -91,7 +91,7 @@ class GameDataRepository internal constructor(
                         if (info?.discoveredBeaconsIds != null)
                             collectedSpotsRepository.setCollectedSpotIds(info.discoveredBeaconsIds)
 
-                        _isGameEnded.value = (discoveredIds.count() == 2/*config.winnerCount*/)
+                        _isGameEnded.value = (discoveredIds.count() == config.winnerCount)
                     }
                 } else {
                     didReceiveNoDevicesBlock?.invoke()

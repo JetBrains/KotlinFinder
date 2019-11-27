@@ -110,6 +110,8 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         this.strengthLabel.textColor = UIColor.redColor
         this.strengthLabel.font = UIFont.boldSystemFontOfSize(30.0)
 
+        this.strengthLabel.setHidden(true)
+
         this.controlWordContainerView.fillContainer(this.shadowView)
 
         this.mapImageView.fillSuperview()
