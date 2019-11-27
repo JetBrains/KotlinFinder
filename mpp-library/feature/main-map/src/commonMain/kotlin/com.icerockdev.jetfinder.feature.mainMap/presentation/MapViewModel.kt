@@ -69,18 +69,18 @@ class MapViewModel(
             this._currentStep.value = ids?.count() ?: 0
 
             this.setHintStr()
+        }
 
-            this.gameDataRepository.isGameEnded.addObserver { ended: Boolean ->
-                if (ended && !this.gameDataRepository.isUserRegistered()) {
-                    _findTaskButtonState.value = FindTaskButtonState.COMPLETED
+        this.gameDataRepository.isGameEnded.addObserver { ended: Boolean ->
+            if (ended && !this.gameDataRepository.isUserRegistered()) {
+                _findTaskButtonState.value = FindTaskButtonState.COMPLETED
 
-                    this.spotSearchRepository.stopScanning()
+                this.spotSearchRepository.stopScanning()
 
-                    this._hintButtonEnabled.value = false
+                this._hintButtonEnabled.value = false
 
-                    this.eventsDispatcher.dispatchEvent {
-                        showEnterNameAlert()
-                    }
+                this.eventsDispatcher.dispatchEvent {
+                    showEnterNameAlert()
                 }
             }
         }
