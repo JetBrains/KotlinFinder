@@ -45,8 +45,6 @@ class GameDataRepository internal constructor(
     private val _isGameEnded: MutableLiveData<Boolean> = MutableLiveData(false)
     val isGameEnded: LiveData<Boolean> = this._isGameEnded.readOnly()
 
-    val winnerName: String? get() = storage.winnerName
-
     private val _proximityInfoChannel: Channel<ProximityInfo?> = Channel(Channel.BUFFERED)
     val proximityInfo: Flow<ProximityInfo?> = channelFlow {
         while (isActive) {
