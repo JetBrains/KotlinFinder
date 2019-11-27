@@ -165,9 +165,9 @@ class MapViewModel(
     fun requestPermissions() {
         viewModelScope.launch {
             try {
-                permissionsController.providePermission(Permission.COARSE_LOCATION)
                 gameDataRepository.startScanning(didReceiveNoDevicesBlock = { })
                 eventsDispatcher.dispatchEvent { onStartScanner() }
+                permissionsController.providePermission(Permission.BLUETOOTH_LE)
 
             } catch (deniedAlways: DeniedAlwaysException) {
 

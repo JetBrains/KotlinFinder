@@ -41,7 +41,7 @@ class MapActivity :
     override fun viewModelFactory(): ViewModelProvider.Factory = createViewModelFactory {
         MainMapDependencies.factory.createMapViewModel(
             eventsDispatcher = eventsDispatcherOnMain(),
-            permissionsController = PermissionsController()
+            permissionsController = PermissionsController(applicationContext = applicationContext)
         )
     }
 

@@ -249,6 +249,8 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         viewModel.hintButtonEnabled.addObserver { enabled: Boolean ->
             this.hintButton.setEnabled(enabled)
         }
+        
+        viewModel.requestPermissions()
     }
 
     @ObjCAction
