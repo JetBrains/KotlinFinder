@@ -67,6 +67,7 @@ class MapActivity :
 
         viewModel.findTaskButtonState.ld()
             .observe(this, Observer { state: MapViewModel.FindTaskButtonState ->
+                // TODO move to common code - it duplicated between platforms
                 when (state) {
                     MapViewModel.FindTaskButtonState.ACTIVE -> {
                         binding.findTaskButton.isEnabled = true
@@ -143,6 +144,7 @@ class MapActivity :
         append(lastText)
     }
 
+    // TODO replace it to fixed version of blue-falcon
     override fun onStartScanner() {
         bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         val filterBuilder = ScanFilter.Builder()

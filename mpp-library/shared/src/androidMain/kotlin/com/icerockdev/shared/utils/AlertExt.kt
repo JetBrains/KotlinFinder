@@ -48,7 +48,7 @@ fun Context.alertYesOrNo(
 ) {
     AlertDialog.Builder(this, R.style.AlertDialogTheme).apply {
         setMessage(messageDesc)
-        setPositiveButton(R.string.retry) { dialog, _ ->
+        setPositiveButton(R.string.yes) { dialog, _ ->
             action?.invoke()
             dialog.dismiss()
         }

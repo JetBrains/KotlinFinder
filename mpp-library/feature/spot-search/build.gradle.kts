@@ -30,11 +30,13 @@ dependencies {
     mppLibrary(Deps.Libs.MultiPlatform.mokoResources)
     mppLibrary(Deps.Libs.MultiPlatform.bluefalcon)
     mppLibrary(Deps.Libs.MultiPlatform.napier)
-    mppModule(Modules.MultiPlatform.domain)
-    mppModule(Modules.MultiPlatform.shared)
 
     androidLibrary(Deps.Libs.Android.lifecycle)
     androidLibrary(Deps.Libs.Android.constraintLayout)
     androidLibrary(Deps.Libs.Android.appCompat)
     androidLibrary(Deps.Libs.Android.material)
+
+    mppModule(Modules.MultiPlatform.domain)
+
+    androidMainApi(project(Modules.Android.shared))
 }
