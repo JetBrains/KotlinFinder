@@ -31,11 +31,14 @@ dependencies {
     mppLibrary(Deps.Libs.MultiPlatform.mokoMvvm)
     mppLibrary(Deps.Libs.MultiPlatform.mokoResources)
     mppLibrary(Deps.Libs.MultiPlatform.mokoPermissions)
+
     androidLibrary(Deps.Libs.Android.constraintLayout)
     androidLibrary(Deps.Libs.Android.appCompat)
     androidLibrary(Deps.Libs.Android.material)
     androidLibrary(Deps.Libs.Android.photoView)
     androidLibrary(Deps.Libs.Android.lifecycle)
+
     mppModule(Modules.MultiPlatform.domain)
-    mppModule(Modules.MultiPlatform.shared)
+
+    androidMainApi(project(Modules.Android.shared))
 }

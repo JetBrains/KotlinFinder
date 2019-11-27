@@ -3,16 +3,15 @@
  */
 
 object Modules {
+    object Android {
+        const val shared = ":mpp-library:shared"
+    }
+
     object MultiPlatform {
         const val library = ":mpp-library"
 
         val domain = MultiPlatformModule(
             name = ":mpp-library:domain",
-            exported = true
-        )
-
-        val shared = MultiPlatformModule(
-            name = ":mpp-library:shared",
             exported = true
         )
 
