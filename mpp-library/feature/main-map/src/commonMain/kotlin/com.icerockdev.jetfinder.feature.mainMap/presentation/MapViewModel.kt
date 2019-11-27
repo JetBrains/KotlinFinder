@@ -53,10 +53,7 @@ class MapViewModel(
     private val _currentStep: MutableLiveData<Int> = MutableLiveData(0)
     val currentStep: LiveData<Int> = this._currentStep.readOnly()
 
-    val winnerName: String? get() = gameDataRepository.winnerName
-
     init {
-
         viewModelScope.launch {
             gameDataRepository.proximityInfo.collect { info: ProximityInfo? ->
                 if (info?.nearestBeaconStrength == null && !gameDataRepository.isGameEnded.value)
