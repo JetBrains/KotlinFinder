@@ -83,8 +83,7 @@ class GameDataRepository internal constructor(
 
                         Napier.d("sent info $info")
 
-                        val collectedIds: List<Int> =
-                            collectedSpotsRepository.collectedSpotIds() ?: emptyList()
+                        val collectedIds: List<Int> = collectedSpotsRepository.collectedSpotIds() ?: emptyList()
                         val discoveredIds: List<Int> = info?.discoveredBeaconsIds ?: emptyList()
 
                         val newIds: List<Int> = discoveredIds.minus(collectedIds)
@@ -93,8 +92,7 @@ class GameDataRepository internal constructor(
 
                         _currentDiscoveredBeaconId.value = newIds.firstOrNull()
 
-                        if (info?.discoveredBeaconsIds != null)
-                            collectedSpotsRepository.setCollectedSpotIds(info.discoveredBeaconsIds)
+                        collectedSpotsRepository.setCollectedSpotIds(discoveredIds)
 
                         _isGameEnded.value = (discoveredIds.count() == config.winnerCount)
                     }
