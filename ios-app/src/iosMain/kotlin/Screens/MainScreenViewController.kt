@@ -28,6 +28,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
     private val strengthLabel: UILabel = UILabel()
     private val spotDistanceView: SpotDistanceView = SpotDistanceView(frame = CGRectMake(0.0, 0.0, 0.0, 0.0))
     private val feedbackGenerator: FeedbackGenerator = FeedbackGenerator()
+    private lateinit var spotDistanceViewWidthConstraint: NSLayoutConstraint
 
     private lateinit var viewModel: MapViewModel
 
@@ -67,8 +68,12 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             this.spotDistanceView
         ).forEach { it.translatesAutoresizingMaskIntoConstraints = false }
 
-        this.spotDistanceView.centerXAnchor.constraintEqualToAnchor(this.view.centerXAnchor).setActive(true)
-        this.spotDistanceView.topAnchor.constraintEqualToAnchor(this.view.topAnchor, constant = 40.0).setActive(true)
+        this.spotDistanceView.centerXAnchor.constraintEqualToAnchor(this.view.rightAnchor, constant = -70.0).setActive(true)
+        this.spotDistanceView.centerYAnchor.constraintEqualToAnchor(this.view.topAnchor, constant = 80.0).setActive(true)
+        this.spotDistanceViewWidthConstraint = this.spotDistanceView.widthAnchor.constraintEqualToConstant(80.0)
+        this.spotDistanceView.heightAnchor.constraintEqualToAnchor(this.spotDistanceView.widthAnchor).setActive(true)
+
+        this.spotDistanceViewWidthConstraint.setActive(true)
 
         this.collectWordView.topAnchor.constraintEqualToAnchor(
             this.shadowView.topAnchor,
@@ -223,6 +228,16 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
 
         viewModel.searchViewState.addObserver { state: MapViewModel.SearchViewState ->
             println("STATE: $state")
+
+            if (state is MapViewModel.SearchViewState.noTask)
+                this.spotDistanceViewWidthConstraint.setConstant(80.0)
+            else
+                this.spotDistanceViewWidthConstraint.setConstant(100.0)
+
+            UIView.animateWithDuration(0.22) {
+                this.view.layoutIfNeeded()
+            }
+
             this.spotDistanceView.setState(state)
         }
         
