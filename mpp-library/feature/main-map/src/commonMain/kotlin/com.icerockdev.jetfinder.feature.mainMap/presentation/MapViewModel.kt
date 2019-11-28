@@ -34,8 +34,6 @@ class MapViewModel(
         fun showFact(fact: String, closeAction: (() -> Unit))
         fun showRegistrationMessage(message: String)
         fun showResetCookiesAlert(resetAction: (() -> Unit))
-        fun onStartScanner()
-        fun onStopScanner()
     }
 
     sealed class SearchViewState {
@@ -57,8 +55,6 @@ class MapViewModel(
 
     private val _searchViewState: MutableLiveData<SearchViewState> = MutableLiveData(SearchViewState.noTask())
     val searchViewState: LiveData<SearchViewState> = this._searchViewState.readOnly()
-
-    val winnerName: String? get() = gameDataRepository.winnerName
 
     init {
         viewModelScope.launch {
@@ -176,11 +172,6 @@ class MapViewModel(
                 gameDataRepository.startReceivingData(didReceiveNoDevicesBlock = {
                     spotSearchRepository.restartScanning()
                 })
-
-                eventsDispatcher.dispatchEvent {
-                    onStartScanner()
-                }
-
             } catch (deniedAlways: DeniedAlwaysException) {
 
             } catch (denied: DeniedException) {
@@ -212,9 +203,6 @@ class MapViewModel(
         this._searchViewState.value = SearchViewState.discovered()
 
         this.spotSearchRepository.stopScanning()
-        eventsDispatcher.dispatchEvent {
-            onStopScanner()
-        }
 
         this._hintButtonEnabled.value = false
 

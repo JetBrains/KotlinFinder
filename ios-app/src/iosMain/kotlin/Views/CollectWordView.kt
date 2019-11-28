@@ -4,7 +4,26 @@ import kotlinx.cinterop.CValue
 import kotlinx.cinterop.ObjCAction
 import platform.CoreGraphics.CGRect
 import platform.Foundation.NSCoder
-import platform.UIKit.*
+import platform.UIKit.UIColor
+import platform.UIKit.UIFont
+import platform.UIKit.UIImage
+import platform.UIKit.UIImageView
+import platform.UIKit.UILabel
+import platform.UIKit.UILayoutConstraintAxisHorizontal
+import platform.UIKit.UILongPressGestureRecognizer
+import platform.UIKit.UIStackView
+import platform.UIKit.UIView
+import platform.UIKit.addGestureRecognizer
+import platform.UIKit.addSubview
+import platform.UIKit.bottomAnchor
+import platform.UIKit.colorNamed
+import platform.UIKit.leadingAnchor
+import platform.UIKit.removeFromSuperview
+import platform.UIKit.topAnchor
+import platform.UIKit.trailingAnchor
+import platform.UIKit.translatesAutoresizingMaskIntoConstraints
+import kotlin.math.max
+import kotlin.math.min
 
 
 class CollectWordView : UIView {
@@ -66,7 +85,7 @@ class CollectWordView : UIView {
     fun setText(text: String) {
         this.wordStackView.arrangedSubviews().map { (it as? UIView)?.removeFromSuperview() }
 
-        for (i in 0..(text.count() - 1)) {
+        for (i in 0 until text.count()) {
             val label: UILabel = UILabel()
             label.text = "${text[i]}"
             label.textColor = UIColor.colorNamed("blackInactiveTextColor")!!
@@ -77,15 +96,17 @@ class CollectWordView : UIView {
     }
 
     fun setCollectedLettersCount(count: Int) {
+        val subviews: List<UIView> = this.wordStackView.arrangedSubviews() as List<UIView>
+        val count = min(count, subviews.size)
+
         if (count == 0) {
-            for (i in 0..(this.wordStackView.arrangedSubviews.count() - 1)) {
-                (this.wordStackView.arrangedSubviews()[i] as? UILabel)?.textColor =
+            for (i in 0 until subviews.count()) {
+                (subviews[i] as? UILabel)?.textColor =
                     UIColor.colorNamed("blackInactiveTextColor")!!
             }
         } else {
-            for (i in 0..(count - 1)) {
-                (this.wordStackView.arrangedSubviews()[i] as? UILabel)?.textColor =
-                    UIColor.colorNamed("blackTextColor")!!
+            for (i in 0 until count) {
+                (subviews[i] as? UILabel)?.textColor = UIColor.colorNamed("blackTextColor")!!
             }
         }
 

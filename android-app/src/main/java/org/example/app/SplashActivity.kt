@@ -35,5 +35,6 @@ class SplashActivity :
 
     override fun routeToMainscreen() {
         startActivity(Intent(this, MapActivity::class.java))
+        finish()
     }
 }

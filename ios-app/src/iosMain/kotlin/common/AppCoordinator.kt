@@ -62,14 +62,6 @@ class AppCoordinator(
         return vc
     }
 
-    override fun onStartScanner() {
-
-    }
-
-    override fun onStopScanner() {
-
-    }
-
     override fun routeToMainscreen() {
         this.navigationController.setNavigationBarHidden(false)
         this.navigationController.setViewControllers(

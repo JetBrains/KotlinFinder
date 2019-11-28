@@ -13,18 +13,10 @@ import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import com.icerockdev.shared.utils.alert
 import com.icerockdev.shared.utils.alertInputText
 import com.icerockdev.shared.utils.alertRetry
+import com.icerockdev.shared.utils.alertYesOrNo
 import dev.icerock.moko.mvvm.MvvmEventsActivity
 import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.mvvm.dispatcher.eventsDispatcherOnMain
-import android.bluetooth.BluetoothManager
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanFilter
-import android.bluetooth.le.ScanResult
-import android.bluetooth.le.ScanSettings
-import android.content.Context
-import com.icerockdev.shared.utils.alertYesOrNo
-import dev.bluefalcon.BluetoothPeripheral
-import dev.bluefalcon.log
 import dev.icerock.moko.permissions.PermissionsController
 
 
@@ -35,13 +27,10 @@ class MapActivity :
     override val viewModelClass: Class<MapViewModel> = MapViewModel::class.java
     override val viewModelVariableId: Int = BR.viewModel
 
-    private var bluetoothManager: BluetoothManager? = null
-    private val mBluetoothScanCallBack = BluetoothScanCallBack()
-
     override fun viewModelFactory(): ViewModelProvider.Factory = createViewModelFactory {
         MainMapDependencies.factory.createMapViewModel(
             eventsDispatcher = eventsDispatcherOnMain(),
-            permissionsController = PermissionsController()
+            permissionsController = PermissionsController(applicationContext = applicationContext)
         )
     }
 
@@ -67,6 +56,7 @@ class MapActivity :
 
         viewModel.findTaskButtonState.ld()
             .observe(this, Observer { state: MapViewModel.FindTaskButtonState ->
+                // TODO move to common code - it duplicated between platforms
                 when (state) {
                     MapViewModel.FindTaskButtonState.ACTIVE -> {
                         binding.findTaskButton.isEnabled = true
@@ -141,48 +131,6 @@ class MapActivity :
         )
         setText(firstText)
         append(lastText)
-    }
-
-    override fun onStartScanner() {
-        bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        val filterBuilder = ScanFilter.Builder()
-        val filter = filterBuilder.build()
-        val filters = listOf(filter)
-        val settings = ScanSettings.Builder()
-            .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
-            .build()
-        val bluetoothScanner = bluetoothManager?.adapter?.bluetoothLeScanner
-
-        bluetoothScanner?.startScan(filters, settings, mBluetoothScanCallBack)
-    }
-
-    override fun onStopScanner() {
-        bluetoothManager?.adapter?.bluetoothLeScanner?.stopScan(mBluetoothScanCallBack)
-    }
-
-    inner class BluetoothScanCallBack : ScanCallback() {
-        override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            addScanResult(result)
-        }
-
-        override fun onBatchScanResults(results: MutableList<ScanResult>?) {
-            results?.forEach { addScanResult(it) }
-        }
-
-        override fun onScanFailed(errorCode: Int) {
-            log("Failed to scan with code $errorCode")
-        }
-
-        private fun addScanResult(result: ScanResult?) {
-            result?.let {
-                if (it.device.name != null) {
-                    viewModel.deviceFound(
-                        BluetoothPeripheral(it.device).apply {
-                            rssi = it.rssi.toFloat()
-                        })
-                }
-            }
-        }
     }
 }
 
