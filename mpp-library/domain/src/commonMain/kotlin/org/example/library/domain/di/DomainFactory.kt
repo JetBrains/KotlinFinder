@@ -89,7 +89,7 @@ class DomainFactory(
     }
 
     val collectedSpotsRepository: CollectedSpotsRepository by lazy {
-        CollectedSpotsRepository(this.keyValueStorage)
+        CollectedSpotsRepository()
     }
 
     val spotSearchRepository: SpotSearchRepository by lazy {

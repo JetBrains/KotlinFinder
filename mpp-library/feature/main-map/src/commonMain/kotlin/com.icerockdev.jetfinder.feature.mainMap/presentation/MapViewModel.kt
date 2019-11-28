@@ -1,11 +1,17 @@
 package com.icerockdev.jetfinder.feature.mainMap.presentation
 
+import com.github.aakira.napier.Napier
+import dev.bluefalcon.BluetoothPeripheral
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcherOwner
 import dev.icerock.moko.mvvm.livedata.LiveData
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.livedata.readOnly
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import dev.icerock.moko.permissions.DeniedAlwaysException
+import dev.icerock.moko.permissions.DeniedException
+import dev.icerock.moko.permissions.Permission
+import dev.icerock.moko.permissions.PermissionsController
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.example.library.domain.entity.ProximityInfo
@@ -18,7 +24,8 @@ class MapViewModel(
     private val collectedSpotsRepository: CollectedSpotsRepository,
     private val gameDataRepository: GameDataRepository,
     private val spotSearchRepository: SpotSearchRepository,
-    override val eventsDispatcher: EventsDispatcher<EventsListener>
+    override val eventsDispatcher: EventsDispatcher<EventsListener>,
+    val permissionsController: PermissionsController
 ) : ViewModel(), EventsDispatcherOwner<MapViewModel.EventsListener> {
 
     enum class FindTaskButtonState {
@@ -47,15 +54,10 @@ class MapViewModel(
     private val _currentStep: MutableLiveData<Int> = MutableLiveData(0)
     val currentStep: LiveData<Int> = this._currentStep.readOnly()
 
-    val winnerName: String? get() = gameDataRepository.winnerName
-
     init {
-        this.gameDataRepository.startScanning(didReceiveNoDevicesBlock = {
-            this.spotSearchRepository.restartScanning()
-        })
-
         viewModelScope.launch {
             gameDataRepository.proximityInfo.collect { info: ProximityInfo? ->
+                Napier.d("got $info")
                 if (info?.nearestBeaconStrength == null && !gameDataRepository.isGameEnded.value)
                     _findTaskButtonState.value = FindTaskButtonState.TOO_FAR
                 else if (!gameDataRepository.isGameEnded.value)
@@ -69,23 +71,21 @@ class MapViewModel(
             this._currentStep.value = ids?.count() ?: 0
 
             this.setHintStr()
+        }
 
-            this.gameDataRepository.isGameEnded.addObserver { ended: Boolean ->
-                if (ended && !this.gameDataRepository.isUserRegistered()) {
-                    _findTaskButtonState.value = FindTaskButtonState.COMPLETED
+        this.gameDataRepository.isGameEnded.addObserver { ended: Boolean ->
+            if (ended && !this.gameDataRepository.isUserRegistered()) {
+                _findTaskButtonState.value = FindTaskButtonState.COMPLETED
 
-                    this.spotSearchRepository.stopScanning()
+                this.spotSearchRepository.stopScanning()
 
-                    this._hintButtonEnabled.value = false
+                this._hintButtonEnabled.value = false
 
-                    this.eventsDispatcher.dispatchEvent {
-                        showEnterNameAlert()
-                    }
+                this.eventsDispatcher.dispatchEvent {
+                    showEnterNameAlert()
                 }
             }
         }
-
-        this.spotSearchRepository.startScanning()
 
         this.setHintStr()
     }
@@ -149,6 +149,25 @@ class MapViewModel(
         } else {
             this.hintStr = notCollectedHints.values.random()
             this._hintButtonEnabled.value = true
+        }
+    }
+
+    fun deviceFound(device: BluetoothPeripheral) {
+        spotSearchRepository.didDiscoverDevice(device)
+    }
+
+    fun requestPermissions() {
+        viewModelScope.launch {
+            try {
+                permissionsController.providePermission(Permission.BLUETOOTH_LE)
+
+                gameDataRepository.startScanning()
+                spotSearchRepository.startScanning()
+            } catch (deniedAlways: DeniedAlwaysException) {
+
+            } catch (denied: DeniedException) {
+
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import com.icerockdev.jetfinder.feature.mainMap.presentation.SplashViewModel
 import com.icerockdev.jetfinder.feature.spotSearch.presentation.SpotSearchViewModel
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
+import dev.icerock.moko.permissions.PermissionsController
 import org.example.library.Factory
 import screens.MainScreenViewController
 import screens.SpotSearchViewController
@@ -30,7 +31,10 @@ class AppCoordinator(
     window: UIWindow,
     factory: Factory
 ) : BasicCoordinator(window, factory), MapViewModel.EventsListener, SplashViewModel.EventsListener {
-    private val mapViewModel: MapViewModel = this.factory.mapFactory.createMapViewModel(EventsDispatcher(this))
+    private val mapViewModel: MapViewModel = this.factory.mapFactory.createMapViewModel(
+        eventsDispatcher = EventsDispatcher(this),
+        permissionsController = PermissionsController()
+    )
     private val spotSearchViewController: SpotSearchViewController = SpotSearchViewController()
 
     override fun start() {

@@ -3,6 +3,10 @@
  */
 
 object Modules {
+    object Android {
+        const val shared = ":mpp-library:shared"
+    }
+
     object MultiPlatform {
         const val library = ":mpp-library"
 

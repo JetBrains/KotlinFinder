@@ -17,10 +17,14 @@ interface ErrorEventsListener {
 class SplashViewModel(
     private val gameDataRepository: GameDataRepository,
     override val eventsDispatcher: EventsDispatcher<EventsListener>
-): ViewModel(), EventsDispatcherOwner<SplashViewModel.EventsListener> {
+) : ViewModel(), EventsDispatcherOwner<SplashViewModel.EventsListener> {
 
-    interface EventsListener: ErrorEventsListener {
+    interface EventsListener : ErrorEventsListener {
         fun routeToMainscreen()
+    }
+
+    init {
+        loadData()
     }
 
     fun loadData() {
