@@ -28,23 +28,19 @@ class MapViewModel(
     val permissionsController: PermissionsController
 ) : ViewModel(), EventsDispatcherOwner<MapViewModel.EventsListener> {
 
-    enum class FindTaskButtonState {
-        TOO_FAR,
-        ACTIVE,
-        COMPLETED
-    }
-
     interface EventsListener : ErrorEventsListener {
-        fun routeToSpotSearchScreen()
         fun showEnterNameAlert()
         fun showHint(hint: String)
+        fun showFact(fact: String, closeAction: (() -> Unit))
         fun showRegistrationMessage(message: String)
         fun showResetCookiesAlert(resetAction: (() -> Unit))
     }
 
-    private val _findTaskButtonState =
-        MutableLiveData<FindTaskButtonState>(FindTaskButtonState.TOO_FAR)
-    val findTaskButtonState: LiveData<FindTaskButtonState> = _findTaskButtonState.readOnly()
+    sealed class SearchViewState {
+        class noTask(): SearchViewState()
+        class distance(val distance: Float): SearchViewState()
+        class discovered(): SearchViewState()
+    }
 
     private var hintStr: String? = null
 
@@ -54,16 +50,28 @@ class MapViewModel(
     private val _currentStep: MutableLiveData<Int> = MutableLiveData(0)
     val currentStep: LiveData<Int> = this._currentStep.readOnly()
 
+    private val _signalStrength: MutableLiveData<Float?> = MutableLiveData(null)
+    val signalStrength: LiveData<Float?> = this._signalStrength.readOnly()
+
+    private val _searchViewState: MutableLiveData<SearchViewState> = MutableLiveData(SearchViewState.noTask())
+    val searchViewState: LiveData<SearchViewState> = this._searchViewState.readOnly()
+
     init {
         viewModelScope.launch {
             gameDataRepository.proximityInfo.collect { info: ProximityInfo? ->
-                Napier.d("got $info")
-                if (info?.nearestBeaconStrength == null && !gameDataRepository.isGameEnded.value)
-                    _findTaskButtonState.value = FindTaskButtonState.TOO_FAR
-                else if (!gameDataRepository.isGameEnded.value)
-                    _findTaskButtonState.value = FindTaskButtonState.ACTIVE
+                if (!spotSearchRepository.isScanning())
+                    return@collect
+
+                val maxStrength: Int = 100
+                val distance: Float? = info?.nearestBeaconStrength?.div(maxStrength.toFloat())
+
+                _signalStrength.value = distance
+                val strength: Float? = _signalStrength.value?.toFloat()
+
+                if (strength != null)
+                    _searchViewState.value = SearchViewState.distance(strength)
                 else
-                    _findTaskButtonState.value = FindTaskButtonState.COMPLETED
+                    _searchViewState.value = SearchViewState.noTask()
             }
         }
 
@@ -73,27 +81,44 @@ class MapViewModel(
             this.setHintStr()
         }
 
-        this.gameDataRepository.isGameEnded.addObserver { ended: Boolean ->
-            if (ended && !this.gameDataRepository.isUserRegistered()) {
-                _findTaskButtonState.value = FindTaskButtonState.COMPLETED
+        this.gameDataRepository.currentDiscoveredBeaconId.addObserver { beaconId: Int? ->
+            Napier.d("New beacon: $beaconId")
 
-                this.spotSearchRepository.stopScanning()
+            if (beaconId != null)  {
+                this._searchViewState.value = SearchViewState.discovered()
 
-                this._hintButtonEnabled.value = false
+                Napier.d(">>>>>>>> TASK COMPLETED!")
 
-                this.eventsDispatcher.dispatchEvent {
-                    showEnterNameAlert()
+                val collectedCount: Int = this.collectedSpotsRepository.collectedSpotIds()?.count() ?: 0
+                val fact: String? = this.gameDataRepository.gameConfig?.facts?.getOrNull(collectedCount)
+
+                Napier.d("fact: $fact")
+
+                if (fact != null) {
+                    this.spotSearchRepository.stopScanning()
+
+                    this.eventsDispatcher.dispatchEvent {
+                        showFact(fact) {
+                            println("continue scanning")
+                            _searchViewState.value = SearchViewState.noTask()
+
+                            if (gameDataRepository.isGameEnded.value && !gameDataRepository.isUserRegistered())
+                                didEndGame()
+                            else
+                                spotSearchRepository.startScanning()
+                        }
+                    }
                 }
             }
         }
 
-        this.setHintStr()
-    }
+        this.spotSearchRepository.startScanning()
 
-    fun findTaskButtonTapped() {
-        eventsDispatcher.dispatchEvent {
-            routeToSpotSearchScreen()
-        }
+        this.gameDataRepository.startReceivingData(didReceiveNoDevicesBlock = {
+            this.spotSearchRepository.restartScanning()
+        })
+
+        this.setHintStr()
     }
 
     fun sendWinnerName(name: String) {
@@ -135,6 +160,26 @@ class MapViewModel(
         return this.gameDataRepository.cookie()
     }
 
+    fun deviceFound(device: BluetoothPeripheral) {
+        spotSearchRepository.didDiscoverDevice(device)
+    }
+
+    fun requestPermissions() {
+        viewModelScope.launch {
+            try {
+                permissionsController.providePermission(Permission.COARSE_LOCATION)
+
+                gameDataRepository.startReceivingData(didReceiveNoDevicesBlock = {
+                    spotSearchRepository.restartScanning()
+                })
+            } catch (deniedAlways: DeniedAlwaysException) {
+
+            } catch (denied: DeniedException) {
+
+            }
+        }
+    }
+
     private fun setHintStr() {
         val collectedSpotIds: List<Int> = this.collectedSpotsRepository.collectedSpotIds().orEmpty()
         val hints = this.gameDataRepository.gameConfig?.hints.orEmpty()
@@ -152,22 +197,17 @@ class MapViewModel(
         }
     }
 
-    fun deviceFound(device: BluetoothPeripheral) {
-        spotSearchRepository.didDiscoverDevice(device)
-    }
+    private fun didEndGame() {
+        println(">>>>>>> GAME ENDED")
 
-    fun requestPermissions() {
-        viewModelScope.launch {
-            try {
-                permissionsController.providePermission(Permission.BLUETOOTH_LE)
+        this._searchViewState.value = SearchViewState.discovered()
 
-                gameDataRepository.startScanning()
-                spotSearchRepository.startScanning()
-            } catch (deniedAlways: DeniedAlwaysException) {
+        this.spotSearchRepository.stopScanning()
 
-            } catch (denied: DeniedException) {
+        this._hintButtonEnabled.value = false
 
-            }
+        this.eventsDispatcher.dispatchEvent {
+            showEnterNameAlert()
         }
     }
 }

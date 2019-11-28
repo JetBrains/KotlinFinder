@@ -1,32 +1,55 @@
 package common
 
 import platform.CoreGraphics.CGFloat
+import platform.Foundation.NSTimer
 import platform.UIKit.UIImpactFeedbackGenerator
 import platform.UIKit.UIImpactFeedbackStyle
 import platform.posix.round
 
 
 class FeedbackGenerator {
-    private val generators: List<UIImpactFeedbackGenerator> = listOf(
-        UIImpactFeedbackGenerator(UIImpactFeedbackStyle.UIImpactFeedbackStyleLight),
-        UIImpactFeedbackGenerator(UIImpactFeedbackStyle.UIImpactFeedbackStyleMedium),
-        UIImpactFeedbackGenerator(UIImpactFeedbackStyle.UIImpactFeedbackStyleHeavy)
+    private var timer: NSTimer? = null
+    private val generator: UIImpactFeedbackGenerator = UIImpactFeedbackGenerator(UIImpactFeedbackStyle.UIImpactFeedbackStyleMedium)
+    private val vibrationsInterval: Float = 0.2f
+    private val vibrationTimes: List<Int> = listOf(
+        1,
+        2,
+        3,
+        4
     )
 
     init {
-        for (g: UIImpactFeedbackGenerator in this.generators)
-            g.prepare()
+        this.generator.prepare()
     }
 
-    fun feedback(intensity: CGFloat) {
+    fun feedback(intensity: Float) {
         if (intensity <= 0.0)
             return
 
-        var idx: Int = round(intensity * this.generators.count()).toInt()
+        var idx: Int = round(intensity * this.vibrationTimes.count().toDouble()).toInt()
 
-        if (idx >= this.generators.count())
-            idx = this.generators.count() - 1
+        if (idx >= this.vibrationTimes.count())
+            idx = this.vibrationTimes.count() - 1
 
-        this.generators[idx].impactOccurred()
+        this.vibrate(this.vibrationTimes[idx])
+    }
+
+    private fun vibrate(times: Int) {
+        var vibratedTimes: Int = 0
+
+        this.timer?.invalidate()
+
+        this.timer = NSTimer.scheduledTimerWithTimeInterval(
+            interval = this.vibrationsInterval.toDouble(),
+            repeats = true,
+            block = { timer: NSTimer? ->
+                vibratedTimes++
+
+                this.generator.impactOccurred()
+
+                if (vibratedTimes == times)
+                    timer?.invalidate()
+            }
+        )
     }
 }

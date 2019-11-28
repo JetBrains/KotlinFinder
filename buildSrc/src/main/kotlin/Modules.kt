@@ -20,11 +20,6 @@ object Modules {
                 name = ":mpp-library:feature:main-map",
                 exported = true
             )
-
-            val spotSearch = MultiPlatformModule(
-                name = ":mpp-library:feature:spot-search",
-                exported = true
-            )
         }
     }
 }
