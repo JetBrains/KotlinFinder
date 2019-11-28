@@ -102,6 +102,8 @@ class GameDataRepository internal constructor(
 
                         _isGameEnded.value = (discoveredIds.count() == config.winnerCount)
                     }
+                } else {
+                    didReceiveNoDevicesBlock?.invoke()
                 }
 
                 delay(1000)
