@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.icerockdev.jetfinder.feature.mainMap.databinding.ActivityMapBinding
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import com.icerockdev.shared.utils.alert
@@ -39,16 +41,14 @@ class MapActivity :
         viewModel.permissionsController.bind(lifecycle, supportFragmentManager)
         viewModel.requestPermissions()
 
-        binding.map.setImageResource(R.drawable.map)
-        binding.map.post { binding.map.scale = 3f }
-
-        binding.imageView.setOnLongClickListener {
+        binding.statusView.setOnLongClickListener {
             this.alertYesOrNo(getString(R.string.reset)) { viewModel.resetCookiesButtonTapped() }
             false
         }
 
         viewModel.currentStep.ld().observe(this, Observer { step ->
             stages.getOrNull(step)?.let {
+                binding.statusButton.setImageResource(it)
                 binding.imageView.setImageResource(it)
                 binding.labelText.setTwoColoredText(step)
             }
@@ -74,6 +74,47 @@ class MapActivity :
                     }
                 }
             })
+        val bottomSheet: View = findViewById(R.id.statusView)
+        val statusView = BottomSheetBehavior.from(bottomSheet)
+        statusView.state = BottomSheetBehavior.STATE_EXPANDED
+        statusView.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(p0: View, p1: Float) {
+
+            }
+
+            override fun onStateChanged(view: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        binding.statusButton.apply {
+                            visibility = View.VISIBLE
+                            alpha = 0f
+                            translationY = height.toFloat()
+                            animate()
+                                .translationY(0f)
+                                .alpha(1f)
+                                .duration = 200L
+                        }
+                    }
+                    else -> {
+                    }
+                }
+            }
+
+        })
+
+
+        binding.statusButton.setOnClickListener {
+            statusView.state = BottomSheetBehavior.STATE_EXPANDED
+            binding.statusButton.visibility = View.GONE
+        }
+
+        binding.map.setImageResource(R.drawable.map)
+        binding.map.post { binding.map.scale = 3f }
+        binding.map.setOnViewDragListener { dx, dy ->
+            if (statusView.state == BottomSheetBehavior.STATE_EXPANDED) {
+                statusView.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
     }
 
     private val stages = mutableListOf(
