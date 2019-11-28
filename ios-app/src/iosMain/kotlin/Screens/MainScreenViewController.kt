@@ -225,6 +225,8 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             println("STATE: $state")
             this.spotDistanceView.setState(state)
         }
+        
+        viewModel.requestPermissions()
     }
 
     @ObjCAction
