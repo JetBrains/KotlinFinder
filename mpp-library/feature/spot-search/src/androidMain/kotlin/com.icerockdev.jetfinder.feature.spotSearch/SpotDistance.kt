@@ -40,12 +40,17 @@ class SpotDistance(context: Context, attrs: AttributeSet) : View(context, attrs)
         bars.forEachIndexed { index, bar ->
             bar.animator.repeatCount = ValueAnimator.INFINITE
             bar.animator.repeatMode = ValueAnimator.REVERSE
-            bar.animator.setFloatValues(bar.thisHeight, bar.getNewHeight())
+            bar.animator.setFloatValues(bar.thisHeight, bar.newHeight())
             bar.animator.addListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(animation: Animator?) {
                     if (animation?.isRunning != true || bar.isDistanceChanged) {
                         bar.animator.duration = bar.getDuration()
-                        bar.animator.setFloatValues(bar.thisHeight, bar.getNewHeight())
+                        val height = bar.newHeight()
+                        val bottomHeight = height - 20f
+                        bar.animator.setFloatValues(
+                            if (bottomHeight > initialBarHeight) bottomHeight else initialBarHeight,
+                            height
+                        )
                         bar.isDistanceChanged = false
                     }
                 }
@@ -138,7 +143,7 @@ class SpotDistance(context: Context, attrs: AttributeSet) : View(context, attrs)
             initialBarHeight * maxScale
         )
 
-        fun getNewHeight(): Float {
+        fun newHeight(): Float {
             var scaleFactor =
                 Random.nextFloat() * 1.0f * (if (Random.nextInt() % 2 == 0) 1 else -1).toFloat() +
                         distance * maxScale
