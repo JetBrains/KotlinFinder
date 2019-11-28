@@ -13,10 +13,11 @@ Pod::Spec.new do |spec|
 
     spec.pod_target_xcconfig = {
         'MPP_LIBRARY_NAME' => 'MultiPlatformLibrary',
-        'GRADLE_TASK[sdk=watchsimulator*][config=*ebug]' => 'syncMultiPlatformLibraryDebugFrameworkWatchosX86',
-        'GRADLE_TASK[sdk=watchsimulator*][config=*elease]' => 'syncMultiPlatformLibraryReleaseFrameworkWatchosX86',
-        'GRADLE_TASK[sdk=watchos*][config=*ebug]' => 'syncMultiPlatformLibraryDebugFrameworkWatchosArm32',
-        'GRADLE_TASK[sdk=watchos*][config=*elease]' => 'syncMultiPlatformLibraryReleaseFrameworkWatchosArm32'
+
+        'GRADLE_WATCHOS_TASK_32[config=*ebug]' => 'linkMultiPlatformLibraryDebugFrameworkWatchosArm32',
+        'GRADLE_WATCHOS_TASK_32[config=*elease]' => 'linkMultiPlatformLibraryReleaseFrameworkWatchosArm32',
+        'GRADLE_WATCHOS_TASK_64[config=*ebug]' => 'linkMultiPlatformLibraryDebugFrameworkWatchosArm64',
+        'GRADLE_WATCHOS_TASK_64[config=*elease]' => 'linkMultiPlatformLibraryReleaseFrameworkWatchosArm64'
     }
 
     spec.script_phases = [
@@ -29,8 +30,13 @@ MPP_PROJECT_ROOT="$SRCROOT/../../watchos-app"
 
 MPP_OUTPUT_DIR="$MPP_PROJECT_ROOT/build/cocoapods/framework"
 MPP_OUTPUT_NAME="$MPP_OUTPUT_DIR/#{spec.name}.framework"
+"$MPP_PROJECT_ROOT/../gradlew" -p "$MPP_PROJECT_ROOT" "$GRADLE_WATCHOS_TASK_32"
+"$MPP_PROJECT_ROOT/../gradlew" -p "$MPP_PROJECT_ROOT" "$GRADLE_WATCHOS_TASK_64"
 
-"$MPP_PROJECT_ROOT/../gradlew" -p "$MPP_PROJECT_ROOT" "$GRADLE_TASK"
+MPP_OUTPUT_32="$MPP_PROJECT_ROOT/build/bin/watchosArm32/MultiPlatformLibraryReleaseFramework/MultiPlatformLibrary.framework/MultiPlatformLibrary"
+MPP_OUTPUT_64="$MPP_PROJECT_ROOT/build/bin/watchosArm64/MultiPlatformLibraryReleaseFramework/MultiPlatformLibrary.framework/MultiPlatformLibrary"
+
+lipo -create "$MPP_OUTPUT_32" "$MPP_OUTPUT_64" -output "$MPP_OUTPUT_NAME/MultiPlatformLibrary"
             SCRIPT
         }
     ]
