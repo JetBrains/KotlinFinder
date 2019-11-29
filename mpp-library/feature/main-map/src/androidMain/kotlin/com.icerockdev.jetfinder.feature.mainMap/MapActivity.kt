@@ -12,10 +12,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.icerockdev.jetfinder.feature.mainMap.databinding.ActivityMapBinding
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
-import com.icerockdev.shared.utils.alert
-import com.icerockdev.shared.utils.alertInputText
-import com.icerockdev.shared.utils.alertRetry
-import com.icerockdev.shared.utils.alertYesOrNo
+import com.icerockdev.jetfinder.feature.mainMap.utils.alert
+import com.icerockdev.jetfinder.feature.mainMap.utils.alertInputText
+import com.icerockdev.jetfinder.feature.mainMap.utils.alertRetry
+import com.icerockdev.jetfinder.feature.mainMap.utils.alertYesOrNo
 import dev.icerock.moko.mvvm.MvvmEventsActivity
 import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.mvvm.dispatcher.eventsDispatcherOnMain

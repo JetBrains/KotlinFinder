@@ -1,10 +1,10 @@
-package com.icerockdev.shared.utils
+package com.icerockdev.jetfinder.feature.mainMap.utils
 
 import android.app.AlertDialog
 import android.content.Context
 import android.text.InputType
 import android.widget.EditText
-import ccom.icerockdev.jetfinder.shared.R
+import com.icerockdev.jetfinder.feature.mainMap.R
 
 fun Context.alert(
     messageDesc: String,

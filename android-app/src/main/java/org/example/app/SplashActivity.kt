@@ -10,7 +10,7 @@ import com.icerockdev.jetfinder.feature.mainMap.MainMapDependencies
 import com.icerockdev.jetfinder.feature.mainMap.MapActivity
 
 import com.icerockdev.jetfinder.feature.mainMap.presentation.SplashViewModel
-import com.icerockdev.shared.utils.alertRetry
+import com.icerockdev.jetfinder.feature.mainMap.utils.alertRetry
 import dev.icerock.moko.mvvm.MvvmEventsActivity
 import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.mvvm.dispatcher.eventsDispatcherOnMain
