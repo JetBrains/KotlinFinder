@@ -63,7 +63,7 @@ class GameDataRepository internal constructor(
         }
     }
 
-    fun startScanning() {
+    fun startReceivingData(didReceiveNoDevicesBlock: (() -> Unit)?) {
         GlobalScope.launch(Dispatchers.UI) {
             while (isActive) {
                 val scanResults = mutableListOf<BeaconInfo>()
@@ -102,6 +102,8 @@ class GameDataRepository internal constructor(
 
                         _isGameEnded.value = (discoveredIds.count() == config.winnerCount)
                     }
+                } else {
+                    didReceiveNoDevicesBlock?.invoke()
                 }
 
                 delay(1000)

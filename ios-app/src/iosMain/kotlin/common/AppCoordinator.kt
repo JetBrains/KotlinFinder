@@ -2,14 +2,11 @@ package common
 
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import com.icerockdev.jetfinder.feature.mainMap.presentation.SplashViewModel
-import com.icerockdev.jetfinder.feature.spotSearch.presentation.SpotSearchViewModel
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import dev.icerock.moko.permissions.PermissionsController
 import org.example.library.Factory
 import screens.MainScreenViewController
-import screens.SpotSearchViewController
 import screens.SplashViewController
-import org.example.library.domain.entity.GameConfig
 import platform.UIKit.*
 
 
@@ -31,11 +28,7 @@ class AppCoordinator(
     window: UIWindow,
     factory: Factory
 ) : BasicCoordinator(window, factory), MapViewModel.EventsListener, SplashViewModel.EventsListener {
-    private val mapViewModel: MapViewModel = this.factory.mapFactory.createMapViewModel(
-        eventsDispatcher = EventsDispatcher(this),
-        permissionsController = PermissionsController()
-    )
-    private val spotSearchViewController: SpotSearchViewController = SpotSearchViewController()
+    private val mapViewModel: MapViewModel = this.factory.mapFactory.createMapViewModel(EventsDispatcher(this), PermissionsController())
 
     override fun start() {
         this.window.tintColor = Colors.orange
@@ -59,14 +52,6 @@ class AppCoordinator(
         return vc
     }
 
-    private fun createSpotSearchScreen(): SpotSearchViewController {
-        val vm: SpotSearchViewModel = this.factory.spotSearchFactory.createSpotSearchViewModel()
-
-        this.spotSearchViewController.bindViewModel(vm)
-
-        return this.spotSearchViewController
-    }
-
     private fun createSplashScreen(): SplashViewController {
         val vc: SplashViewController = SplashViewController()
         val vm: SplashViewModel = this.factory.mapFactory.createSplashViewModel(EventsDispatcher(this))
@@ -75,10 +60,6 @@ class AppCoordinator(
         vm.loadData()
 
         return vc
-    }
-
-    override fun routeToSpotSearchScreen() {
-        this.navigationController.pushViewController(this.createSpotSearchScreen(), animated = true)
     }
 
     override fun routeToMainscreen() {
@@ -95,8 +76,8 @@ class AppCoordinator(
 
     override fun showHint(hint: String) {
         val alert: UIAlertController = UIAlertController.alertControllerWithTitle(
-            title = "Hint!",
-            message = hint,
+            title = hint,
+            message = null,
             preferredStyle = UIAlertControllerStyleAlert
         )
 
@@ -145,6 +126,13 @@ class AppCoordinator(
             buttonTitle = "Reset",
             addCancelButton = true,
             action = resetAction
+        )
+    }
+
+    override fun showFact(fact: String, closeAction: () -> Unit) {
+        this.showAlert(
+            text = fact,
+            action = closeAction
         )
     }
 

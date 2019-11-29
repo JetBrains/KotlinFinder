@@ -40,6 +40,5 @@ dependencies {
     androidLibrary(Deps.Libs.Android.lifecycle)
 
     mppModule(Modules.MultiPlatform.domain)
-
-    androidMainApi(project(Modules.Android.shared))
+    //mppModule(Modules.MultiPlatform.shared)
 }

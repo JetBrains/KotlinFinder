@@ -1,6 +1,7 @@
 package screens
 
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
+import common.FeedbackGenerator
 import common.fillContainer
 import common.fillSuperview
 import kotlinx.cinterop.ObjCAction
@@ -10,13 +11,12 @@ import platform.Foundation.NSNumber
 import platform.QuartzCore.CAShapeLayer
 import platform.UIKit.*
 import views.CollectWordView
-import views.CommonButton
+import views.SpotDistanceView
 import kotlin.math.min
 
 
 class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol {
     private val scrollView: UIScrollView = UIScrollView()
-    private val findTaskButton: CommonButton = CommonButton(frame = CGRectMake(0.0, 0.0, 0.0, 0.0))
     private val controlWordContainerView: UIView = UIView()
     private val collectWordView: CollectWordView =
         CollectWordView(frame = CGRectMake(0.0, 0.0, 0.0, 0.0))
@@ -25,6 +25,9 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
     private val shadowView: UIView = UIView()
     private val mapImageView: UIImageView = UIImageView(UIImage.imageNamed("mapImage"))
     private val hintButton: UIButton = UIButton.buttonWithType(3)
+    private val strengthLabel: UILabel = UILabel()
+    private val spotDistanceView: SpotDistanceView = SpotDistanceView(frame = CGRectMake(0.0, 0.0, 0.0, 0.0))
+    private val feedbackGenerator: FeedbackGenerator = FeedbackGenerator()
 
     private lateinit var viewModel: MapViewModel
 
@@ -41,9 +44,10 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             backgroundColor = UIColor.whiteColor
 
             addSubview(scrollView)
-            addSubview(findTaskButton)
             addSubview(shadowView)
             addSubview(controlWordContainerView)
+            addSubview(strengthLabel)
+            addSubview(spotDistanceView)
         }
 
         this.scrollView.addSubview(this.mapImageView)
@@ -54,13 +58,17 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
 
         listOf(
             scrollView,
-            findTaskButton,
             controlWordContainerView,
             shadowView,
             mapImageView,
             collectWordView,
-            this.hintButton
+            this.hintButton,
+            this.strengthLabel,
+            this.spotDistanceView
         ).forEach { it.translatesAutoresizingMaskIntoConstraints = false }
+
+        this.spotDistanceView.centerXAnchor.constraintEqualToAnchor(this.view.centerXAnchor).setActive(true)
+        this.spotDistanceView.topAnchor.constraintEqualToAnchor(this.view.topAnchor, constant = 40.0).setActive(true)
 
         this.collectWordView.topAnchor.constraintEqualToAnchor(
             this.shadowView.topAnchor,
@@ -96,19 +104,13 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         this.shadowView.rightAnchor.constraintEqualToAnchor(this.view.rightAnchor).setActive(true)
         this.shadowView.bottomAnchor.constraintEqualToAnchor(this.view.bottomAnchor).setActive(true)
 
-        this.findTaskButton.heightAnchor.constraintEqualToConstant(50.0).setActive(true)
-        this.findTaskButton.leftAnchor.constraintEqualToAnchor(
-            this.view.leftAnchor,
-            constant = 16.0
-        ).setActive(true)
-        this.findTaskButton.rightAnchor.constraintEqualToAnchor(
-            this.view.rightAnchor,
-            constant = -16.0
-        ).setActive(true)
-        this.findTaskButton.bottomAnchor.constraintEqualToAnchor(
-            this.shadowView.topAnchor,
-            constant = -20.0
-        ).setActive(true)
+        this.strengthLabel.leftAnchor.constraintEqualToAnchor(this.scrollView.leftAnchor).setActive(true)
+        this.strengthLabel.topAnchor.constraintEqualToAnchor(this.scrollView.topAnchor).setActive(true)
+
+        this.strengthLabel.textColor = UIColor.redColor
+        this.strengthLabel.font = UIFont.boldSystemFontOfSize(30.0)
+
+        this.strengthLabel.setHidden(true)
 
         this.controlWordContainerView.fillContainer(this.shadowView)
 
@@ -118,12 +120,6 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
 
         this.collectWordView.setText("KOTLIN")
         this.collectWordView.setCollectedLettersCount(0)
-
-        this.findTaskButton.titleLabel?.setMinimumScaleFactor(0.5)
-        this.findTaskButton.titleLabel?.setNumberOfLines(0)
-        this.findTaskButton.titleLabel?.setAdjustsFontSizeToFitWidth(true)
-        this.findTaskButton.titleLabel?.lineBreakMode = NSLineBreakByWordWrapping
-        this.findTaskButton.titleLabel?.textAlignment = NSTextAlignmentCenter
 
         with(controlWordContainerView) {
             with(layer) {
@@ -155,12 +151,6 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             zoomScale = minimumZoomScale
             delegate = this@MainScreenViewController
         }
-
-        this.findTaskButton.addTarget(
-            target = this,
-            action = platform.darwin.sel_registerName("findTaskButtonTapped"),
-            forControlEvents = UIControlEventTouchUpInside
-        )
 
         this.hintButton.addTarget(
             target = this,
@@ -221,41 +211,20 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             this.collectWordView.setCollectedLettersCount(step)
         }
 
-        viewModel.findTaskButtonState.addObserver { state: MapViewModel.FindTaskButtonState ->
-            when (state) {
-                MapViewModel.FindTaskButtonState.ACTIVE -> {
-                    this.findTaskButton.enabled = true
-                    this.findTaskButton.setStyle(CommonButton.Style.ORANGE)
-                    this.findTaskButton.setTitle("Find a task", forState = 0u)
-                }
-
-                MapViewModel.FindTaskButtonState.TOO_FAR -> {
-                    this.findTaskButton.enabled = false
-                    this.findTaskButton.setStyle(CommonButton.Style.GRAY)
-                    this.findTaskButton.setTitle(
-                        "You are too far from the task point",
-                        forState = 0u
-                    )
-                }
-
-                MapViewModel.FindTaskButtonState.COMPLETED -> {
-                    this.findTaskButton.enabled = false
-                    this.findTaskButton.setStyle(CommonButton.Style.ORANGE)
-                    this.findTaskButton.setTitle("${this.viewModel.cookie()}", forState = 0u)
-                }
-            }
-        }
-
         viewModel.hintButtonEnabled.addObserver { enabled: Boolean ->
             this.hintButton.setEnabled(enabled)
         }
         
-        viewModel.requestPermissions()
-    }
+        viewModel.signalStrength.addObserver { strength: Float? ->
+            this.strengthLabel.text = "$strength"
 
-    @ObjCAction
-    private fun findTaskButtonTapped() {
-        this.viewModel.findTaskButtonTapped()
+            this.feedbackGenerator.feedback(strength ?: 0.0f)
+        }
+
+        viewModel.searchViewState.addObserver { state: MapViewModel.SearchViewState ->
+            println("STATE: $state")
+            this.spotDistanceView.setState(state)
+        }
     }
 
     @ObjCAction

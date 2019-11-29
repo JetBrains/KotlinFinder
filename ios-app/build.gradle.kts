@@ -54,8 +54,7 @@ dependencies {
     }
 
     listOf(
-        Modules.MultiPlatform.Feature.mainMap,
-        Modules.MultiPlatform.Feature.spotSearch
+        Modules.MultiPlatform.Feature.mainMap
     ).map { it.name }
         .plus(Modules.MultiPlatform.library)
         .forEach {

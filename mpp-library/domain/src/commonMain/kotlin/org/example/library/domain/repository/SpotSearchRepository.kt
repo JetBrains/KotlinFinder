@@ -27,6 +27,10 @@ class SpotSearchRepository(
 
     private val lastBeaconRssi = mutableMapOf<String, Int>()
 
+    init {
+        this.bf.delegates.add(this)
+    }
+
     fun startScanning() {
         if (this.bf.isScanning) {
             return
@@ -34,14 +38,11 @@ class SpotSearchRepository(
 
         Napier.d(message = "starting search...")
 
-        this.bf.delegates.add(this)
         this.doScanning()
     }
 
     fun stopScanning() {
         this.bf.stopScanning()
-
-        this.bf.delegates.remove(this)
     }
 
     fun isScanning(): Boolean {
@@ -73,7 +74,7 @@ class SpotSearchRepository(
                 is BluetoothNotEnabledException,
                 is BluetoothResettingException,
                 is BluetoothUnknownException -> {
-                    Napier.e(message = "known BT expetion, try again later", throwable = error)
+                    Napier.e(message = "known BT exception, try again later", throwable = error)
                     false
                 }
                 else -> {

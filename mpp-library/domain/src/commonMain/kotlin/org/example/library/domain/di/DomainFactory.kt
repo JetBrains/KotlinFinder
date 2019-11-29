@@ -56,7 +56,7 @@ class DomainFactory(
                         Napier.d(message = message)
                     }
                 }
-                level = LogLevel.NONE
+                level = LogLevel.ALL
             }
             install(HttpCookies) {
                 storage = cookiesStorage
