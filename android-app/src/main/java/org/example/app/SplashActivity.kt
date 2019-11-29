@@ -10,7 +10,7 @@ import com.icerockdev.jetfinder.feature.mainMap.MainMapDependencies
 import com.icerockdev.jetfinder.feature.mainMap.MapActivity
 
 import com.icerockdev.jetfinder.feature.mainMap.presentation.SplashViewModel
-import com.icerockdev.jetfinder.feature.mainMap.utils.alertRetry
+import com.icerockdev.jetfinder.feature.mainMap.utils.alert
 import dev.icerock.moko.mvvm.MvvmEventsActivity
 import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.mvvm.dispatcher.eventsDispatcherOnMain
@@ -30,7 +30,11 @@ class SplashActivity :
     }
 
     override fun showError(error: Throwable, retryingAction: (() -> Unit)?) {
-        alertRetry(error.message ?: getString(R.string.retry), action = retryingAction)
+        alert(
+            message = error.message ?: getString(R.string.retry),
+            cancelable = false,
+            closable = false,
+            positiveAction = retryingAction?.let { R.string.retry to retryingAction })
     }
 
     override fun routeToMainscreen() {

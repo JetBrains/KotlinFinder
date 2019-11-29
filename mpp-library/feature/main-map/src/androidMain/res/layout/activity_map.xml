@@ -124,11 +124,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/search_success"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/search"
             app:layout_constraintEnd_toEndOf="@+id/search"
             app:layout_constraintStart_toStartOf="@+id/search"
-            app:layout_constraintTop_toTopOf="@+id/search" />
+            app:layout_constraintTop_toTopOf="@+id/search"
+            app:visibleOrGone="@{viewModel.isDiscoveredVisible.ld}" />
 
         <TextView
             android:id="@+id/textNoTask"
@@ -138,18 +138,19 @@
             android:textColor="@color/textNoTask"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/search"
             app:layout_constraintEnd_toEndOf="@+id/search"
             app:layout_constraintStart_toStartOf="@+id/search"
-            app:layout_constraintTop_toTopOf="@+id/search" />
+            app:layout_constraintTop_toTopOf="@+id/search"
+            app:visibleOrGone="@{viewModel.isNoTaskVisible.ld}" />
 
         <com.icerockdev.jetfinder.feature.mainMap.SpotDistance
             android:id="@+id/spotSearch"
+            visibleOrGone="@{viewModel.searchDistance.ld != null}"
             android:layout_width="50dp"
             android:layout_height="40dp"
             android:layout_marginStart="4dp"
-            android:visibility="gone"
+            app:distance="@{viewModel.searchDistance.ld}"
             app:layout_constraintBottom_toBottomOf="@+id/search"
             app:layout_constraintEnd_toEndOf="@+id/search"
             app:layout_constraintStart_toStartOf="@+id/search"

@@ -7,70 +7,41 @@ import android.widget.EditText
 import com.icerockdev.jetfinder.feature.mainMap.R
 
 fun Context.alert(
-    messageDesc: String,
-    okAction: () -> Unit,
-    showCancel: Boolean = true,
-    cancelAction: (() -> Unit)? = null
+    title: String? = null,
+    message: String? = null,
+    positiveAction: Pair<Int, () -> Unit>? = null,
+    negativeAction: Pair<Int, () -> Unit>? = null,
+    cancelable: Boolean = true,
+    closable: Boolean = true,
+    inputAction: ((String) -> Unit)? = null
 ) {
     AlertDialog.Builder(this, R.style.AlertDialogTheme).apply {
-        setMessage(messageDesc)
-        setPositiveButton(R.string.ok) { dialog, _ ->
-            okAction()
-            dialog.dismiss()
-        }
-        if (showCancel) {
-            if (cancelAction != null) {
-                setNegativeButton(R.string.cancel) { _, _ -> cancelAction() }
-            } else {
-                setNegativeButton(R.string.cancel, null)
+        title?.let { setTitle(it) }
+        message?.let { setMessage(it) }
+        positiveAction?.let {
+            setPositiveButton(it.first) { dialog, _ ->
+                it.second()
+                if (closable)
+                    dialog.dismiss()
             }
         }
-    }.show()
-}
-
-fun Context.alertRetry(
-    messageDesc: String,
-    action: (() -> Unit)?
-) {
-    AlertDialog.Builder(this, R.style.AlertDialogTheme).apply {
-        setMessage(messageDesc)
-        setCancelable(false)
-        setPositiveButton(R.string.retry) { dialog, _ ->
-            action?.invoke()
-            dialog.dismiss()
+        negativeAction?.let {
+            setNegativeButton(it.first) { dialog, _ ->
+                it.second()
+                if (closable)
+                    dialog.dismiss()
+            }
         }
-    }.show()
-}
-
-fun Context.alertYesOrNo(
-    messageDesc: String,
-    action: (() -> Unit)?
-) {
-    AlertDialog.Builder(this, R.style.AlertDialogTheme).apply {
-        setMessage(messageDesc)
-        setPositiveButton(R.string.yes) { dialog, _ ->
-            action?.invoke()
-            dialog.dismiss()
-        }
-        setNegativeButton(R.string.no) { dialog, which ->
-            dialog.dismiss()
-        }
-    }.show()
-}
-
-fun Context.alertInputText(
-    title: String,
-    action: (name: String) -> Unit
-) {
-    val editText = EditText(this).apply {
-        inputType = InputType.TYPE_CLASS_TEXT
-    }
-    AlertDialog.Builder(this, R.style.AlertDialogTheme).also {
-        it.setTitle(title)
-        it.setView(editText)
-        it.setPositiveButton(R.string.retry) { dialog, _ ->
-            action(editText.text.toString())
-            dialog.dismiss()
+        setCancelable(cancelable)
+        inputAction?.let {
+            val editText = EditText(context).apply {
+                inputType = InputType.TYPE_CLASS_TEXT
+            }
+            setView(editText)
+            setPositiveButton(R.string.retry) { dialog, _ ->
+                it(editText.text.toString())
+                dialog.dismiss()
+            }
         }
     }.show()
 }
