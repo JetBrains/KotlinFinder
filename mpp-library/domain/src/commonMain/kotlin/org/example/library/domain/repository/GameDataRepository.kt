@@ -164,7 +164,7 @@ class GameDataRepository internal constructor(
         }
 
         val beaconsString: String =
-            onlyLast.joinToString(separator = ",") { "${it.name}:${it.rssi}" }
+            onlyLast.joinToString(separator = ",") { "${it.name.cityHash64().toString(16)}:${it.rssi}" }
 
         Napier.d(message = "proximity = $beaconsString")
 
