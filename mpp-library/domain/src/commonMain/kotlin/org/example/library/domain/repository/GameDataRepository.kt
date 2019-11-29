@@ -64,6 +64,8 @@ class GameDataRepository internal constructor(
     }
 
     fun startReceivingData(didReceiveNoDevicesBlock: (() -> Unit)?) {
+        var isFirstRun: Boolean = true
+
         GlobalScope.launch(Dispatchers.UI) {
             while (isActive) {
                 val scanResults = mutableListOf<BeaconInfo>()
@@ -96,7 +98,10 @@ class GameDataRepository internal constructor(
 
                         Napier.d("collected: $collectedIds, discovered: $discoveredIds, new: $newIds")
 
-                        _currentDiscoveredBeaconId.value = newIds.firstOrNull()
+                        if (!isFirstRun)
+                            _currentDiscoveredBeaconId.value = newIds.firstOrNull()
+                        else
+                            isFirstRun = false
 
                         collectedSpotsRepository.setCollectedSpotIds(discoveredIds)
 
@@ -164,7 +169,7 @@ class GameDataRepository internal constructor(
         }
 
         val beaconsString: String =
-            onlyLast.joinToString(separator = ",") { "${it.name}:${it.rssi}" }
+            onlyLast.joinToString(separator = ",") { "${it.name.cityHash64().toString(16)}:${it.rssi}" }
 
         Napier.d(message = "proximity = $beaconsString")
 

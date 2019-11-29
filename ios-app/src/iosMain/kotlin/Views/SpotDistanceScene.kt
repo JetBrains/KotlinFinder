@@ -61,8 +61,6 @@ class SpotDistanceScene : SKScene {
             val bar: Bar = this.createBar(width = barWidth, height = barHeight)
             val xPos: CGFloat = i * (barWidth + barsSpacing) + lrSpacings / 2.0 - barWidth / 2.0
 
-            println("x:: $xPos")
-
             bar.topPart.position = CGPointMake(
                 xPos,
                 CGRectGetHeight(this.frame) / 2.0 + barHeight / 2.0 - barWidth / 2.0

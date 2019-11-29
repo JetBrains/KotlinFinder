@@ -112,12 +112,6 @@ class MapViewModel(
             }
         }
 
-        this.spotSearchRepository.startScanning()
-
-        this.gameDataRepository.startReceivingData(didReceiveNoDevicesBlock = {
-            this.spotSearchRepository.restartScanning()
-        })
-
         this.setHintStr()
     }
 
@@ -167,15 +161,15 @@ class MapViewModel(
     fun requestPermissions() {
         viewModelScope.launch {
             try {
-                permissionsController.providePermission(Permission.COARSE_LOCATION)
+                permissionsController.providePermission(Permission.BLUETOOTH_LE)
+
+                spotSearchRepository.startScanning()
 
                 gameDataRepository.startReceivingData(didReceiveNoDevicesBlock = {
                     spotSearchRepository.restartScanning()
                 })
-            } catch (deniedAlways: DeniedAlwaysException) {
-
-            } catch (denied: DeniedException) {
-
+            } catch (error: Throwable) {
+                println("$error")
             }
         }
     }
