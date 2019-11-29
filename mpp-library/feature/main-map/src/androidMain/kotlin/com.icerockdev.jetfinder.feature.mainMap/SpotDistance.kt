@@ -1,4 +1,4 @@
-package com.icerockdev.jetfinder.feature.spotSearch
+package com.icerockdev.jetfinder.feature.mainMap
 
 import android.animation.*
 import android.content.Context
@@ -13,9 +13,9 @@ import kotlin.random.Random
 
 class SpotDistance(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
-    private val initialBarHeight = 10.0f
-    private val maxScale: Float = 8.0f
-    private val barsCount: Int = 20
+    private val initialBarHeight = 5.0f
+    private val maxScale: Float = 6.0f
+    private val barsCount: Int = 9
     private var initialBarWidth = 0.0
     private val bars = MutableList(barsCount) { i -> Bar(i) }
     private val density = resources.displayMetrics.density
@@ -46,7 +46,7 @@ class SpotDistance(context: Context, attrs: AttributeSet) : View(context, attrs)
                     if (animation?.isRunning != true || bar.isDistanceChanged) {
                         bar.animator.duration = bar.getDuration()
                         val height = bar.newHeight()
-                        val bottomHeight = height - 20f
+                        val bottomHeight = height - 10f
                         bar.animator.setFloatValues(
                             if (bottomHeight > initialBarHeight) bottomHeight else initialBarHeight,
                             height
@@ -77,15 +77,15 @@ class SpotDistance(context: Context, attrs: AttributeSet) : View(context, attrs)
         if (initialBarWidth > 0)
             canvas?.apply {
                 bars.forEach {
-                    drawRoundRect(
-                        it.left,
-                        it.top - 20,
-                        it.right,
-                        it.bottom + 20,
-                        10f,
-                        10f,
-                        shadowPaint
-                    )
+                    //                    drawRoundRect(
+//                        it.left,
+//                        it.top - 5,
+//                        it.right,
+//                        it.bottom + 5,
+//                        10f,
+//                        10f,
+//                        shadowPaint
+//                    )
                     drawRoundRect(
                         it.left,
                         it.top,
@@ -120,7 +120,7 @@ class SpotDistance(context: Context, attrs: AttributeSet) : View(context, attrs)
             get() = (left + initialBarWidth).toFloat()
 
         val top
-            get() = ((initialBarHeight * maxScale + 20) - thisHeight) / 2 * density
+            get() = ((initialBarHeight * maxScale + 10) - thisHeight) / 2 * density
 
         val bottom
             get() = top + (thisHeight * density)

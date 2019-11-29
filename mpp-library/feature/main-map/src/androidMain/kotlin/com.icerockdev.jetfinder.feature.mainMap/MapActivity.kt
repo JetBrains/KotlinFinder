@@ -57,22 +57,22 @@ class MapActivity :
         viewModel.findTaskButtonState.ld()
             .observe(this, Observer { state: MapViewModel.FindTaskButtonState ->
                 // TODO move to common code - it duplicated between platforms
-                when (state) {
-                    MapViewModel.FindTaskButtonState.ACTIVE -> {
-                        binding.findTaskButton.isEnabled = true
-                        binding.findTaskButton.text = getString(R.string.find_task)
-                    }
-
-                    MapViewModel.FindTaskButtonState.TOO_FAR -> {
-                        binding.findTaskButton.isEnabled = false
-                        binding.findTaskButton.text = getString(R.string.farTaskPoint)
-                    }
-
-                    MapViewModel.FindTaskButtonState.COMPLETED -> {
-                        binding.findTaskButton.isEnabled = false
-                        binding.findTaskButton.text = getString(R.string.completed)
-                    }
-                }
+//                when (state) {
+//                    MapViewModel.FindTaskButtonState.ACTIVE -> {
+//                        binding.findTaskButton.isEnabled = true
+//                        binding.findTaskButton.text = getString(R.string.find_task)
+//                    }
+//
+//                    MapViewModel.FindTaskButtonState.TOO_FAR -> {
+//                        binding.findTaskButton.isEnabled = false
+//                        binding.findTaskButton.text = getString(R.string.farTaskPoint)
+//                    }
+//
+//                    MapViewModel.FindTaskButtonState.COMPLETED -> {
+//                        binding.findTaskButton.isEnabled = false
+//                        binding.findTaskButton.text = getString(R.string.completed)
+//                    }
+//                }
             })
         val bottomSheet: View = findViewById(R.id.statusView)
         val statusView = BottomSheetBehavior.from(bottomSheet)
