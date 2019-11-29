@@ -50,7 +50,7 @@ class MapViewModel(
     private val _currentStep: MutableLiveData<Int> = MutableLiveData(0)
     val currentStep: LiveData<Int> = this._currentStep.readOnly()
 
-    private val _signalStrength: MutableLiveData<Float?> = MutableLiveData(null)
+    private val _signalStrength: MutableLiveData<Float?> = MutableLiveData<Float?>(null)
     val signalStrength: LiveData<Float?> = this._signalStrength.readOnly()
 
     private val _searchViewState: MutableLiveData<SearchViewState> = MutableLiveData(SearchViewState.noTask())

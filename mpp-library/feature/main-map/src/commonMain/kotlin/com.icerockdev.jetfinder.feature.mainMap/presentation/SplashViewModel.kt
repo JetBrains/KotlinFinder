@@ -23,6 +23,10 @@ class SplashViewModel(
         fun routeToMainscreen()
     }
 
+    init {
+        loadData()
+    }
+
     fun loadData() {
         this.viewModelScope.launch {
             try {

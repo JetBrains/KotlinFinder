@@ -54,25 +54,25 @@ class MapActivity :
             }
         })
 
-        viewModel.findTaskButtonState.ld()
-            .observe(this, Observer { state: MapViewModel.FindTaskButtonState ->
-                // TODO move to common code - it duplicated between platforms
-//                when (state) {
-//                    MapViewModel.FindTaskButtonState.ACTIVE -> {
-//                        binding.findTaskButton.isEnabled = true
-//                        binding.findTaskButton.text = getString(R.string.find_task)
-//                    }
-//
-//                    MapViewModel.FindTaskButtonState.TOO_FAR -> {
-//                        binding.findTaskButton.isEnabled = false
-//                        binding.findTaskButton.text = getString(R.string.farTaskPoint)
-//                    }
-//
-//                    MapViewModel.FindTaskButtonState.COMPLETED -> {
-//                        binding.findTaskButton.isEnabled = false
-//                        binding.findTaskButton.text = getString(R.string.completed)
-//                    }
-//                }
+        viewModel.searchViewState.ld()
+            .observe(this, Observer { state: MapViewModel.SearchViewState ->
+                binding.textNoTask.visibility = View.GONE
+                binding.searchSuccess.visibility = View.GONE
+                binding.spotSearch.visibility = View.GONE
+                when (state) {
+                    is MapViewModel.SearchViewState.noTask -> {
+                        binding.textNoTask.visibility = View.VISIBLE
+                    }
+
+                    is MapViewModel.SearchViewState.discovered -> {
+                        binding.searchSuccess.visibility = View.VISIBLE
+                    }
+
+                    is MapViewModel.SearchViewState.distance -> {
+                        binding.spotSearch.visibility = View.VISIBLE
+                        binding.spotSearch.distance = state.distance
+                    }
+                }
             })
         val bottomSheet: View = findViewById(R.id.statusView)
         val statusView = BottomSheetBehavior.from(bottomSheet)
@@ -127,10 +127,6 @@ class MapActivity :
         R.drawable.stage6
     )
 
-    override fun routeToSpotSearchScreen() {
-        MainMapDependencies.router.routeToSpotSearch(this)
-    }
-
     override fun showResetCookiesAlert(resetAction: () -> Unit) {
         resetAction()
     }
@@ -143,6 +139,10 @@ class MapActivity :
 
     override fun showHint(hint: String) {
         alert(hint, {}, false)
+    }
+
+    override fun showFact(fact: String, closeAction: () -> Unit) {
+        alert(fact, {}, false)
     }
 
     override fun showRegistrationMessage(message: String) {

@@ -8,7 +8,6 @@ import android.app.Application
 import android.preference.PreferenceManager
 import com.github.aakira.napier.DebugAntilog
 import com.icerockdev.jetfinder.feature.mainMap.MainMapDependencies
-import com.icerockdev.jetfinder.feature.spotSearch.SpotSearchDependencies
 import com.russhwolf.settings.AndroidSettings
 import org.example.library.Factory
 import org.example.routers.MapRouterImpl
@@ -25,6 +24,5 @@ class MainApplication : Application() {
 
         MainMapDependencies.factory = mainFactory.mapFactory
         MainMapDependencies.router = MapRouterImpl
-        SpotSearchDependencies.factory = mainFactory.spotSearchFactory
     }
 }

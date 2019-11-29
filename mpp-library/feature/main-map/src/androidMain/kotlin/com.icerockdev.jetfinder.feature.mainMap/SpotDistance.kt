@@ -32,8 +32,8 @@ class SpotDistance(context: Context, attrs: AttributeSet) : View(context, attrs)
 
     private val shadowPaint = Paint(ANTI_ALIAS_FLAG).apply {
         color = context.resources.getColor(R.color.orange)
-        maskFilter = BlurMaskFilter(8f, BlurMaskFilter.Blur.NORMAL)
-        alpha = 50
+        maskFilter = BlurMaskFilter(20f, BlurMaskFilter.Blur.NORMAL)
+        alpha = 70
     }
 
     private fun start() {
@@ -77,15 +77,15 @@ class SpotDistance(context: Context, attrs: AttributeSet) : View(context, attrs)
         if (initialBarWidth > 0)
             canvas?.apply {
                 bars.forEach {
-                    //                    drawRoundRect(
-//                        it.left,
-//                        it.top - 5,
-//                        it.right,
-//                        it.bottom + 5,
-//                        10f,
-//                        10f,
-//                        shadowPaint
-//                    )
+                    drawRoundRect(
+                        it.left - 10,
+                        it.top - 5,
+                        it.right + 10,
+                        it.bottom + 5,
+                        10f,
+                        10f,
+                        shadowPaint
+                    )
                     drawRoundRect(
                         it.left,
                         it.top,

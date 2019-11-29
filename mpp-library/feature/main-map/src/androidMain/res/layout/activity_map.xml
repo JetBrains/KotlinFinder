@@ -33,7 +33,7 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/circle_button"
             android:clickable="true"
-            android:padding="24dp"
+            android:padding="20dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -112,9 +112,9 @@
             android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/search_background" />
@@ -130,12 +130,26 @@
             app:layout_constraintStart_toStartOf="@+id/search"
             app:layout_constraintTop_toTopOf="@+id/search" />
 
+        <TextView
+            android:id="@+id/textNoTask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/noTask"
+            android:textColor="@color/textNoTask"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/search"
+            app:layout_constraintEnd_toEndOf="@+id/search"
+            app:layout_constraintStart_toStartOf="@+id/search"
+            app:layout_constraintTop_toTopOf="@+id/search" />
+
         <com.icerockdev.jetfinder.feature.mainMap.SpotDistance
             android:id="@+id/spotSearch"
             android:layout_width="50dp"
             android:layout_height="40dp"
             android:layout_marginStart="4dp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/search"
             app:layout_constraintEnd_toEndOf="@+id/search"
             app:layout_constraintStart_toStartOf="@+id/search"

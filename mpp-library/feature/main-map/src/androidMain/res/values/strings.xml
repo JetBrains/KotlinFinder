@@ -13,4 +13,5 @@
     <string name="no">no</string>
     <string name="searching">Searching…</string>
     <string name="spot_found">Spot found</string>
+    <string name="noTask">No task</string>
 </resources>

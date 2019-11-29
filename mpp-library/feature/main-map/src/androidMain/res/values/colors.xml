@@ -10,4 +10,5 @@
     <color name="textGrayLight">#1a27282c</color>
     <color name="textGrayDark">#ff27282c</color>
     <color name="textControl">#99222222</color>
+    <color name="textNoTask">#80FFFFFF</color>
 </resources>
