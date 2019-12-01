@@ -50,11 +50,8 @@ class GameDataRepository internal constructor(
     val proximityInfo: Flow<ProximityInfo?> = channelFlow {
         val job = launch {
             while (isActive) {
-                Napier.d("wait proximity...")
                 val info: ProximityInfo? = _proximityInfoChannel.receive()
-                Napier.d("got strength $info")
                 send(info)
-                Napier.d("send $info complete")
             }
         }
 
@@ -88,8 +85,6 @@ class GameDataRepository internal constructor(
                         }
 
                         _proximityInfoChannel.send(info)
-
-                        Napier.d("sent info $info")
 
                         val collectedIds: List<Int> = collectedSpotsRepository.collectedSpotIds() ?: emptyList()
                         val discoveredIds: List<Int> = info?.discoveredBeaconsIds ?: emptyList()
@@ -171,13 +166,13 @@ class GameDataRepository internal constructor(
         val beaconsString: String =
             onlyLast.joinToString(separator = ",") { "${it.name.cityHash64().toString(16)}:${it.rssi}" }
 
-        Napier.d(message = "proximity = $beaconsString")
+//        Napier.d(message = "proximity = $beaconsString")
 
         val info: ProximityInfo
 
         try {
             val response: ProximityResponse = this.gameApi.finderProximityGet(beaconsString)
-            Napier.d(message = "received = $response")
+//            Napier.d(message = "received = $response")
 
             info = response.toDomain()
         } catch (error: Throwable) {
