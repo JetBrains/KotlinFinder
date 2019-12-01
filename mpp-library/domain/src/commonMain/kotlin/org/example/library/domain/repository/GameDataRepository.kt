@@ -60,7 +60,7 @@ class GameDataRepository internal constructor(
         }
     }
 
-    fun startReceivingData(didReceiveNoDevicesBlock: (() -> Unit)?) {
+    fun startReceivingData() {
         var isFirstRun: Boolean = true
 
         GlobalScope.launch(Dispatchers.UI) {
@@ -102,8 +102,6 @@ class GameDataRepository internal constructor(
 
                         _isGameEnded.value = (discoveredIds.count() == config.winnerCount)
                     }
-                } else {
-                    didReceiveNoDevicesBlock?.invoke()
                 }
 
                 delay(1000)

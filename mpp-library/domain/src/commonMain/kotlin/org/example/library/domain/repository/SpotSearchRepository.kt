@@ -125,4 +125,9 @@ class SpotSearchRepository(
     override fun didRssiUpdate(bluetoothPeripheral: BluetoothPeripheral) {
         this.sendBeaconInfo(bluetoothPeripheral)
     }
+
+    override fun scanDidFailed(error: Throwable) {
+        Napier.e("scan failed: $error")
+        doScanning()
+    }
 }

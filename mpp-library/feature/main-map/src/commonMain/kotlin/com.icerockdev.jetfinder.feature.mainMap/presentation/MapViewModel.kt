@@ -9,8 +9,6 @@ import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.livedata.map
 import dev.icerock.moko.mvvm.livedata.readOnly
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
-import dev.icerock.moko.permissions.DeniedAlwaysException
-import dev.icerock.moko.permissions.DeniedException
 import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.PermissionsController
 import kotlinx.coroutines.flow.collect
@@ -169,10 +167,7 @@ class MapViewModel(
                 permissionsController.providePermission(Permission.BLUETOOTH_LE)
 
                 spotSearchRepository.startScanning()
-
-                gameDataRepository.startReceivingData(didReceiveNoDevicesBlock = {
-                    spotSearchRepository.restartScanning()
-                })
+                gameDataRepository.startReceivingData()
             } catch (error: Throwable) {
                 println("$error")
             }

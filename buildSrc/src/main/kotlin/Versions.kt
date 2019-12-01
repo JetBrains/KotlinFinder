@@ -45,7 +45,7 @@ object Versions {
             const val napier = "1.1.0"
             const val settings = "0.4.1"
 
-            const val bluefalcon = "0.5.5"
+            const val bluefalcon = "0.5.6"
         }
     }
 }

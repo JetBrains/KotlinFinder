@@ -9,6 +9,7 @@ import com.github.aakira.napier.Napier
 import com.icerockdev.jetfinder.feature.mainMap.di.MapViewModelFactory
 import com.russhwolf.settings.Settings
 import dev.bluefalcon.ApplicationContext
+import dev.bluefalcon.Log
 import org.example.library.domain.di.DomainFactory
 
 
@@ -28,5 +29,6 @@ class Factory(
 
     init {
         Napier.base(antilog)
+        Log.level = Log.Level.DEBUG
     }
 }
