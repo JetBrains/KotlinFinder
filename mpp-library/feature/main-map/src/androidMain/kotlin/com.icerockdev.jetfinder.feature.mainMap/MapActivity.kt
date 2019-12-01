@@ -45,7 +45,7 @@ class MapActivity :
                 negativeAction = R.string.no to {},
                 positiveAction = R.string.yes to { viewModel.resetCookiesButtonTapped() }
             )
-            false
+            true
         }
 
         viewModel.currentStep.ld().observe(this, Observer { step ->
@@ -69,6 +69,14 @@ class MapActivity :
             if (statusView.state == BottomSheetBehavior.STATE_EXPANDED) {
                 statusView.state = BottomSheetBehavior.STATE_COLLAPSED
             }
+        }
+
+        binding.search.setOnLongClickListener {
+            alert(
+                message = "cookie: ${viewModel.cookie()}",
+                positiveAction = R.string.close to {}
+            )
+            true
         }
     }
 
