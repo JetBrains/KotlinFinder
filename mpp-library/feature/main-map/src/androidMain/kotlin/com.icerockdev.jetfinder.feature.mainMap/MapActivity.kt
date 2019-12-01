@@ -89,7 +89,9 @@ class MapActivity :
     override fun showEnterNameAlert() {
         alert(
             title = getString(R.string.enterName),
-            inputAction = { name: String -> viewModel.sendWinnerName(name) })
+            cancelable = false,
+            inputAction = { name: String -> viewModel.sendWinnerName(name) }
+        )
     }
 
     override fun showHint(hint: String) {
