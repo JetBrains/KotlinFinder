@@ -1,15 +1,55 @@
 package screens
 
+import com.github.aakira.napier.Napier
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import common.FeedbackGenerator
 import common.fillContainer
 import common.fillSuperview
 import kotlinx.cinterop.ObjCAction
-import platform.CoreGraphics.*
+import platform.CoreGraphics.CGRectGetHeight
+import platform.CoreGraphics.CGRectGetWidth
+import platform.CoreGraphics.CGRectMake
+import platform.CoreGraphics.CGSizeMake
 import platform.Foundation.NSCoder
 import platform.Foundation.NSNumber
+import platform.Foundation.NSSelectorFromString
 import platform.QuartzCore.CAShapeLayer
-import platform.UIKit.*
+import platform.UIKit.NSLayoutConstraint
+import platform.UIKit.UIAlertAction
+import platform.UIKit.UIAlertActionStyleCancel
+import platform.UIKit.UIAlertController
+import platform.UIKit.UIAlertControllerStyleAlert
+import platform.UIKit.UIBezierPath
+import platform.UIKit.UIButton
+import platform.UIKit.UIColor
+import platform.UIKit.UIControlEventTouchUpInside
+import platform.UIKit.UIFont
+import platform.UIKit.UIImage
+import platform.UIKit.UIImageView
+import platform.UIKit.UILabel
+import platform.UIKit.UILongPressGestureRecognizer
+import platform.UIKit.UIRectCornerTopLeft
+import platform.UIKit.UIRectCornerTopRight
+import platform.UIKit.UIScrollView
+import platform.UIKit.UIScrollViewDelegateProtocol
+import platform.UIKit.UIView
+import platform.UIKit.UIViewController
+import platform.UIKit.addGestureRecognizer
+import platform.UIKit.addSubview
+import platform.UIKit.animateWithDuration
+import platform.UIKit.backgroundColor
+import platform.UIKit.bottomAnchor
+import platform.UIKit.centerXAnchor
+import platform.UIKit.centerYAnchor
+import platform.UIKit.heightAnchor
+import platform.UIKit.layoutIfNeeded
+import platform.UIKit.leftAnchor
+import platform.UIKit.navigationController
+import platform.UIKit.rightAnchor
+import platform.UIKit.setHidden
+import platform.UIKit.topAnchor
+import platform.UIKit.translatesAutoresizingMaskIntoConstraints
+import platform.UIKit.widthAnchor
 import views.CollectWordView
 import views.SpotDistanceView
 import kotlin.math.min
@@ -166,6 +206,13 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         this.collectWordView.didLongTapImageViewBlock = {
             this.viewModel.resetCookiesButtonTapped()
         }
+
+        val longTapGesture = UILongPressGestureRecognizer(
+            target = this,
+            action = NSSelectorFromString("spotSearchLongPress")
+        )
+        this.spotDistanceView.addGestureRecognizer(longTapGesture)
+        this.spotDistanceView.setUserInteractionEnabled(true)
     }
 
     override fun viewWillAppear(animated: Boolean) {
@@ -247,6 +294,19 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
     @ObjCAction
     private fun hintButtonTapped() {
         this.viewModel.hintButtonTapped()
+    }
+
+    @ObjCAction
+    private fun spotSearchLongPress() {
+        val alert = UIAlertController.alertControllerWithTitle(
+            title = null,
+            message = "cookie: ${viewModel.cookie()}",
+            preferredStyle = UIAlertControllerStyleAlert
+        ).apply {
+            addAction(UIAlertAction.actionWithTitle(title = "Close", style = UIAlertActionStyleCancel, handler = null))
+        }
+
+        presentViewController(alert, animated = true, completion = null)
     }
 
     override fun viewForZoomingInScrollView(scrollView: UIScrollView): UIView {
