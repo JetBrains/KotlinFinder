@@ -17,7 +17,7 @@ class SpotDistance(context: Context, attrs: AttributeSet) : View(context, attrs)
     private val maxScale: Float = 6.0f
     private val barsCount: Int = 9
     private var initialBarWidth = 0.0
-    private val bars = MutableList(barsCount) { i -> Bar(i) }
+    private val bars = List(barsCount) { i -> Bar(i) }
     private val density = resources.displayMetrics.density
 
     var distance: Float = 0.0f
@@ -72,31 +72,31 @@ class SpotDistance(context: Context, attrs: AttributeSet) : View(context, attrs)
 
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        if (initialBarWidth > 0)
-            canvas?.apply {
-                bars.forEach {
-                    drawRoundRect(
-                        it.left - 10,
-                        it.top - 5,
-                        it.right + 10,
-                        it.bottom + 5,
-                        10f,
-                        10f,
-                        shadowPaint
-                    )
-                    drawRoundRect(
-                        it.left,
-                        it.top,
-                        it.right,
-                        it.bottom,
-                        10f,
-                        10f,
-                        paint
-                    )
-                }
-            }
+
+        if(initialBarWidth <= 0) return
+
+        bars.forEach {
+            canvas.drawRoundRect(
+                it.left - 10,
+                it.top - 5,
+                it.right + 10,
+                it.bottom + 5,
+                10f,
+                10f,
+                shadowPaint
+            )
+            canvas.drawRoundRect(
+                it.left,
+                it.top,
+                it.right,
+                it.bottom,
+                10f,
+                10f,
+                paint
+            )
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
