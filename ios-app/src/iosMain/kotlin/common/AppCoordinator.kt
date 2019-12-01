@@ -46,7 +46,6 @@ class AppCoordinator(
 
     private fun createMainScreen(): MainScreenViewController {
         val vc: MainScreenViewController = MainScreenViewController()
-
         vc.bindViewModel(this.mapViewModel)
 
         return vc
@@ -57,7 +56,6 @@ class AppCoordinator(
         val vm: SplashViewModel = this.factory.mapFactory.createSplashViewModel(EventsDispatcher(this))
 
         vc.bindViewModel(vm)
-        vm.loadData()
 
         return vc
     }

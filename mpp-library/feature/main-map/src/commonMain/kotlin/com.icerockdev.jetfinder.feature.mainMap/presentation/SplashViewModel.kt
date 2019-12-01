@@ -27,14 +27,12 @@ class SplashViewModel(
         loadData()
     }
 
-    fun loadData() {
+    private fun loadData() {
         this.viewModelScope.launch {
             try {
                 gameDataRepository.loadGameConfig()
 
-                eventsDispatcher.dispatchEvent {
-                    routeToMainscreen()
-                }
+                eventsDispatcher.dispatchEvent { routeToMainscreen() }
             } catch (error: Throwable) {
                 eventsDispatcher.dispatchEvent {
                     showError(error, retryingAction = {
