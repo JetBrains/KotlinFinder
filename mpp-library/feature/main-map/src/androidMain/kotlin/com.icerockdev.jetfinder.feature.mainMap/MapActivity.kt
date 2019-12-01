@@ -97,7 +97,7 @@ class MapActivity :
     }
 
     override fun showFact(fact: String, closeAction: () -> Unit) {
-        alert(message = fact, positiveAction = R.string.cancel to closeAction)
+        alert(message = fact, positiveAction = R.string.close to closeAction)
     }
 
     override fun showRegistrationMessage(message: String) {

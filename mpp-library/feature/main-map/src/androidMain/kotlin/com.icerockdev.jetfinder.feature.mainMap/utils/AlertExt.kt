@@ -38,7 +38,7 @@ fun Context.alert(
                 inputType = InputType.TYPE_CLASS_TEXT
             }
             setView(editText)
-            setPositiveButton(R.string.retry) { dialog, _ ->
+            setPositiveButton(R.string.send) { dialog, _ ->
                 it(editText.text.toString())
                 dialog.dismiss()
             }

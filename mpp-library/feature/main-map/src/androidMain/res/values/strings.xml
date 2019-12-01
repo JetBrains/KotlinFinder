@@ -3,9 +3,11 @@
     <string name="label">Control word</string>
     <string name="find_task">Find a task</string>
     <string name="ok">Ok</string>
+    <string name="send">Send</string>
     <string name="retry">Retry</string>
     <string name="enterName">Enter your name</string>
     <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
     <string name="farTaskPoint">You are too far from the task point</string>
     <string name="completed">Completed</string>
     <string name="reset">Reset cookie?</string>
