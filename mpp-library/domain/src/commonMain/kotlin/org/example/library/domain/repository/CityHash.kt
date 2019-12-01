@@ -209,4 +209,5 @@ public fun cityHash64(s: ByteArray, pos: Int = 0, len: Int = s.size): ULong {
     )
 }
 
+@UseExperimental(ExperimentalStdlibApi::class)
 fun String.cityHash64() = cityHash64(this.encodeToByteArray()).toLong()
