@@ -1,15 +1,7 @@
 package org.example.library.domain.repository
 
 import com.github.aakira.napier.Napier
-import dev.bluefalcon.ApplicationContext
-import dev.bluefalcon.BlueFalcon
-import dev.bluefalcon.BlueFalconDelegate
-import dev.bluefalcon.BluetoothCharacteristic
-import dev.bluefalcon.BluetoothNotEnabledException
-import dev.bluefalcon.BluetoothPeripheral
-import dev.bluefalcon.BluetoothResettingException
-import dev.bluefalcon.BluetoothUnknownException
-import dev.bluefalcon.BluetoothUnsupportedException
+import dev.bluefalcon.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -57,9 +49,10 @@ class SpotSearchRepository(
     private fun doScanning() {
         GlobalScope.launch(Dispatchers.UI) {
             while (isActive) {
-                if (tryStartScan()) break
+                if (tryStartScan())
+                    break
 
-                delay(100)
+                delay(500)
             }
         }
     }
