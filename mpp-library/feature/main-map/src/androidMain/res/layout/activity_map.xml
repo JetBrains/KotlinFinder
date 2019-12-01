@@ -146,7 +146,7 @@
 
         <com.icerockdev.jetfinder.feature.mainMap.SpotDistance
             android:id="@+id/spotSearch"
-            visibleOrGone="@{viewModel.searchDistance.ld != null}"
+            app:visibleOrGone="@{viewModel.searchDistance.ld != null}"
             android:layout_width="50dp"
             android:layout_height="40dp"
             android:layout_marginStart="4dp"
