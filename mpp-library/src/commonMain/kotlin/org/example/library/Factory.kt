@@ -29,6 +29,6 @@ class Factory(
 
     init {
         Napier.base(antilog)
-        Log.level = Log.Level.DEBUG
+//        Log.level = Log.Level.DEBUG
     }
 }

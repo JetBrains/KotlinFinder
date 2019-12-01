@@ -44,17 +44,17 @@ class SpotDistanceView: UIView {
 
     fun setState(state: MapViewModel.SearchViewState) {
         when (state) {
-            is MapViewModel.SearchViewState.noTask -> {
+            is MapViewModel.SearchViewState.NoTask -> {
                 this.setSpotDiscovered(false)
                 this.setDistance(null)
             }
 
-            is MapViewModel.SearchViewState.distance -> {
+            is MapViewModel.SearchViewState.Distance -> {
                 this.setSpotDiscovered(false)
                 this.setDistance(state.distance)
             }
 
-            is MapViewModel.SearchViewState.discovered -> {
+            is MapViewModel.SearchViewState.Discovered -> {
                 this.setSpotDiscovered(true)
             }
         }

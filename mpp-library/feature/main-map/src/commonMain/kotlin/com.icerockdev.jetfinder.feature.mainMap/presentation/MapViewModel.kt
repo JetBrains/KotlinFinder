@@ -36,9 +36,9 @@ class MapViewModel(
     }
 
     sealed class SearchViewState {
-        class noTask(): SearchViewState()
-        class distance(val distance: Float): SearchViewState()
-        class discovered(): SearchViewState()
+        object NoTask : SearchViewState()
+        class Distance(val distance: Float) : SearchViewState()
+        object Discovered : SearchViewState()
     }
 
     private var hintStr: String? = null
@@ -52,33 +52,31 @@ class MapViewModel(
     private val _signalStrength: MutableLiveData<Float?> = MutableLiveData<Float?>(null)
     val signalStrength: LiveData<Float?> = this._signalStrength.readOnly()
 
-    private val _searchViewState: MutableLiveData<SearchViewState> = MutableLiveData(SearchViewState.noTask())
+    private val _searchViewState: MutableLiveData<SearchViewState> = MutableLiveData(SearchViewState.NoTask)
     val searchViewState: LiveData<SearchViewState> = this._searchViewState.readOnly()
 
-    val isNoTaskVisible: LiveData<Boolean> = this._searchViewState.map { it is SearchViewState.noTask }
-    val isDiscoveredVisible: LiveData<Boolean> = this._searchViewState.map { it is SearchViewState.discovered }
-    val searchDistance: LiveData<Float?> = this._searchViewState.map { (it as? SearchViewState.distance)?.distance }
+    val isNoTaskVisible: LiveData<Boolean> = this._searchViewState.map { it is SearchViewState.NoTask }
+    val isDiscoveredVisible: LiveData<Boolean> = this._searchViewState.map { it is SearchViewState.Discovered }
+    val searchDistance: LiveData<Float?> = this._searchViewState.map { (it as? SearchViewState.Distance)?.distance }
 
     init {
         viewModelScope.launch {
             gameDataRepository.proximityInfo.collect { info: ProximityInfo? ->
-                if (!spotSearchRepository.isScanning())
-                    return@collect
-
                 val maxStrength: Int = 100
                 val distance: Float? = info?.nearestBeaconStrength?.div(maxStrength.toFloat())
 
                 _signalStrength.value = distance
-                val strength: Float? = _signalStrength.value?.toFloat()
+                val strength: Float? = _signalStrength.value
 
                 if (strength != null)
-                    _searchViewState.value = SearchViewState.distance(strength)
+                    _searchViewState.value = SearchViewState.Distance(strength)
                 else
-                    _searchViewState.value = SearchViewState.noTask()
+                    _searchViewState.value = SearchViewState.NoTask
             }
         }
 
         this.collectedSpotsRepository.collectedSpotsIds.addObserver { ids: List<Int>? ->
+            Napier.d("collectedSpotsIds $ids")
             this._currentStep.value = ids?.count() ?: 0
 
             this.setHintStr()
@@ -87,8 +85,8 @@ class MapViewModel(
         this.gameDataRepository.currentDiscoveredBeaconId.addObserver { beaconId: Int? ->
             Napier.d("New beacon: $beaconId")
 
-            if (beaconId != null)  {
-                this._searchViewState.value = SearchViewState.discovered()
+            if (beaconId != null) {
+                this._searchViewState.value = SearchViewState.Discovered
 
                 Napier.d(">>>>>>>> TASK COMPLETED!")
 
@@ -102,8 +100,8 @@ class MapViewModel(
 
                     this.eventsDispatcher.dispatchEvent {
                         showFact(fact) {
-                            println("continue scanning")
-                            _searchViewState.value = SearchViewState.noTask()
+                            Napier.d("continue scanning")
+                            _searchViewState.value = SearchViewState.NoTask
 
                             if (gameDataRepository.isGameEnded.value && !gameDataRepository.isUserRegistered())
                                 didEndGame()
@@ -169,7 +167,7 @@ class MapViewModel(
                 spotSearchRepository.startScanning()
                 gameDataRepository.startReceivingData()
             } catch (error: Throwable) {
-                println("$error")
+                Napier.e("$error")
             }
         }
     }
@@ -192,9 +190,9 @@ class MapViewModel(
     }
 
     private fun didEndGame() {
-        println(">>>>>>> GAME ENDED")
+        Napier.d(">>>>>>> GAME ENDED")
 
-        this._searchViewState.value = SearchViewState.discovered()
+        this._searchViewState.value = SearchViewState.Discovered
 
         this.spotSearchRepository.stopScanning()
 

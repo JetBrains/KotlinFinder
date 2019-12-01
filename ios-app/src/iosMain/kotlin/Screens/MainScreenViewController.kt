@@ -1,6 +1,5 @@
 package screens
 
-import com.github.aakira.napier.Napier
 import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
 import common.FeedbackGenerator
 import common.fillContainer
@@ -108,8 +107,10 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             this.spotDistanceView
         ).forEach { it.translatesAutoresizingMaskIntoConstraints = false }
 
-        this.spotDistanceView.centerXAnchor.constraintEqualToAnchor(this.view.rightAnchor, constant = -70.0).setActive(true)
-        this.spotDistanceView.centerYAnchor.constraintEqualToAnchor(this.view.topAnchor, constant = 80.0).setActive(true)
+        this.spotDistanceView.centerXAnchor.constraintEqualToAnchor(this.view.rightAnchor, constant = -70.0)
+            .setActive(true)
+        this.spotDistanceView.centerYAnchor.constraintEqualToAnchor(this.view.topAnchor, constant = 80.0)
+            .setActive(true)
         this.spotDistanceViewWidthConstraint = this.spotDistanceView.widthAnchor.constraintEqualToConstant(80.0)
         this.spotDistanceView.heightAnchor.constraintEqualToAnchor(this.spotDistanceView.widthAnchor).setActive(true)
 
@@ -234,7 +235,8 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
 
         this.scrollView.minimumZoomScale = min(
             CGRectGetWidth(this.scrollView.frame) / CGRectGetWidth(this.mapImageView.frame),
-            CGRectGetHeight(this.scrollView.frame) / CGRectGetHeight(this.mapImageView.frame))
+            CGRectGetHeight(this.scrollView.frame) / CGRectGetHeight(this.mapImageView.frame)
+        )
         this.scrollView.zoomScale = 1.0
     }
 
@@ -266,7 +268,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         viewModel.hintButtonEnabled.addObserver { enabled: Boolean ->
             this.hintButton.setEnabled(enabled)
         }
-        
+
         viewModel.signalStrength.addObserver { strength: Float? ->
             this.strengthLabel.text = "$strength"
 
@@ -274,9 +276,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
         }
 
         viewModel.searchViewState.addObserver { state: MapViewModel.SearchViewState ->
-            println("STATE: $state")
-
-            if (state is MapViewModel.SearchViewState.noTask)
+            if (state is MapViewModel.SearchViewState.NoTask)
                 this.spotDistanceViewWidthConstraint.setConstant(80.0)
             else
                 this.spotDistanceViewWidthConstraint.setConstant(100.0)
@@ -287,7 +287,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
 
             this.spotDistanceView.setState(state)
         }
-        
+
         viewModel.requestPermissions()
     }
 
