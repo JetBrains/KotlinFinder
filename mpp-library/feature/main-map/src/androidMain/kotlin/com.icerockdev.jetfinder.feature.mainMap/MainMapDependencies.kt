@@ -4,5 +4,4 @@ import com.icerockdev.jetfinder.feature.mainMap.di.MapViewModelFactory
 
 object MainMapDependencies {
     lateinit var factory: MapViewModelFactory
-    lateinit var router: MapRouter
 }

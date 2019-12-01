@@ -10,7 +10,6 @@ import com.github.aakira.napier.DebugAntilog
 import com.icerockdev.jetfinder.feature.mainMap.MainMapDependencies
 import com.russhwolf.settings.AndroidSettings
 import org.example.library.Factory
-import org.example.routers.MapRouterImpl
 
 class MainApplication : Application() {
     override fun onCreate() {
@@ -23,6 +22,5 @@ class MainApplication : Application() {
         )
 
         MainMapDependencies.factory = mainFactory.mapFactory
-        MainMapDependencies.router = MapRouterImpl
     }
 }
