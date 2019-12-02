@@ -4,10 +4,7 @@ import com.github.aakira.napier.Napier
 import dev.bluefalcon.BluetoothPeripheral
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcherOwner
-import dev.icerock.moko.mvvm.livedata.LiveData
-import dev.icerock.moko.mvvm.livedata.MutableLiveData
-import dev.icerock.moko.mvvm.livedata.map
-import dev.icerock.moko.mvvm.livedata.readOnly
+import dev.icerock.moko.mvvm.livedata.*
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.PermissionsController
@@ -52,12 +49,20 @@ class MapViewModel(
     private val _signalStrength: MutableLiveData<Float?> = MutableLiveData<Float?>(null)
     val signalStrength: LiveData<Float?> = this._signalStrength.readOnly()
 
-    private val _searchViewState: MutableLiveData<SearchViewState> = MutableLiveData(SearchViewState.NoTask)
+    private val _searchViewState: MutableLiveData<SearchViewState> =
+        MutableLiveData(SearchViewState.NoTask)
     val searchViewState: LiveData<SearchViewState> = this._searchViewState.readOnly()
 
-    val isNoTaskVisible: LiveData<Boolean> = this._searchViewState.map { it is SearchViewState.NoTask }
-    val isDiscoveredVisible: LiveData<Boolean> = this._searchViewState.map { it is SearchViewState.Discovered }
-    val searchDistance: LiveData<Float?> = this._searchViewState.map { (it as? SearchViewState.Distance)?.distance }
+    val isBluetoothEnabled = MutableLiveData<Boolean>(false)
+
+    val isNoTaskVisible: LiveData<Boolean> =
+        this._searchViewState.mergeWith(isBluetoothEnabled) { ld1, ld2 -> (ld1 is SearchViewState.NoTask) && ld2 }
+
+    val isDiscoveredVisible: MediatorLiveData<Boolean> =
+        this._searchViewState.mergeWith(isBluetoothEnabled) { ld1, ld2 -> (ld1 is SearchViewState.Discovered) && ld2 }
+
+    val searchDistance: LiveData<Float?> =
+        this._searchViewState.map { if (isBluetoothEnabled.value) (it as? SearchViewState.Distance)?.distance else null }
 
     init {
         viewModelScope.launch {
@@ -90,8 +95,10 @@ class MapViewModel(
 
                 Napier.d(">>>>>>>> TASK COMPLETED!")
 
-                val collectedCount: Int = this.collectedSpotsRepository.collectedSpotIds()?.count() ?: 0
-                val fact: String? = this.gameDataRepository.gameConfig?.facts?.getOrNull(collectedCount)
+                val collectedCount: Int =
+                    this.collectedSpotsRepository.collectedSpotIds()?.count() ?: 0
+                val fact: String? =
+                    this.gameDataRepository.gameConfig?.facts?.getOrNull(collectedCount)
 
                 Napier.d("fact: $fact")
 
@@ -201,5 +208,9 @@ class MapViewModel(
         this.eventsDispatcher.dispatchEvent {
             showEnterNameAlert()
         }
+    }
+
+    fun startGame() {
+        spotSearchRepository.restartScanning()
     }
 }
