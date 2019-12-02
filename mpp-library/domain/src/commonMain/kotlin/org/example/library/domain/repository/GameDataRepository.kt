@@ -30,12 +30,14 @@ import org.example.library.domain.entity.ProximityInfo
 import org.example.library.domain.entity.toDomain
 import org.example.library.domain.storage.KeyValueStorage
 import org.example.library.domain.storage.PersistentCookiesStorage
+import kotlin.random.Random
 
 class GameDataRepository internal constructor(
     private val gameApi: GameApi,
     private val collectedSpotsRepository: CollectedSpotsRepository,
     private val storage: KeyValueStorage,
-    private val cookiesStorage: PersistentCookiesStorage
+    private val cookiesStorage: PersistentCookiesStorage,
+    private val watchSyncRepository: WatchSyncRepository
 ) {
     val beaconsChannel: Channel<BeaconInfo> = Channel(Channel.BUFFERED)
     var gameConfig: GameConfig? = null
@@ -101,6 +103,13 @@ class GameDataRepository internal constructor(
                         collectedSpotsRepository.setCollectedSpotIds(discoveredIds)
 
                         _isGameEnded.value = (discoveredIds.count() == config.winnerCount)
+
+                        watchSyncRepository.sendData(
+                            currentStep = info?.discoveredBeaconsIds?.size ?: 0,
+                            signalStrength = info?.nearestBeaconStrength,
+                            discoveredBeaconId = _currentDiscoveredBeaconId.value,
+                            isGameEnded = _isGameEnded.value
+                        )
                     }
                 }
 
