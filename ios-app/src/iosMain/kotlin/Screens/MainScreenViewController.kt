@@ -212,6 +212,7 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             target = this,
             action = NSSelectorFromString("spotSearchLongPress")
         )
+        longTapGesture.minimumPressDuration = 2.0
         this.spotDistanceView.addGestureRecognizer(longTapGesture)
         this.spotDistanceView.setUserInteractionEnabled(true)
     }
