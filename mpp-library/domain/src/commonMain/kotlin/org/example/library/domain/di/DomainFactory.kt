@@ -22,6 +22,7 @@ import kotlinx.serialization.json.Json
 import org.example.library.domain.repository.CollectedSpotsRepository
 import org.example.library.domain.repository.GameDataRepository
 import org.example.library.domain.repository.SpotSearchRepository
+import org.example.library.domain.repository.WatchSyncRepository
 import org.example.library.domain.storage.KeyValueStorage
 import org.example.library.domain.storage.PersistentCookiesStorage
 
@@ -56,7 +57,7 @@ class DomainFactory(
                         Napier.d(message = message)
                     }
                 }
-                level = LogLevel.NONE
+                level = LogLevel.ALL
             }
             install(HttpCookies) {
                 storage = cookiesStorage
@@ -74,13 +75,17 @@ class DomainFactory(
         )
     }
 
+    val watchSyncRepository: WatchSyncRepository by lazy {
+        WatchSyncRepository()
+    }
+
     val gameDataRepository: GameDataRepository by lazy {
         GameDataRepository(
             gameApi = this.gameApi,
             collectedSpotsRepository = this.collectedSpotsRepository,
             storage = this.keyValueStorage,
-            cookiesStorage = this.cookiesStorage
-        )
+            cookiesStorage = this.cookiesStorage,
+            watchSyncRepository = this.watchSyncRepository)
     }
 
     val collectedSpotsRepository: CollectedSpotsRepository by lazy {
