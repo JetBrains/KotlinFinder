@@ -171,8 +171,7 @@ class MapActivity :
             message = getString(R.string.onBluetooth),
             cancelable = false,
             positiveAction = R.string.allow to {
-                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                startActivityForResult(enableBtIntent, 1)
+                startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
             },
             negativeAction = R.string.deny to { viewModel.isBluetoothEnabled.value = false })
     }
@@ -210,8 +209,6 @@ class MapActivity :
                         viewModel.startGame()
                         viewModel.isBluetoothEnabled.value = true
                     }
-                    else -> {
-                    }
                 }
 
             }
@@ -221,6 +218,11 @@ class MapActivity :
     override fun onStop() {
         super.onStop()
         unregisterReceiver(bluetoothReceiver)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        registerReceiver(bluetoothReceiver, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
     }
 }
 
