@@ -56,10 +56,10 @@ class MapViewModel(
     val isBluetoothEnabled = MutableLiveData<Boolean>(false)
 
     val isNoTaskVisible: LiveData<Boolean> =
-        this._searchViewState.mergeWith(isBluetoothEnabled) { ld1, ld2 -> (ld1 is SearchViewState.NoTask) && ld2 }
+        this._searchViewState.mergeWith(isBluetoothEnabled) { state, isEnabled -> (state is SearchViewState.NoTask) && isEnabled }
 
     val isDiscoveredVisible: MediatorLiveData<Boolean> =
-        this._searchViewState.mergeWith(isBluetoothEnabled) { ld1, ld2 -> (ld1 is SearchViewState.Discovered) && ld2 }
+        this._searchViewState.mergeWith(isBluetoothEnabled) { state, isEnabled -> (state is SearchViewState.Discovered) && isEnabled }
 
     val searchDistance: LiveData<Float?> =
         this._searchViewState.map { if (isBluetoothEnabled.value) (it as? SearchViewState.Distance)?.distance else null }

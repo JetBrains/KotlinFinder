@@ -84,8 +84,6 @@ class MapActivity :
             true
         }
 
-        registerReceiver(bluetoothReceiver, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
-
         BluetoothAdapter.getDefaultAdapter()?.let {
             if (it.state == BluetoothAdapter.STATE_OFF) {
                 viewModel.isBluetoothEnabled.value = false
