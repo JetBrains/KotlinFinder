@@ -146,7 +146,6 @@
 
         <com.icerockdev.jetfinder.feature.mainMap.SpotDistance
             android:id="@+id/spotSearch"
-            app:visibleOrGone="@{viewModel.searchDistance.ld != null}"
             android:layout_width="50dp"
             android:layout_height="40dp"
             android:layout_marginStart="4dp"
@@ -154,7 +153,19 @@
             app:layout_constraintBottom_toBottomOf="@+id/search"
             app:layout_constraintEnd_toEndOf="@+id/search"
             app:layout_constraintStart_toStartOf="@+id/search"
-            app:layout_constraintTop_toTopOf="@+id/search" />
+            app:layout_constraintTop_toTopOf="@+id/search"
+            app:visibleOrGone="@{viewModel.searchDistance.ld != null}" />
+
+        <ImageView
+            android:id="@+id/bt_active"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bluetooth"
+            app:layout_constraintBottom_toBottomOf="@+id/search"
+            app:layout_constraintEnd_toEndOf="@+id/search"
+            app:layout_constraintStart_toStartOf="@+id/search"
+            app:layout_constraintTop_toTopOf="@+id/search"
+            app:visibleOrGone="@{!viewModel.isBluetoothEnabled.ld}" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

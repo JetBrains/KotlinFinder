@@ -13,7 +13,10 @@
     <string name="reset">Reset cookie?</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
+    <string name="allow">allow</string>
+    <string name="deny">deny</string>
     <string name="searching">Searching…</string>
     <string name="spot_found">Spot found</string>
     <string name="noTask">No task</string>
+    <string name="onBluetooth">You need to turn on bluetooth</string>
 </resources>

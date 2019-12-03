@@ -1,5 +1,10 @@
 package com.icerockdev.jetfinder.feature.mainMap
 
+import android.bluetooth.BluetoothAdapter
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -78,6 +83,15 @@ class MapActivity :
             )
             true
         }
+
+        BluetoothAdapter.getDefaultAdapter()?.let {
+            if (it.state == BluetoothAdapter.STATE_OFF) {
+                viewModel.isBluetoothEnabled.value = false
+                checkBT()
+            } else {
+                viewModel.isBluetoothEnabled.value = true
+            }
+        }
     }
 
     private val stages = mutableListOf(
@@ -150,6 +164,16 @@ class MapActivity :
         return statusView
     }
 
+    private fun checkBT() {
+        alert(
+            message = getString(R.string.onBluetooth),
+            cancelable = false,
+            positiveAction = R.string.allow to {
+                startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+            },
+            negativeAction = R.string.deny to { viewModel.isBluetoothEnabled.value = false })
+    }
+
     private fun TextView.setTwoColoredText(count: Int) {
         val text = this.text.toString()
         val firstText = SpannableString(text.take(count))
@@ -169,6 +193,34 @@ class MapActivity :
         )
         setText(firstText)
         append(lastText)
+    }
+
+    private val bluetoothReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                when (intent?.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)) {
+                    BluetoothAdapter.STATE_OFF -> {
+                        checkBT()
+                        viewModel.isBluetoothEnabled.value = false
+                    }
+                    BluetoothAdapter.STATE_ON -> {
+                        viewModel.startGame()
+                        viewModel.isBluetoothEnabled.value = true
+                    }
+                }
+
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(bluetoothReceiver)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        registerReceiver(bluetoothReceiver, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
     }
 }
 
