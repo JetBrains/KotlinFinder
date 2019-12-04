@@ -1,7 +1,3 @@
-import Deps.Plugins.androidExtensions
-
-
-
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.multiplatform")
@@ -38,5 +34,4 @@ dependencies {
     androidLibrary(Deps.Libs.Android.lifecycle)
 
     mppModule(Modules.MultiPlatform.domain)
-    //mppModule(Modules.MultiPlatform.shared)
 }

@@ -1,6 +1,4 @@
-
-
-package com.kotlinconf.locator
+package org.jetbrains.kotlin.locator
 
 import android.app.Application
 import android.preference.PreferenceManager

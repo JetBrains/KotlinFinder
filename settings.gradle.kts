@@ -34,5 +34,3 @@ listOf(
     Modules.MultiPlatform.domain,
     Modules.MultiPlatform.Feature.mainMap
 ).forEach { include(it.name) }
-
-include(Modules.Android.shared)

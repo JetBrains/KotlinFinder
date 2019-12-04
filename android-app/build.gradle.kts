@@ -1,5 +1,3 @@
-
-
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -21,7 +19,7 @@ android {
         minSdkVersion(Versions.Android.minSdk)
         targetSdkVersion(Versions.Android.targetSdk)
 
-        applicationId = "com.kotlinconf.locator"
+        applicationId = "org.jetbrains.kotlin.locator"
 
         versionCode = 1
         versionName = "0.1.0"
