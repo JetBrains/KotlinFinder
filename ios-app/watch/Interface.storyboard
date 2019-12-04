@@ -2,7 +2,8 @@
 <document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15505" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="fx0-0D-ogB">
     <device id="watch38"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <deployment identifier="watchOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="15501"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
     </dependencies>
@@ -12,10 +13,10 @@
         </array>
     </customFonts>
     <scenes>
-        <!--Word-->
+        <!--Kotlin-->
         <scene sceneID="wuZ-Vm-eOX">
             <objects>
-                <controller identifier="word" title="Word" id="fx0-0D-ogB" customClass="MainInterfaceController" customModule="watchExtension">
+                <controller identifier="word" title="Kotlin" id="fx0-0D-ogB" customClass="MainInterfaceController" customModule="watchExtension">
                     <items>
                         <group width="1" alignment="left" hidden="YES" layout="vertical" id="qyb-sE-JtY">
                             <items>
