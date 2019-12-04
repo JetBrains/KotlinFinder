@@ -102,9 +102,9 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             shadowView,
             mapImageView,
             collectWordView,
-            this.hintButton,
-            this.strengthLabel,
-            this.spotDistanceView
+            hintButton,
+            strengthLabel,
+            spotDistanceView
         ).forEach { it.translatesAutoresizingMaskIntoConstraints = false }
 
         this.spotDistanceView.centerXAnchor.constraintEqualToAnchor(this.view.rightAnchor, constant = -70.0)

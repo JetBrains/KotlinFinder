@@ -83,31 +83,30 @@ class CollectWordView : UIView {
     }
 
     fun setText(text: String) {
-        this.wordStackView.arrangedSubviews().map { (it as? UIView)?.removeFromSuperview() }
 
-        for (i in 0 until text.count()) {
-            val label: UILabel = UILabel()
-            label.text = "${text[i]}"
-            label.textColor = UIColor.colorNamed("blackInactiveTextColor")!!
-            label.font = UIFont.boldSystemFontOfSize(42.0)
+        this.wordStackView.arrangedSubviews().forEach { (it as? UIView)?.removeFromSuperview() }
 
-            this.wordStackView.addArrangedSubview(label)
-        }
+        val textColor = UIColor.colorNamed("blackInactiveTextColor")
+        val textFont = UIFont.boldSystemFontOfSize(42.0)
+
+        text.map { char ->
+            UILabel().also {
+                it.text = "${char}"
+                it.textColor = textColor!!
+                it.font = textFont
+            }
+        }.forEach { this.wordStackView.addArrangedSubview(it) }
     }
 
     fun setCollectedLettersCount(count: Int) {
         val subviews: List<UIView> = this.wordStackView.arrangedSubviews() as List<UIView>
         val count = min(count, subviews.size)
 
-        if (count == 0) {
-            for (i in 0 until subviews.count()) {
-                (subviews[i] as? UILabel)?.textColor =
-                    UIColor.colorNamed("blackInactiveTextColor")!!
-            }
-        } else {
-            for (i in 0 until count) {
-                (subviews[i] as? UILabel)?.textColor = UIColor.colorNamed("blackTextColor")!!
-            }
+        val textColorName = if (count == 0) "blackInactiveTextColor" else "blackTextColor"
+
+        for (i in 0 until subviews.count()) {
+            (subviews[i] as? UILabel)?.textColor =
+                UIColor.colorNamed(textColorName)!!
         }
 
         this.imageView.image = UIImage.imageNamed("kotlin$count")
