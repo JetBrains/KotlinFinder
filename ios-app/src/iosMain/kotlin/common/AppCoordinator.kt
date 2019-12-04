@@ -1,22 +1,24 @@
 package common
 
-import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
-import com.icerockdev.jetfinder.feature.mainMap.presentation.SplashViewModel
+import com.kotlinconf.library.feature.mainMap.presentation.MapViewModel
+import com.kotlinconf.library.feature.mainMap.presentation.SplashViewModel
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import dev.icerock.moko.permissions.PermissionsController
-import org.example.library.Factory
+import com.kotlinconf.library.Factory
 import screens.MainScreenViewController
 import screens.SplashViewController
 import platform.UIKit.*
 
 
 open class BasicCoordinator(
-    protected val window: UIWindow,
-    protected val factory: Factory
+    protected val window: UIWindow
 ) {
     protected val navigationController: UINavigationController = UINavigationController()
 
-    open fun start() {}
+    open fun start() {
+        this.window.rootViewController = this.navigationController
+        this.window.makeKeyAndVisible()
+    }
 
     fun popBack() {
         this.navigationController.popToRootViewControllerAnimated(true)
@@ -26,11 +28,13 @@ open class BasicCoordinator(
 
 class AppCoordinator(
     window: UIWindow,
-    factory: Factory
-) : BasicCoordinator(window, factory), MapViewModel.EventsListener, SplashViewModel.EventsListener {
+    private val factory: Factory
+) : BasicCoordinator(window), MapViewModel.EventsListener, SplashViewModel.EventsListener {
     private val mapViewModel: MapViewModel = this.factory.mapFactory.createMapViewModel(EventsDispatcher(this), PermissionsController())
 
     override fun start() {
+        super.start()
+
         this.window.tintColor = Colors.orange
 
         this.navigationController.setViewControllers(
@@ -39,25 +43,16 @@ class AppCoordinator(
         )
         this.navigationController.navigationBar.shadowImage = UIImage()
         this.navigationController.setNavigationBarHidden(true)
-
-        this.window.rootViewController = this.navigationController
-        this.window.makeKeyAndVisible()
     }
 
     private fun createMainScreen(): MainScreenViewController {
-        val vc: MainScreenViewController = MainScreenViewController()
-        vc.bindViewModel(this.mapViewModel)
-
-        return vc
+        return MainScreenViewController().also { it.bindViewModel(this.mapViewModel) }
     }
 
     private fun createSplashScreen(): SplashViewController {
-        val vc: SplashViewController = SplashViewController()
-        val vm: SplashViewModel = this.factory.mapFactory.createSplashViewModel(EventsDispatcher(this))
-
-        vc.bindViewModel(vm)
-
-        return vc
+        return SplashViewController().also {
+            it.bindViewModel(this.factory.mapFactory.createSplashViewModel(EventsDispatcher(this)))
+        }
     }
 
     override fun routeToMainscreen() {

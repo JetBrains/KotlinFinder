@@ -1,6 +1,6 @@
 package screens
 
-import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
+import com.kotlinconf.library.feature.mainMap.presentation.MapViewModel
 import common.FeedbackGenerator
 import common.fillContainer
 import common.fillSuperview
@@ -102,9 +102,9 @@ class MainScreenViewController : UIViewController, UIScrollViewDelegateProtocol 
             shadowView,
             mapImageView,
             collectWordView,
-            this.hintButton,
-            this.strengthLabel,
-            this.spotDistanceView
+            hintButton,
+            strengthLabel,
+            spotDistanceView
         ).forEach { it.translatesAutoresizingMaskIntoConstraints = false }
 
         this.spotDistanceView.centerXAnchor.constraintEqualToAnchor(this.view.rightAnchor, constant = -70.0)

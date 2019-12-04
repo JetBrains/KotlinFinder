@@ -1,6 +1,6 @@
 package screens
 
-import com.icerockdev.jetfinder.feature.mainMap.presentation.SplashViewModel
+import com.kotlinconf.library.feature.mainMap.presentation.SplashViewModel
 import common.fillContainer
 import common.fillSuperview
 import kotlinx.cinterop.ObjCAction

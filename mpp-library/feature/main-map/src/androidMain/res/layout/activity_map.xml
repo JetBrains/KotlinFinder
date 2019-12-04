@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel" />
+            type="com.kotlinconf.library.feature.mainMap.presentation.MapViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -144,7 +144,7 @@
             app:layout_constraintTop_toTopOf="@+id/search"
             app:visibleOrGone="@{viewModel.isNoTaskVisible.ld}" />
 
-        <com.icerockdev.jetfinder.feature.mainMap.SpotDistance
+        <com.kotlinconf.library.feature.mainMap.SpotDistance
             android:id="@+id/spotSearch"
             android:layout_width="50dp"
             android:layout_height="40dp"

@@ -1,6 +1,6 @@
 package views
 
-import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
+import com.kotlinconf.library.feature.mainMap.presentation.MapViewModel
 import common.fillSuperview
 import kotlinx.cinterop.CValue
 import platform.CoreGraphics.CGRect

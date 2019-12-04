@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel" />
+            type="com.kotlinconf.library.feature.mainMap.presentation.MapViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
