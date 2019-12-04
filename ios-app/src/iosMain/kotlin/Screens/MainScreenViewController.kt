@@ -1,6 +1,6 @@
 package screens
 
-import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
+import com.kotlinconf.library.feature.mainMap.presentation.MapViewModel
 import common.FeedbackGenerator
 import common.fillContainer
 import common.fillSuperview

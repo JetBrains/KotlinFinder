@@ -1,22 +1,24 @@
 package common
 
-import com.icerockdev.jetfinder.feature.mainMap.presentation.MapViewModel
-import com.icerockdev.jetfinder.feature.mainMap.presentation.SplashViewModel
+import com.kotlinconf.library.feature.mainMap.presentation.MapViewModel
+import com.kotlinconf.library.feature.mainMap.presentation.SplashViewModel
 import dev.icerock.moko.mvvm.dispatcher.EventsDispatcher
 import dev.icerock.moko.permissions.PermissionsController
-import org.example.library.Factory
+import com.kotlinconf.library.Factory
 import screens.MainScreenViewController
 import screens.SplashViewController
 import platform.UIKit.*
 
 
 open class BasicCoordinator(
-    protected val window: UIWindow,
-    protected val factory: Factory
+    protected val window: UIWindow
 ) {
     protected val navigationController: UINavigationController = UINavigationController()
 
-    open fun start() {}
+    open fun start() {
+        this.window.rootViewController = this.navigationController
+        this.window.makeKeyAndVisible()
+    }
 
     fun popBack() {
         this.navigationController.popToRootViewControllerAnimated(true)

@@ -1,7 +1,7 @@
 import com.github.aakira.napier.DebugAntilog
 import com.russhwolf.settings.AppleSettings
 import common.AppCoordinator
-import org.example.library.Factory
+import com.kotlinconf.library.Factory
 import platform.Foundation.NSUserDefaults
 import platform.UIKit.UIApplication
 import platform.UIKit.UIApplicationDelegateProtocol
