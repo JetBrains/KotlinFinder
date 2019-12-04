@@ -117,7 +117,7 @@ class MapActivity :
     }
 
     override fun showHint(hint: String) {
-        alert(message = hint)
+        alert(message = hint, positiveAction = R.string.close to {})
     }
 
     override fun showFact(fact: String, closeAction: () -> Unit) {
@@ -125,7 +125,7 @@ class MapActivity :
     }
 
     override fun showRegistrationMessage(message: String) {
-        alert(message = message)
+        alert(message = message, positiveAction = R.string.close to {})
     }
 
     override fun showError(error: Throwable, retryingAction: (() -> Unit)?) {
