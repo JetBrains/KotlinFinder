@@ -9,8 +9,8 @@ EXTERNAL SOURCES:
     :path: "../watchos-app"
 
 SPEC CHECKSUMS:
-  MultiPlatformLibrary: 5bdd821f1eebd2d21b31e212a9ce56f38f3fbb0b
+  MultiPlatformLibrary: 8862bf2e2111fef1389fd0c952bad976bdac5dcc
 
-PODFILE CHECKSUM: 244bdf7c91b41bd18da72cfd5ef238fbd43ed98c
+PODFILE CHECKSUM: 650e95c9cc92b1454c1ff9243f2479d25c239e38
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.8.3
