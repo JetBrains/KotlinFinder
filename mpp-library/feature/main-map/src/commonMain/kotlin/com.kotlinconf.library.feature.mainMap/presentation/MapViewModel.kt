@@ -145,6 +145,9 @@ class MapViewModel(
     }
 
     fun hintButtonTapped() {
+        // randomize hint
+        setHintStr()
+
         this.eventsDispatcher.dispatchEvent {
             showHint(hintStr ?: return@dispatchEvent)
         }
