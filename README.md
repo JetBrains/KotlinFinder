@@ -23,3 +23,6 @@ Two schemes - `JetFinder`, `watchapp` use for run application on simulator/devic
 - [MOKO permissions](https://github.com/icerockdev/moko-permissions) - runtime permissions request
 - [blue-falcon](https://github.com/Reedyuk/blue-falcon) - bluetooth scan (used [forked version](https://github.com/icerockdev/blue-falcon))
 - [multiplatform-settings](https://github.com/russhwolf/multiplatform-settings) - local key/value storage
+
+## Authors
+Developed by [IceRock](https://github.com/icerockdev) and [JetBrains](http://github.com/jetBrains)
