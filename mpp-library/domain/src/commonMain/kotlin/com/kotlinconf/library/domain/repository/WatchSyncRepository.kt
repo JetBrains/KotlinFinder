@@ -1,6 +1,6 @@
 package com.kotlinconf.library.domain.repository
 
-expect class WatchSyncRepository {
+expect class WatchSyncRepository() {
 
     fun sendData(currentStep: Int,
                  signalStrength: Int?,

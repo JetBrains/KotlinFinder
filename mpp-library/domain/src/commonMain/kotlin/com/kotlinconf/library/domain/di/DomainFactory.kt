@@ -71,7 +71,7 @@ class DomainFactory(
         )
     }
 
-    val watchSyncRepository: WatchSyncRepository by lazy {
+    private val watchSyncRepository: WatchSyncRepository by lazy {
         WatchSyncRepository()
     }
 
